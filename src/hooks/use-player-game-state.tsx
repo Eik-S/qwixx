@@ -6,7 +6,9 @@ export function usePlayerGameState() {
 
   const [hasContentChanged, setHasContentChanged] = useState(false)
   const [numSelectionsMade, setNumSelectionsMade] = useState(0)
-  const [lineColorClosed, setLineColorClosed] = useState<LineColor | undefined>(undefined)
+  const [lineColorClosedThisTurn, setLineColorClosedThisTurn] = useState<LineColor | undefined>(
+    undefined,
+  )
 
   function toggleField(field: Field) {
     if (field.isSelected) {
@@ -31,10 +33,10 @@ export function usePlayerGameState() {
 
           if (
             i === line.fields.length - 1 &&
-            line.fields.filter((field) => field.isFilled).length >= 4
+            line.fields.filter((field) => field.isFilled).length >= 5
           ) {
             line.wasClosedByYou = true
-            setLineColorClosed(line.color)
+            setLineColorClosedThisTurn(line.color)
           }
         }
         if (hasFilledCrossToTheRight) {
@@ -56,8 +58,8 @@ export function usePlayerGameState() {
     content,
     hasContentChanged,
     numSelectionsMade,
-    lineColorClosed,
-    setLineColorClosed,
+    lineColorClosedThisTurn,
+    setLineColorClosedThisTurn,
     setHasContentChanged,
     toggleField,
     fillSelectedFields,

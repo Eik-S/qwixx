@@ -32,8 +32,8 @@ export function Player({
     content,
     hasContentChanged,
     numSelectionsMade,
-    lineColorClosed,
-    setLineColorClosed,
+    lineColorClosedThisTurn,
+    setLineColorClosedThisTurn,
     setHasContentChanged,
     toggleField,
     fillSelectedFields,
@@ -47,6 +47,7 @@ export function Player({
 
   useEffect(() => {
     if (gameStatus === 'running') {
+      setStrikes(0)
       resetContent()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -67,11 +68,18 @@ export function Player({
   }, [closedLineColors, content, setHasContentChanged])
 
   useEffect(() => {
-    if (lineColorClosed === undefined) return
+    if (lineColorClosedThisTurn === undefined) return
 
-    onCloseLine(lineColorClosed)
-    setLineColorClosed(undefined)
-  }, [lineColorClosed, onCloseLine, setLineColorClosed])
+    onCloseLine(lineColorClosedThisTurn)
+    setLineColorClosedThisTurn(undefined)
+  }, [lineColorClosedThisTurn, onCloseLine, setLineColorClosedThisTurn])
+
+  useEffect(() => {
+    if (strikes === 4) {
+      endGame()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [strikes])
 
   function checkIsFieldClickValid(field: Field): boolean {
     const maxPossibleSelections = isActivePlayer ? 2 : 1
@@ -92,11 +100,7 @@ export function Player({
     if (isActivePlayer && numSelectionsMade === 0) {
       setStrikes((prev) => prev + 1)
     }
-    if (strikes === 4) {
-      endGame()
-    } else {
-      setNextPlayer()
-    }
+    setNextPlayer()
   }
 
   return (

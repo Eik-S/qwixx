@@ -20,11 +20,13 @@ export function useGlobalGameState() {
   }
 
   function addClosedLineColor(lineColor: LineColor): void {
-    if (closedLineColors.includes(lineColor)) {
-      return
-    }
-
-    setClosedLineColors((prev) => [...prev, lineColor])
+    setClosedLineColors((prev) => {
+      if (prev.includes(lineColor)) {
+        return prev
+      } else {
+        return [...prev, lineColor]
+      }
+    })
   }
 
   function endGame() {
