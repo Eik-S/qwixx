@@ -8,6 +8,10 @@ export function hasContentChangedByPointerMovement(
   event: MouseEvent,
 ): boolean {
   const field = dimensions.getFieldAtPosition(content.lines, event.offsetX, event.offsetY)
+  if (field === undefined) {
+    clearHovers(content)
+    return true
+  }
   if (field.isHovered) {
     return false
   }

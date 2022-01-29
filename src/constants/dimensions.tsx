@@ -1,22 +1,21 @@
 import { Field, Line } from '../game-board/game-board'
 
 const fieldSize = 48
-const fieldXPadding = 6
-const fieldYPadding = 18
-const lineHeight = fieldSize + fieldYPadding
+const fieldGap = 6
+const lineGap = 12
+const lineHeight = fieldSize + lineGap + fieldGap
 
 function getCanvasWidth(): number {
-  const fieldWidth = fieldSize + fieldXPadding
+  const fieldWidth = fieldSize + fieldGap
   return fieldWidth * 12
 }
 
 function getCanvasHeight(): number {
-  const fieldHeight = fieldSize + fieldYPadding
-  return fieldHeight * 4 - fieldYPadding
+  return lineHeight * 4 - lineGap
 }
 
 function getClosedStarWidth(): number {
-  return fieldSize + fieldXPadding
+  return fieldSize + fieldGap
 }
 
 function getClickableWidth(): number {
@@ -24,31 +23,43 @@ function getClickableWidth(): number {
 }
 
 function getFieldXPos(fieldIndex: number): number {
-  return fieldIndex * (fieldSize + fieldXPadding)
+  return fieldIndex * (fieldSize + fieldGap) + fieldGap / 2
 }
 
 function getLineYPos(colorString: string): number {
-  if (colorString === 'r') return lineHeight * 0
-  if (colorString === 'y') return lineHeight * 1
-  if (colorString === 'g') return lineHeight * 2
-  if (colorString === 'b') return lineHeight * 3
+  if (colorString === 'r') return lineHeight * 0 + fieldGap / 2
+  if (colorString === 'y') return lineHeight * 1 + fieldGap / 2
+  if (colorString === 'g') return lineHeight * 2 + fieldGap / 2
+  if (colorString === 'b') return lineHeight * 3 + fieldGap / 2
   else throw Error(`Invalid colorString given: ${colorString}`)
 }
 
-function getLineByYPos(y: number, lines: Line[]): Line {
+function getLineByYPos(y: number, lines: Line[]): Line | undefined {
   const lineNumber = Math.floor(y / lineHeight)
+  const positionInLine = y % lineHeight
+  if (positionInLine > fieldSize + fieldGap) {
+    return undefined
+  }
 
   return lines[lineNumber] ?? undefined
 }
 
-function getFieldByLineAndXPos(x: number, line: Line): Field {
-  const fieldWidth = fieldSize + fieldXPadding
+function getFieldByLineAndXPos(x: number, line: Line): Field | undefined {
+  const fieldWidth = fieldSize + fieldGap
   const fieldNumber = Math.floor(x / fieldWidth)
+  if (fieldNumber >= line.fields.length) {
+    return undefined
+  }
+
   return line.fields[fieldNumber]
 }
 
-function getFieldAtPosition(lines: Line[], x: number, y: number): Field {
+function getFieldAtPosition(lines: Line[], x: number, y: number): Field | undefined {
   const line = dimensions.getLineByYPos(y, lines)
+  if (line === undefined) {
+    return undefined
+  }
+
   return dimensions.getFieldByLineAndXPos(x, line)
 }
 

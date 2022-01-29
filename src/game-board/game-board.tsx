@@ -81,31 +81,20 @@ export function GameBoard({
     DrawingUtil.drawLines(ctx, content.lines)
   }, [ctx, hasContentChanged, content, setHasContentChanged])
 
-  function isMouseOnFields(event: React.MouseEvent | React.PointerEvent) {
-    const x = event.nativeEvent.offsetX
-
-    if (x >= dimensions.clickableWidth) {
-      return false
-    }
-    return true
-  }
-
   return (
     <canvas
       id={`canvas-of-player-${playerId}`}
       onClick={(event: React.MouseEvent) => {
-        if (!isMouseOnFields(event)) return
-        onFieldClick(
-          dimensions.getFieldAtPosition(
-            content.lines,
-            event.nativeEvent.offsetX,
-            event.nativeEvent.offsetY,
-          ),
+        const field = dimensions.getFieldAtPosition(
+          content.lines,
+          event.nativeEvent.offsetX,
+          event.nativeEvent.offsetY,
         )
+        if (field === undefined) return
+        onFieldClick(field)
       }}
       onPointerMove={(event: React.PointerEvent) => {
         if (event.pointerType !== 'mouse') return
-        if (!isMouseOnFields(event)) return
 
         const hasContentChanged = hasContentChangedByPointerMovement(content, event.nativeEvent)
 
