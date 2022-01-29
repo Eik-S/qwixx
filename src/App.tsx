@@ -1,26 +1,47 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.scss';
+import { useEffect } from 'react'
+import './App.scss'
+import { DiceCup } from './dices/dice-cup'
+import { LineColor } from './game-board/game-board'
+import { useGlobalGameState } from './hooks/use-global-game-state'
+import { Player } from './player/player'
 
-function App() {
+export function App() {
+  const {
+    numberOfPlayers,
+    activePlayerIndex,
+    gameStatus,
+    closedLineColors,
+    setNextPlayer,
+    addClosedLineColor,
+    endGame,
+    startNewGame,
+  } = useGlobalGameState()
+
+  useEffect(() => {
+    if (closedLineColors.length === 2) {
+      endGame()
+    }
+  }, [closedLineColors, endGame])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+    <div className="content">
+      {[...Array(numberOfPlayers)].map((_player, index) => (
+        <Player
+          key={index}
+          id={index}
+          isActivePlayer={activePlayerIndex === index}
+          setNextPlayer={() => setNextPlayer()}
+          gameStatus={gameStatus}
+          startNewGame={() => startNewGame()}
+          endGame={() => endGame()}
+          onCloseLine={(lineColor: LineColor) => addClosedLineColor(lineColor)}
+          closedLineColors={closedLineColors}
+        />
+      ))}
 
-export default App;
+      <div className="dices-area">
+        {gameStatus === 'running' ? <DiceCup activePlayerIndex={activePlayerIndex} /> : null}
+      </div>
+    </div>
+  )
+}

@@ -1,0 +1,32 @@
+@import "./../assets/colors.scss";
+
+.game-stats-area {
+  height: 100%;
+  display: grid;
+  grid-auto-flow: row;
+  justify-content: right;
+  align-content: flex-end;
+  align-content: space-between;
+  text-align: center;
+
+  p {
+    font-size: 24px;
+    margin: 0;
+    font-weight: lighter;
+  }
+
+  .stat-label {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin: 0;
+    width: 100px;
+  }
+
+  .strikes {
+    font-size: 28px;
+    width: 100px;
+    text-align: center;
+    vertical-align: bottom;
+    line-height: 23px;
+  }
+}
