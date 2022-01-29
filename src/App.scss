@@ -1,4 +1,4 @@
-@import "./assets/colors.scss";
+@import './assets/colors.scss';
 
 .content {
   height: 100vh;
@@ -9,16 +9,13 @@
   grid-template-columns: auto 1fr auto;
   grid-template-rows: auto 1fr auto;
   grid-template-areas:
-    ". player_0 ."
-    "player_2 dices player_3"
-    ". player_1 .";
+    '. player_0 .'
+    'player_2 dices player_3'
+    '. player_1 .';
 }
 
 .dices-area {
   grid-area: dices;
   justify-self: center;
   align-self: center;
-}
-
-.win-message {
 }
