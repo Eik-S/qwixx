@@ -104,7 +104,9 @@ export function GameBoard({
         )
       }}
       onPointerMove={(event: React.PointerEvent) => {
+        if (event.pointerType !== 'mouse') return
         if (!isMouseOnFields(event)) return
+
         const hasContentChanged = hasContentChangedByPointerMovement(content, event.nativeEvent)
 
         if (hasContentChanged) {
