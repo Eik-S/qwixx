@@ -33,9 +33,10 @@ export function useGlobalGameState() {
     setGameStatus('finished')
   }
 
-  function startNewGame() {
+  function startNewGame(playerId: number) {
     setClosedLineColors([])
     setGameStatus('running')
+    setActivePlayerIndex(playerId)
   }
 
   return {

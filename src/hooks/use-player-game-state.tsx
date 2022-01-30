@@ -26,19 +26,23 @@ export function usePlayerGameState() {
       var hasFilledCrossToTheRight = false
       for (var i = line.fields.length - 1; i >= 0; i--) {
         const field = line.fields[i]
+
         if (field.isSelected) {
           field.isSelected = false
           field.isFilled = true
           hasFilledCrossToTheRight = true
 
-          if (
-            i === line.fields.length - 1 &&
-            line.fields.filter((field) => field.isFilled).length >= 5
-          ) {
-            line.wasClosedByYou = true
-            setLineColorClosedThisTurn(line.color)
+          if (i === line.fields.length - 1) {
+            const crossesInLine = line.fields.filter((field) => {
+              return field.isSelected || field.isFilled
+            }).length
+            if (crossesInLine >= 5) {
+              line.wasClosedByYou = true
+              setLineColorClosedThisTurn(line.color)
+            }
           }
         }
+
         if (hasFilledCrossToTheRight) {
           field.isDisabled = true
         }

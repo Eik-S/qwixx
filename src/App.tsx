@@ -18,7 +18,7 @@ export function App() {
   } = useGlobalGameState()
 
   useEffect(() => {
-    if (closedLineColors.length === 2) {
+    if (closedLineColors.length >= 2) {
       endGame()
     }
   }, [closedLineColors, endGame])
@@ -32,7 +32,7 @@ export function App() {
           isActivePlayer={activePlayerIndex === index}
           setNextPlayer={() => setNextPlayer()}
           gameStatus={gameStatus}
-          startNewGame={() => startNewGame()}
+          startNewGame={(playerId: number) => startNewGame(playerId)}
           endGame={() => endGame()}
           onCloseLine={(lineColor: LineColor) => addClosedLineColor(lineColor)}
           closedLineColors={closedLineColors}

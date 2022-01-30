@@ -12,7 +12,7 @@ export interface PlayerProps {
   closedLineColors: LineColor[]
   gameStatus: GameStatus
   setNextPlayer: () => void
-  startNewGame: () => void
+  startNewGame: (playerId: number) => void
   endGame: () => void
   onCloseLine: (lineColor: LineColor) => void
 }
@@ -121,7 +121,7 @@ export function Player({
         <GameControls
           onEndTurn={() => handleEndTurn()}
           areControlsDisabled={!isActivePlayer}
-          startNewGame={() => startNewGame()}
+          startNewGame={() => startNewGame(id)}
           gameStatus={gameStatus}
         ></GameControls>
       </div>
