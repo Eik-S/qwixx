@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
 import { LineColor } from '../game-board/game-board'
+import { useLocalStorage } from './use-local-storage'
 
 export type GameStatus = 'running' | 'finished'
 
 export function useGlobalGameState() {
-  const [numberOfPlayers] = useState(2)
+  const [numberOfPlayers, setNumberOfPlayers] = useLocalStorage('numberOfPlayers', 2)
   const [activePlayerIndex, setActivePlayerIndex] = useState(numberOfPlayers - 1)
   const [gameStatus, setGameStatus] = useState<GameStatus>('running')
   const [closedLineColors, setClosedLineColors] = useState<LineColor[]>([])
@@ -48,5 +49,6 @@ export function useGlobalGameState() {
     addClosedLineColor,
     endGame,
     startNewGame,
+    setNumberOfPlayers,
   }
 }

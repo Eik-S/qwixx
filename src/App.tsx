@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import './App.scss'
+import { Controls } from './controls/controls'
 import { DiceCup } from './dices/dice-cup'
 import { LineColor } from './game-board/game-board'
 import { useGlobalGameState } from './hooks/use-global-game-state'
@@ -12,6 +13,7 @@ export function App() {
     gameStatus,
     closedLineColors,
     setNextPlayer,
+    setNumberOfPlayers,
     addClosedLineColor,
     endGame,
     startNewGame,
@@ -23,25 +25,36 @@ export function App() {
     }
   }, [closedLineColors, endGame])
 
-  return (
-    <div className="content">
-      {[...Array(numberOfPlayers)].map((_player, index) => (
-        <Player
-          key={index}
-          id={index}
-          isActivePlayer={activePlayerIndex === index}
-          setNextPlayer={() => setNextPlayer()}
-          gameStatus={gameStatus}
-          startNewGame={(playerId: number) => startNewGame(playerId)}
-          endGame={() => endGame()}
-          onCloseLine={(lineColor: LineColor) => addClosedLineColor(lineColor)}
-          closedLineColors={closedLineColors}
-        />
-      ))}
+  function handleNewGameClick() {
+    window.location.reload()
+  }
 
-      <div className="dices-area">
-        {gameStatus === 'running' ? <DiceCup activePlayerIndex={activePlayerIndex} /> : null}
+  return (
+    <>
+      <div className="content">
+        {[...Array(numberOfPlayers)].map((_player, index) => (
+          <Player
+            key={index}
+            id={index}
+            isActivePlayer={activePlayerIndex === index}
+            setNextPlayer={() => setNextPlayer()}
+            gameStatus={gameStatus}
+            startNewGame={(playerId: number) => startNewGame(playerId)}
+            endGame={() => endGame()}
+            onCloseLine={(lineColor: LineColor) => addClosedLineColor(lineColor)}
+            closedLineColors={closedLineColors}
+          />
+        ))}
+
+        <div className="dices-area">
+          {gameStatus === 'running' ? <DiceCup activePlayerIndex={activePlayerIndex} /> : null}
+        </div>
       </div>
-    </div>
+      <Controls
+        numOfPlayers={numberOfPlayers}
+        onClickNewGame={() => handleNewGameClick()}
+        onNumOfPlayersChange={(newValue) => setNumberOfPlayers(newValue)}
+      />
+    </>
   )
 }

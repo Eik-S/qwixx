@@ -7,6 +7,7 @@
   grid-template-rows: auto;
   grid-column-gap: 18px;
 
+
   &.player-0 {
     grid-area: player_0;
     rotate: 180deg;
@@ -16,10 +17,14 @@
   }
   &.player-2 {
     grid-area: player_2;
-    rotate: 90deg;
+    justify-self: center;
+    align-self: center;
+    transform: rotate(90deg);
   }
   &.player-3 {
     grid-area: player_3;
+    justify-self: center;
+    align-self: center;
     rotate: 270deg;
   }
 
