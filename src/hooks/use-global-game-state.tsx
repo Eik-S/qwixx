@@ -5,7 +5,7 @@ import { useLocalStorage } from './use-local-storage'
 export type GameStatus = 'running' | 'finished'
 
 export function useGlobalGameState() {
-  const [numberOfPlayers, setNumberOfPlayers] = useLocalStorage('numberOfPlayers', 2)
+  const [numberOfPlayers, setNumberOfPlayers] = useLocalStorage('numberOfPlayers', 4)
   const [activePlayerIndex, setActivePlayerIndex] = useState(numberOfPlayers - 1)
   const [gameStatus, setGameStatus] = useState<GameStatus>('running')
   const [closedLineColors, setClosedLineColors] = useState<LineColor[]>([])

@@ -8,7 +8,13 @@ interface DiceObj {
   color: string
 }
 
-export function DiceCup({ activePlayerIndex }: { activePlayerIndex: number }) {
+export function DiceCup({
+  activePlayerIndex,
+  isBig,
+}: {
+  activePlayerIndex: number
+  isBig: boolean
+}) {
   const [dices, setDices] = useState<DiceObj[]>([
     { value: 1, color: getHexColor('w', 'dark') },
     { value: 1, color: getHexColor('w', 'dark') },
@@ -46,7 +52,7 @@ export function DiceCup({ activePlayerIndex }: { activePlayerIndex: number }) {
   return (
     <div className="dice-cup">
       {dices.map((dice, i) => (
-        <Dice key={i} value={dice.value} color={dice.color} />
+        <Dice key={i} value={dice.value} color={dice.color} isBig={isBig} />
       ))}
     </div>
   )

@@ -1,6 +1,7 @@
+/** @jsxImportSource @emotion/react */
+import { css } from '@emotion/react'
 import { useEffect, useState } from 'react'
 import { GameBoardContent, Line } from '../game-board/game-board'
-import './game-stats.scss'
 
 interface Score {
   red: number
@@ -13,9 +14,10 @@ export interface GameStatProps {
   strikes: number
   content: GameBoardContent
   hasContentChanged: boolean
+  narrowLayout: boolean
 }
 
-export function GameStats({ strikes, content, hasContentChanged }: GameStatProps) {
+export function GameStats({ narrowLayout, strikes, content, hasContentChanged }: GameStatProps) {
   const [score, setScore] = useState<Score>({
     red: 0,
     yellow: 0,
@@ -46,14 +48,14 @@ export function GameStats({ strikes, content, hasContentChanged }: GameStatProps
   }, [score, strikes])
 
   return (
-    <div className="game-stats-area">
+    <div css={styles.gameStatsArea(narrowLayout)}>
       <div>
-        <h3 className="stat-label">score</h3>
-        <p>{totalScore}</p>
+        <h3 css={styles.statLabel}>score</h3>
+        <p css={styles.statValue}>{totalScore}</p>
       </div>
       <div>
-        <h3 className="stat-label">strikes</h3>
-        <div className="strikes">
+        <h3 css={styles.statLabel}>strikes</h3>
+        <div css={styles.strikes}>
           {[...Array(4)].map((e, i) => {
             if (i >= strikes) {
               return <span key={i}>{String.fromCharCode(0x2610)}</span>
@@ -65,4 +67,44 @@ export function GameStats({ strikes, content, hasContentChanged }: GameStatProps
       </div>
     </div>
   )
+}
+
+const styles = {
+  gameStatsArea: (narrowLayout: boolean) => css`
+    height: 100%;
+    display: grid;
+    grid-auto-flow: row;
+    text-align: center;
+    align-content: space-between;
+
+    ${narrowLayout &&
+    css`
+      grid-auto-flow: column;
+      justify-content: left;
+      justify-content: space-between;
+
+      & > div {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+      }
+    `}
+  `,
+  statLabel: css`
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin: 0;
+    width: 100px;
+  `,
+  statValue: css`
+    font-size: 24px;
+    margin: 0;
+    font-weight: lighter;
+  `,
+  strikes: css`
+    font-size: 28px;
+    width: 100px;
+    text-align: center;
+    vertical-align: bottom;
+  `,
 }

@@ -1,5 +1,10 @@
 @import './assets/colors.scss';
 
+body,
+html {
+  position: fixed;
+}
+
 body {
   margin: 0;
   font-family: sans-serif;

@@ -1,3 +1,4 @@
+/** @jsxImportSource @emotion/react */
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { dimensions } from '../constants/dimensions'
 import * as DrawingUtil from './drawing-utility'
@@ -40,6 +41,7 @@ export function GameBoard({
   hasContentChanged,
   setHasContentChanged,
   onFieldClick,
+  ...props
 }: GameBoardProps) {
   const [ctx, setCtx] = useState<CanvasRenderingContext2D>()
 
@@ -110,6 +112,7 @@ export function GameBoard({
         )
         setHasContentChanged(true)
       }}
+      {...props}
     />
   )
 }
