@@ -1,7 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next'
+import { createSession } from '../../../services/session-storage'
 
 interface ResponseData {
-  name: string
+  sessionId: string
 }
 
 export default function handler(req: NextApiRequest, res: NextApiResponse<ResponseData>) {
@@ -10,5 +11,12 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Respon
     res.end()
     return
   }
-  res.status(200).json({ name: 'John Doe' })
+
+  try {
+    const sessionId = createSession()
+    res.status(200).json({ sessionId })
+  } catch (error) {
+    console.log(error)
+    res.status(500).end()
+  }
 }
