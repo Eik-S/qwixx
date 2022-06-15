@@ -1,6 +1,5 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react'
-import './dice.scss'
 
 export function Dice({ value, color, isBig }: { value: number; color: string; isBig: boolean }) {
   return (

@@ -1,15 +1,14 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 
 export function useLocalStorage<T>(key: string, initialValue: T): [T, Dispatch<SetStateAction<T>>] {
-  const [storedValue, setStoredValue] = useState<T>(() => {
-    try {
-      const item = window.localStorage.getItem(key)
-      return item ? JSON.parse(item) : initialValue
-    } catch (error) {
-      console.log(error)
-      return initialValue
+  const [storedValue, setStoredValue] = useState<T>(initialValue)
+
+  useEffect(() => {
+    const item = window.localStorage.getItem(key)
+    if (item) {
+      setStoredValue(JSON.parse(item))
     }
-  })
+  }, [key])
 
   useEffect(() => {
     window.localStorage.setItem(key, JSON.stringify(storedValue))

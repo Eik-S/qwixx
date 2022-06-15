@@ -1,7 +1,8 @@
+/** @jsxImportSource @emotion/react */
+import { css } from '@emotion/react'
 import { useEffect, useState } from 'react'
 import { getHexColor } from '../assets/colors'
 import { Dice } from './dice'
-import './dice-cup.scss'
 
 interface DiceObj {
   value: number
@@ -50,10 +51,18 @@ export function DiceCup({
   }
 
   return (
-    <div className="dice-cup">
+    <div css={styles.diceCup}>
       {dices.map((dice, i) => (
         <Dice key={i} value={dice.value} color={dice.color} isBig={isBig} />
       ))}
     </div>
   )
+}
+
+const styles = {
+  diceCup: css`
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  `,
 }
