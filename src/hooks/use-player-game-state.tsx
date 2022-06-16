@@ -1,42 +1,42 @@
 import { useState } from 'react'
-import { Field, GameBoardContent, LineColor } from '../game-board/game-board'
+import { Field, Board, LineColor } from '../models/game'
 
 export function usePlayerGameState() {
-  const [content, setContent] = useState<GameBoardContent>(getCleanContent())
+  const [board, setBoard] = useState<Board>(getCleanBoard())
 
-  const [hasContentChanged, setHasContentChanged] = useState(false)
+  const [hasBoardChanged, setHasBoardChanged] = useState(false)
   const [numSelectionsMade, setNumSelectionsMade] = useState(0)
   const [lineColorClosedThisTurn, setLineColorClosedThisTurn] = useState<LineColor | undefined>(
     undefined,
   )
 
   function toggleField(field: Field) {
-    if (field.isSelected) {
-      field.isSelected = false
+    if (field.status === 'selected') {
+      field.status = 'open'
       setNumSelectionsMade((prev) => prev - 1)
     } else {
-      field.isSelected = true
+      field.status = 'selected'
       setNumSelectionsMade((prev) => prev + 1)
     }
-    setHasContentChanged(true)
+    setHasBoardChanged(true)
   }
 
   function fillSelectedFields() {
-    content.lines.forEach((line) => {
+    board.lines.forEach((line) => {
       var hasFilledCrossToTheRight = false
       for (var i = line.fields.length - 1; i >= 0; i--) {
         const field = line.fields[i]
 
-        if (field.isSelected) {
-          field.isSelected = false
-          field.isFilled = true
+        if (field.status === 'selected') {
+          field.status = 'filled'
           hasFilledCrossToTheRight = true
 
           if (i === line.fields.length - 1) {
             const crossesInLine = line.fields.filter((field) => {
-              return field.isSelected || field.isFilled
+              return field.status === ('selected' || 'filled')
             }).length
             if (crossesInLine >= 5) {
+              line.status = 'closed'
               line.wasClosedByYou = true
               setLineColorClosedThisTurn(line.color)
             }
@@ -44,27 +44,27 @@ export function usePlayerGameState() {
         }
 
         if (hasFilledCrossToTheRight) {
-          field.isDisabled = true
+          field.status = 'disabled'
         }
       }
     })
 
     setNumSelectionsMade(0)
-    setHasContentChanged(true)
+    setHasBoardChanged(true)
   }
 
   function resetContent() {
-    setContent(getCleanContent())
-    setHasContentChanged(true)
+    setBoard(getCleanBoard())
+    setHasBoardChanged(true)
   }
 
   return {
-    content,
-    hasContentChanged,
+    board,
+    hasBoardChanged,
     numSelectionsMade,
     lineColorClosedThisTurn,
     setLineColorClosedThisTurn,
-    setHasContentChanged,
+    setHasBoardChanged,
     toggleField,
     fillSelectedFields,
     resetContent,
@@ -76,42 +76,38 @@ function createEmptyLineOfFields(order: 'asc' | 'desc'): Field[] {
   for (let x = 2; x < 13; x++) {
     line.push({
       value: order === 'asc' ? x : 14 - x,
-
-      isSelected: false,
-      isDisabled: false,
-      isFilled: false,
-      isHovered: false,
+      status: 'open',
     })
   }
   return line
 }
 
-function getCleanContent(): GameBoardContent {
+function getCleanBoard(): Board {
   return {
-    hits: 0,
+    strikes: 0,
     lines: [
       {
         color: 'r',
         fields: createEmptyLineOfFields('asc'),
-        isClosed: false,
+        status: 'open',
         wasClosedByYou: false,
       },
       {
         color: 'y',
         fields: createEmptyLineOfFields('asc'),
-        isClosed: false,
+        status: 'open',
         wasClosedByYou: false,
       },
       {
         color: 'g',
         fields: createEmptyLineOfFields('desc'),
-        isClosed: false,
+        status: 'open',
         wasClosedByYou: false,
       },
       {
         color: 'b',
         fields: createEmptyLineOfFields('desc'),
-        isClosed: false,
+        status: 'open',
         wasClosedByYou: false,
       },
     ],

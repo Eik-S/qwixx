@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react'
 import { useEffect, useState } from 'react'
-import { GameBoardContent, Line } from '../game-board/game-board'
+import { Board, Line } from '../models/game'
 
 interface Score {
   red: number
@@ -12,12 +12,12 @@ interface Score {
 
 export interface GameStatProps {
   strikes: number
-  content: GameBoardContent
-  hasContentChanged: boolean
+  board: Board
+  hasBoardChanged: boolean
   narrowLayout: boolean
 }
 
-export function GameStats({ narrowLayout, strikes, content, hasContentChanged }: GameStatProps) {
+export function GameStats({ narrowLayout, strikes, board, hasBoardChanged }: GameStatProps) {
   const [score, setScore] = useState<Score>({
     red: 0,
     yellow: 0,
@@ -30,17 +30,17 @@ export function GameStats({ narrowLayout, strikes, content, hasContentChanged }:
     const pointsBySelections = [0, 1, 3, 6, 10, 15, 21, 28, 36, 45, 55, 66, 78]
 
     function getScoreForLine(line: Line) {
-      const filledFields = line.fields.filter((field) => field.isFilled)
+      const filledFields = line.fields.filter((field) => field.status === 'filled')
       return pointsBySelections[filledFields.length + (line.wasClosedByYou ? 1 : 0)]
     }
 
     setScore({
-      red: getScoreForLine(content.lines[0]),
-      yellow: getScoreForLine(content.lines[1]),
-      green: getScoreForLine(content.lines[2]),
-      blue: getScoreForLine(content.lines[3]),
+      red: getScoreForLine(board.lines[0]),
+      yellow: getScoreForLine(board.lines[1]),
+      green: getScoreForLine(board.lines[2]),
+      blue: getScoreForLine(board.lines[3]),
     })
-  }, [content, hasContentChanged])
+  }, [board, hasBoardChanged])
 
   useEffect(() => {
     const totalLineScore = Object.values(score).reduce((prev, curr) => prev + curr)

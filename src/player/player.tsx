@@ -2,11 +2,12 @@
 import { css } from '@emotion/react'
 import { useEffect, useState } from 'react'
 import { colors } from '../assets/colors'
-import { Field, GameBoard, LineColor } from '../game-board/game-board'
+import { Field, LineColor } from '../models/game'
 import { GameControls } from '../game-controls/game-controls'
 import { GameStats } from '../game-stats/game-stats'
 import { GameStatus } from '../hooks/use-global-game-state'
 import { usePlayerGameState } from '../hooks/use-player-game-state'
+import { GameBoard } from '../game-board/game-board'
 
 export interface PlayerProps {
   activePlayerIndex: number
@@ -36,14 +37,14 @@ export function Player({
   onCloseLine,
 }: PlayerProps) {
   const [strikes, setStrikes] = useState(0)
-  const narrowLayout = numberOfPlayers > 2
+  const [narrowLayout, setNarrowLayout] = useState(false)
   const {
-    content,
-    hasContentChanged,
+    board,
+    hasBoardChanged,
     numSelectionsMade,
     lineColorClosedThisTurn,
     setLineColorClosedThisTurn,
-    setHasContentChanged,
+    setHasBoardChanged,
     toggleField,
     fillSelectedFields,
     resetContent,
@@ -51,6 +52,7 @@ export function Player({
 
   useEffect(() => {
     fillSelectedFields()
+    console.log({ activePlayerIndex, numberOfPlayers })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activePlayerIndex])
 
@@ -63,18 +65,20 @@ export function Player({
   }, [gameStatus])
 
   useEffect(() => {
-    content.lines.forEach((line) => {
+    board.lines.forEach((line) => {
       if (closedLineColors.includes(line.color)) {
-        if (!line.isClosed) {
-          line.isClosed = true
-          setHasContentChanged(true)
+        if (line.status === 'open') {
+          line.status = 'closed'
+          setHasBoardChanged(true)
           line.fields.forEach((field) => {
-            field.isDisabled = true
+            if (field.status === 'open') {
+              field.status = 'disabled'
+            }
           })
         }
       }
     })
-  }, [closedLineColors, content, setHasContentChanged])
+  }, [closedLineColors, board, setHasBoardChanged])
 
   useEffect(() => {
     if (lineColorClosedThisTurn === undefined) return
@@ -90,11 +94,15 @@ export function Player({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [strikes])
 
+  useEffect(() => {
+    setNarrowLayout(numberOfPlayers > 2)
+  }, [numberOfPlayers])
+
   function checkIsFieldClickValid(field: Field): boolean {
     const maxPossibleSelections = isActivePlayer ? 2 : 1
 
-    if (field.isDisabled || field.isFilled) return false
-    if (!field.isSelected && maxPossibleSelections - numSelectionsMade === 0) return false
+    if (field.status === ('disabled' || 'filled')) return false
+    if (field.status === 'open' && maxPossibleSelections - numSelectionsMade === 0) return false
     return true
   }
 
@@ -118,16 +126,16 @@ export function Player({
         <GameStats
           narrowLayout={narrowLayout}
           strikes={strikes}
-          content={content}
-          hasContentChanged={hasContentChanged}
+          board={board}
+          hasBoardChanged={hasBoardChanged}
         />
       </div>
 
       <GameBoard
         playerId={id}
-        content={content}
-        hasContentChanged={hasContentChanged}
-        setHasContentChanged={setHasContentChanged}
+        board={board}
+        hasBoardChanged={hasBoardChanged}
+        setHasBoardChanged={setHasBoardChanged}
         onFieldClick={(field) => handleFieldClick(field)}
         css={styles.gameBoard}
       ></GameBoard>

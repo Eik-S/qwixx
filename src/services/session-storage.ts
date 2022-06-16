@@ -67,6 +67,7 @@ function initPlayer(name: string): Player {
           color,
           fields: getLineFields(order),
           status: 'open',
+          wasClosedByYou: false,
         }
       }),
       strikes: 0,

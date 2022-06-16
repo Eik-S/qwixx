@@ -1,4 +1,4 @@
-import { Field, Line } from '../game-board/game-board'
+import { Field, Line } from '../models/game'
 
 const fieldSize = 48
 const fieldGap = 6

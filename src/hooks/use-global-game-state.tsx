@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { LineColor } from '../game-board/game-board'
+import { LineColor } from '../models/game'
 import { useLocalStorage } from './use-local-storage'
 
 export type GameStatus = 'running' | 'finished'

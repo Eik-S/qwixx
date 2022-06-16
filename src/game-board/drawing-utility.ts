@@ -2,7 +2,7 @@
 
 import { colors, getHexColor } from '../assets/colors'
 import { dimensions } from '../constants/dimensions'
-import { Field, Line, LineColor } from './game-board'
+import { Field, Line, LineColor } from './../models/game'
 
 export function drawLines(ctx: CanvasRenderingContext2D, lines: Line[]): void {
   lines.forEach((line) => {
@@ -20,9 +20,8 @@ function drawFieldLine(
   const y = dimensions.getLineYPos(colorString)
   fields.forEach((field, fieldIndex) => {
     const x = dimensions.getFieldXPos(fieldIndex)
-    const hasHoverStyles = field.isHovered && !(field.isFilled || field.isDisabled)
 
-    ctx.fillStyle = getHexColor(colorString, hasHoverStyles ? 'dark' : 'light')
+    ctx.fillStyle = getHexColor(colorString, 'light')
     ctx.strokeStyle = getHexColor(colorString, 'dark')
     ctx.fillRect(x, y, dimensions.fieldSize, dimensions.fieldSize)
 
@@ -36,19 +35,19 @@ function drawFieldLine(
     )
 
     // draw number in the center of the field
-    ctx.fillStyle = hasHoverStyles ? getHexColor(colorString, 'light') : getHexColor(colorString)
+    ctx.fillStyle = getHexColor(colorString)
     drawFieldNumber(ctx, x + dimensions.fieldSize / 2, y + dimensions.fieldSize / 2, field.value)
 
-    if (field.isSelected || field.isFilled) {
+    if (field.status === ('selected' || 'filled')) {
       drawCrossAt(
         ctx,
         x + dimensions.fieldSize / 2,
         y + dimensions.fieldSize / 2,
-        field.isSelected ? 2 : 4,
+        field.status === 'selected' ? 2 : 4,
       )
     }
 
-    if (field.isDisabled && !field.isFilled) {
+    if (field.status === 'disabled') {
       ctx.fillStyle = '#fff9'
       ctx.fillRect(x, y, dimensions.fieldSize, dimensions.fieldSize)
     }
