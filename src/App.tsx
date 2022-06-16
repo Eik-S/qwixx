@@ -39,12 +39,14 @@ export function App() {
     if (numberOfPlayers === 3) {
       return playerId === 0 ? 'top' : playerId === 1 ? 'bottom' : 'left'
     }
-    return playerId === 0 ? 'top' : playerId === 1 ? 'right' : playerId === 2 ? 'bottom' : 'left'
+    if (numberOfPlayers === 4) {
+      return playerId === 0 ? 'top' : playerId === 1 ? 'right' : playerId === 2 ? 'bottom' : 'left'
+    }
   }
 
   return (
     <>
-      <div css={styles.content(numberOfPlayers)}>
+      <div css={styles.content}>
         {[...Array(numberOfPlayers)].map((_player, index) => (
           <Player
             key={index}
@@ -80,7 +82,7 @@ export function App() {
 }
 
 const styles = {
-  content: (numPlayers: number) => css`
+  content: css`
     height: 100vh;
     width: 100vw;
     height: -webkit-fill-available;

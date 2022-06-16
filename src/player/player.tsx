@@ -16,7 +16,7 @@ export interface PlayerProps {
   closedLineColors: LineColor[]
   gameStatus: GameStatus
   numberOfPlayers: number
-  gridPosition: 'top' | 'bottom' | 'left' | 'right'
+  gridPosition: 'top' | 'bottom' | 'left' | 'right' | undefined
   setNextPlayer: () => void
   startNewGame: (playerId: number) => void
   endGame: () => void
@@ -52,7 +52,7 @@ export function Player({
 
   useEffect(() => {
     fillSelectedFields()
-    console.log({ activePlayerIndex, numberOfPlayers })
+    console.log({ activePlayerIndex, numberOfPlayers, gridPosition })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activePlayerIndex])
 
@@ -153,7 +153,10 @@ export function Player({
 }
 
 const styles = {
-  playerArea: (gridPosition: 'top' | 'bottom' | 'left' | 'right', narrowLayout: boolean) => css`
+  playerArea: (
+    gridPosition: 'top' | 'bottom' | 'left' | 'right' | undefined,
+    narrowLayout: boolean,
+  ) => css`
     display: grid;
     grid-template-areas: 'stats board controls';
     grid-template-columns: auto auto auto;
@@ -161,6 +164,7 @@ const styles = {
     grid-column-gap: 18px;
     width: min-content;
     grid-area: ${`player_${gridPosition}`};
+    justify-self: center;
 
     ${narrowLayout &&
     css`
