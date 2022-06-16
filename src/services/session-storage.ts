@@ -1,7 +1,9 @@
 import { randomUUID } from 'crypto'
 import humanId from 'human-id'
 import { PassThrough } from 'stream'
-import { Session, Player, LineColor, Field, SessionInfo } from '../models/session-elements'
+import { LineColor, Field } from '../models/game'
+import { Player } from '../models/game'
+import { Session, SessionInfo } from '../models/session-elements'
 import { SessionMessage } from '../models/session-messages'
 
 let sessions: Session[] = []

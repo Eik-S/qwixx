@@ -1,4 +1,4 @@
-import { GameFinishedData, GamePlayingData } from './session-elements'
+import { GameFinishedData, GamePlayingData } from './game'
 
 interface SessionMessageBase {
   type: 'join' | 'leave' | 'start' | 'move' | 'end' | 'reset'
