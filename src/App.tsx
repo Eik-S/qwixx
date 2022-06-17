@@ -44,6 +44,13 @@ export function App() {
     }
   }
 
+  // dont render app on the server to not have
+  // flickering content due to unset variables
+  // needed by emotion
+  if (typeof window === 'undefined') {
+    return null
+  }
+
   return (
     <>
       <div css={styles.content}>
