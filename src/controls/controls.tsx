@@ -1,21 +1,15 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react'
 import { useState } from 'react'
-import { ControlPane, ControlPaneProps } from './control-pane'
+import { ControlPane } from './control-pane'
 
-export function Controls({
-  onNumOfPlayersChange,
-  onClickNewGame,
-  numOfPlayers,
-  isBig,
-  onChangeIsBig,
-}: ControlPaneProps) {
+interface ControlsProps {
+  isBig: boolean
+  onChangeIsBig: (newValue: boolean) => void
+}
+
+export function Controls({ isBig, onChangeIsBig }: ControlsProps) {
   const [isControlsPaneOpen, setIsControlsPaneOpen] = useState(false)
-
-  function handleClickNewGame() {
-    onClickNewGame()
-    setIsControlsPaneOpen(false)
-  }
 
   return (
     <>
@@ -30,11 +24,9 @@ export function Controls({
           <div css={styles.curtain} onClick={() => setIsControlsPaneOpen(false)}></div>
           <ControlPane
             css={styles.controlPane}
-            numOfPlayers={numOfPlayers}
-            onClickNewGame={() => handleClickNewGame()}
-            onNumOfPlayersChange={(newValue) => onNumOfPlayersChange(newValue)}
             isBig={isBig}
             onChangeIsBig={(newValue) => onChangeIsBig(newValue)}
+            onStartNewGame={() => setIsControlsPaneOpen(false)}
           />
         </div>
       )}

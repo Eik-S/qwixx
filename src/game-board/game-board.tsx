@@ -1,25 +1,17 @@
 /** @jsxImportSource @emotion/react */
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { dimensions } from '../constants/dimensions'
-import { Board, Field } from '../models/game'
+import { usePlayerStateContext } from '../hooks/use-player-game-state'
+import { Field, Line } from '../models/game'
 import * as DrawingUtil from './drawing-utility'
 
 export interface GameBoardProps {
-  playerId: number
-  board: Board
-  hasBoardChanged: boolean
-  setHasBoardChanged: Dispatch<SetStateAction<boolean>>
-  onFieldClick: (field: Field) => void
+  playerId: string
 }
 
-export function GameBoard({
-  playerId,
-  board,
-  hasBoardChanged,
-  setHasBoardChanged,
-  onFieldClick,
-  ...props
-}: GameBoardProps) {
+export function GameBoard({ playerId, ...props }: GameBoardProps) {
+  const { board, isActivePlayer, numSelectionsMade, toggleField } = usePlayerStateContext()
+
   const [ctx, setCtx] = useState<CanvasRenderingContext2D>()
 
   // canvas initialization & watchers
@@ -43,34 +35,44 @@ export function GameBoard({
     // Normalize coordinate system to use css pixels.
     canvasCtx.scale(scale, scale)
     setCtx(canvasCtx)
-
-    //trigger initial draw
-    setHasBoardChanged(true)
-  }, [board, ctx, onFieldClick, playerId, setHasBoardChanged])
+  }, [board, ctx, playerId])
 
   // content (re)drawing
   useEffect(() => {
-    if (hasBoardChanged === false) return
-    setHasBoardChanged(false)
-
+    console.log('redrawing board:')
+    console.log({ board })
     if (ctx === undefined || board === undefined) return
 
     ctx.clearRect(0, 0, dimensions.canvasWidth, dimensions.canvasHeight)
 
     DrawingUtil.drawLines(ctx, board.lines)
-  }, [ctx, hasBoardChanged, board, setHasBoardChanged])
+  }, [ctx, board])
+
+  function checkIsFieldClickValid(field: Field): boolean {
+    const maxPossibleSelections = isActivePlayer ? 2 : 1
+
+    if (field.status === 'disabled' || field.status === 'filled') return false
+    if (field.status === 'open' && maxPossibleSelections - numSelectionsMade === 0) return false
+    return true
+  }
+
+  function handleFieldClick(line: Line, field: Field) {
+    const isFieldClickValid = checkIsFieldClickValid(field)
+    if (isFieldClickValid) {
+      toggleField(line, field)
+    }
+  }
 
   return (
     <canvas
       id={`canvas-of-player-${playerId}`}
       onClick={(event: React.MouseEvent) => {
-        const field = dimensions.getFieldAtPosition(
-          board.lines,
-          event.nativeEvent.offsetX,
-          event.nativeEvent.offsetY,
-        )
-        if (field === undefined) return
-        onFieldClick(field)
+        const y = event.nativeEvent.offsetY
+        const x = event.nativeEvent.offsetX
+        const line = dimensions.getLineByYPos(y, board.lines)
+        const field = dimensions.getFieldAtPosition(board.lines, x, y)
+        if (line === undefined || field === undefined) return
+        handleFieldClick(line, field)
       }}
       {...props}
     />

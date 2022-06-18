@@ -1,39 +1,41 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react'
+import { randomUUID } from 'crypto'
+import humanId from 'human-id'
+import { useGameStateContext } from '../hooks/use-global-game-state'
+import { Player } from '../models/game'
+import { getNewBoard } from '../utils/game-board-factory'
+import { getNewPlayer } from '../utils/player-factory'
 
 export interface ControlPaneProps extends React.HTMLAttributes<HTMLDivElement> {
-  numOfPlayers: number
-  onNumOfPlayersChange: (numOfPlayers: number) => void
-  onClickNewGame: () => void
   isBig: boolean
   onChangeIsBig: (newValue: boolean) => void
+  onStartNewGame: () => void
 }
 
-export function ControlPane({
-  onNumOfPlayersChange,
-  numOfPlayers,
-  onClickNewGame,
-  isBig,
-  onChangeIsBig,
-  ...props
-}: ControlPaneProps) {
-  function handleNumOfPlayersChange(e: React.ChangeEvent<HTMLInputElement>) {
-    onNumOfPlayersChange(parseInt(e.target.value))
+export function ControlPane({ isBig, onChangeIsBig, onStartNewGame, ...props }: ControlPaneProps) {
+  const { addPlayer, removePlayer, startNewGame, gameData } = useGameStateContext()
+
+  function handleAddPlayer(): void {
+    addPlayer(getNewPlayer())
   }
+
+  function handleStartNewGame(): void {
+    startNewGame()
+    onStartNewGame()
+  }
+
   return (
     <div {...props} css={styles.pane}>
       <h2 css={styles.headline}>Settings</h2>
       <div css={styles.controlsGrid}>
-        <label htmlFor="numPayersSlider">Number of PLayers: {numOfPlayers}</label>
-        <input
-          value={numOfPlayers}
-          onChange={(handler) => handleNumOfPlayersChange(handler)}
-          id="numPlayersSlider"
-          type="range"
-          min="2"
-          max="4"
-          step="1"
-        />
+        <label htmlFor="numPayersSlider">Number of PLayers: {gameData.players.length}</label>
+        <button onClick={() => handleAddPlayer()} disabled={gameData.players.length >= 4}>
+          +
+        </button>
+        <button onClick={() => removePlayer()} disabled={gameData.players.length <= 2}>
+          -
+        </button>
         <label htmlFor="isBig">Günter Mode</label>
         <input
           type="checkbox"
@@ -41,7 +43,7 @@ export function ControlPane({
           checked={isBig}
           onChange={(e) => onChangeIsBig(e.target.checked)}
         />
-        <button css={styles.restartButton} onClick={() => onClickNewGame()} className="button">
+        <button css={styles.restartButton} onClick={() => handleStartNewGame()} className="button">
           new game
         </button>
       </div>

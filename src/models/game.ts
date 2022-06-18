@@ -35,6 +35,7 @@ export interface GameLobbyData extends GameBaseData {
 export interface GamePlayingData extends GameBaseData {
   state: 'playing'
   movingPlayerId: string
+  closedLineColors: string[]
 }
 
 export interface GameFinishedData extends GameBaseData {

@@ -2,152 +2,36 @@
 import { css } from '@emotion/react'
 import { useEffect, useState } from 'react'
 import { colors } from '../assets/colors'
-import { Field, LineColor } from '../models/game'
-import { GameControls } from '../game-controls/game-controls'
-import { GameStats } from '../game-stats/game-stats'
-import { GameStatus } from '../hooks/use-global-game-state'
-import { usePlayerGameState } from '../hooks/use-player-game-state'
 import { GameBoard } from '../game-board/game-board'
+import { PlayerControls } from './player-controls/player-controls'
+import { GameStats } from '../game-stats/game-stats'
+import { useGameStateContext } from '../hooks/use-global-game-state'
+import { usePlayerStateContext } from '../hooks/use-player-game-state'
 
 export interface PlayerProps {
-  activePlayerIndex: number
-  isActivePlayer: boolean
-  id: number
-  closedLineColors: LineColor[]
-  gameStatus: GameStatus
-  numberOfPlayers: number
+  id: string
   gridPosition: 'top' | 'bottom' | 'left' | 'right' | undefined
-  setNextPlayer: () => void
-  startNewGame: (playerId: number) => void
-  endGame: () => void
-  onCloseLine: (lineColor: LineColor) => void
 }
 
-export function Player({
-  id,
-  isActivePlayer,
-  activePlayerIndex,
-  closedLineColors,
-  gameStatus,
-  numberOfPlayers,
-  gridPosition,
-  setNextPlayer,
-  startNewGame,
-  endGame,
-  onCloseLine,
-}: PlayerProps) {
-  const [strikes, setStrikes] = useState(0)
+export function Player({ id, gridPosition }: PlayerProps) {
   const [narrowLayout, setNarrowLayout] = useState(false)
-  const {
-    board,
-    hasBoardChanged,
-    numSelectionsMade,
-    lineColorClosedThisTurn,
-    setLineColorClosedThisTurn,
-    setHasBoardChanged,
-    toggleField,
-    fillSelectedFields,
-    resetContent,
-  } = usePlayerGameState()
+  const { gameData } = useGameStateContext()
+  const { isActivePlayer } = usePlayerStateContext()
+  const player = gameData.players.find((player) => player.id === id)!
 
   useEffect(() => {
-    fillSelectedFields()
-    console.log({ activePlayerIndex, numberOfPlayers, gridPosition })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activePlayerIndex])
-
-  useEffect(() => {
-    if (gameStatus === 'running') {
-      setStrikes(0)
-      resetContent()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gameStatus])
-
-  useEffect(() => {
-    board.lines.forEach((line) => {
-      if (closedLineColors.includes(line.color)) {
-        if (line.status === 'open') {
-          line.status = 'closed'
-          setHasBoardChanged(true)
-          line.fields.forEach((field) => {
-            if (field.status === 'open') {
-              field.status = 'disabled'
-            }
-          })
-        }
-      }
-    })
-  }, [closedLineColors, board, setHasBoardChanged])
-
-  useEffect(() => {
-    if (lineColorClosedThisTurn === undefined) return
-
-    onCloseLine(lineColorClosedThisTurn)
-    setLineColorClosedThisTurn(undefined)
-  }, [lineColorClosedThisTurn, onCloseLine, setLineColorClosedThisTurn])
-
-  useEffect(() => {
-    if (strikes === 4) {
-      endGame()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [strikes])
-
-  useEffect(() => {
-    setNarrowLayout(numberOfPlayers > 2)
-  }, [numberOfPlayers])
-
-  function checkIsFieldClickValid(field: Field): boolean {
-    const maxPossibleSelections = isActivePlayer ? 2 : 1
-
-    if (field.status === ('disabled' || 'filled')) return false
-    if (field.status === 'open' && maxPossibleSelections - numSelectionsMade === 0) return false
-    return true
-  }
-
-  function handleFieldClick(field: Field) {
-    const isFieldClickValid = checkIsFieldClickValid(field)
-    if (isFieldClickValid) {
-      toggleField(field)
-    }
-  }
-
-  function handleEndTurn() {
-    if (isActivePlayer && numSelectionsMade === 0) {
-      setStrikes((prev) => prev + 1)
-    }
-    setNextPlayer()
-  }
+    setNarrowLayout(gameData.players.length > 2)
+  }, [gameData.players.length])
 
   return (
     <div css={styles.playerArea(gridPosition, narrowLayout)}>
       <div css={styles.stats(narrowLayout)}>
-        <GameStats
-          narrowLayout={narrowLayout}
-          strikes={strikes}
-          board={board}
-          hasBoardChanged={hasBoardChanged}
-        />
+        <GameStats narrowLayout={narrowLayout} board={player.board} />
       </div>
 
-      <GameBoard
-        playerId={id}
-        board={board}
-        hasBoardChanged={hasBoardChanged}
-        setHasBoardChanged={setHasBoardChanged}
-        onFieldClick={(field) => handleFieldClick(field)}
-        css={styles.gameBoard}
-      ></GameBoard>
+      <GameBoard playerId={id} css={styles.gameBoard}></GameBoard>
 
-      <GameControls
-        css={styles.controls}
-        areControlsDisabled={!isActivePlayer}
-        gameStatus={gameStatus}
-        narrowLayout={narrowLayout}
-        onEndTurn={() => handleEndTurn()}
-        startNewGame={() => startNewGame(id)}
-      ></GameControls>
+      <PlayerControls css={styles.controls} narrowLayout={narrowLayout}></PlayerControls>
     </div>
   )
 }

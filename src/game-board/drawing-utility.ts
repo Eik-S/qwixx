@@ -38,7 +38,7 @@ function drawFieldLine(
     ctx.fillStyle = getHexColor(colorString)
     drawFieldNumber(ctx, x + dimensions.fieldSize / 2, y + dimensions.fieldSize / 2, field.value)
 
-    if (field.status === ('selected' || 'filled')) {
+    if (field.status === 'selected' || field.status === 'filled') {
       drawCrossAt(
         ctx,
         x + dimensions.fieldSize / 2,

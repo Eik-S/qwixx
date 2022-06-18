@@ -1,45 +1,24 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react'
-import { useEffect } from 'react'
 import { Controls } from './controls/controls'
 import { DiceCup } from './dices/dice-cup'
-import { LineColor } from './models/game'
-import { useGlobalGameState } from './hooks/use-global-game-state'
 import { useLocalStorage } from './hooks/use-local-storage'
 import { Player } from './player/player'
+import { useGameStateContext } from './hooks/use-global-game-state'
+import { PlayerStateContextProvider } from './hooks/use-player-game-state'
 
 export function App() {
-  const {
-    numberOfPlayers,
-    activePlayerIndex,
-    gameStatus,
-    closedLineColors,
-    setNextPlayer,
-    setNumberOfPlayers,
-    addClosedLineColor,
-    endGame,
-    startNewGame,
-  } = useGlobalGameState()
+  const { gameData } = useGameStateContext()
   const [isBig, setIsBig] = useLocalStorage('isBig', false)
 
-  useEffect(() => {
-    if (closedLineColors.length >= 2) {
-      endGame()
-    }
-  }, [closedLineColors, endGame])
-
-  function handleNewGameClick() {
-    window.location.reload()
-  }
-
   function getGridPosition(playerId: number) {
-    if (numberOfPlayers === 2) {
+    if (gameData.players.length === 2) {
       return playerId === 0 ? 'top' : 'bottom'
     }
-    if (numberOfPlayers === 3) {
+    if (gameData.players.length === 3) {
       return playerId === 0 ? 'top' : playerId === 1 ? 'bottom' : 'left'
     }
-    if (numberOfPlayers === 4) {
+    if (gameData.players.length === 4) {
       return playerId === 0 ? 'top' : playerId === 1 ? 'right' : playerId === 2 ? 'bottom' : 'left'
     }
   }
@@ -54,36 +33,17 @@ export function App() {
   return (
     <>
       <div css={styles.content}>
-        {[...Array(numberOfPlayers)].map((_player, index) => (
-          <Player
-            key={index}
-            id={index}
-            activePlayerIndex={activePlayerIndex}
-            numberOfPlayers={numberOfPlayers}
-            gridPosition={getGridPosition(index)}
-            isActivePlayer={activePlayerIndex === index}
-            setNextPlayer={() => setNextPlayer()}
-            gameStatus={gameStatus}
-            startNewGame={(playerId: number) => startNewGame(playerId)}
-            endGame={() => endGame()}
-            onCloseLine={(lineColor: LineColor) => addClosedLineColor(lineColor)}
-            closedLineColors={closedLineColors}
-          />
+        {gameData.players.map((player, index) => (
+          <PlayerStateContextProvider key={index} player={player}>
+            <Player id={player.id} gridPosition={getGridPosition(index)} />
+          </PlayerStateContextProvider>
         ))}
 
         <div css={styles.dicesArea}>
-          {gameStatus === 'running' ? (
-            <DiceCup isBig={isBig} activePlayerIndex={activePlayerIndex} />
-          ) : null}
+          <DiceCup isBig={isBig} />
         </div>
       </div>
-      <Controls
-        numOfPlayers={numberOfPlayers}
-        onClickNewGame={() => handleNewGameClick()}
-        onNumOfPlayersChange={(newValue) => setNumberOfPlayers(newValue)}
-        isBig={isBig}
-        onChangeIsBig={(newValue) => setIsBig(newValue)}
-      />
+      <Controls isBig={isBig} onChangeIsBig={(newValue) => setIsBig(newValue)} />
     </>
   )
 }

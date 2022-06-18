@@ -1,31 +1,31 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react'
-import { GameStatus } from '../hooks/use-global-game-state'
+import { useGameStateContext } from '../../hooks/use-global-game-state'
+import { usePlayerStateContext } from '../../hooks/use-player-game-state'
 
-export interface GameControlProps {
-  areControlsDisabled: boolean
-  gameStatus: GameStatus
+export interface PlayerControlsProps {
   narrowLayout: boolean
-  onEndTurn: () => void
-  startNewGame: () => void
 }
 
-export function GameControls({
-  gameStatus,
-  areControlsDisabled,
-  narrowLayout,
-  onEndTurn,
-  startNewGame,
-  ...props
-}: GameControlProps) {
+export function PlayerControls({ narrowLayout, ...props }: PlayerControlsProps) {
+  const { numSelectionsMade, isActivePlayer, addStrike } = usePlayerStateContext()
+  const { startNewGame, setNextPlayer, gameData } = useGameStateContext()
+
+  function handleEndTurn() {
+    if (numSelectionsMade === 0) {
+      addStrike()
+    }
+    setNextPlayer()
+  }
+
   return (
-    <div css={styles.gameControlsArea} {...props}>
-      {gameStatus === 'running' ? (
+    <div css={styles.playerControlsArea} {...props}>
+      {gameData.state === 'playing' ? (
         <button
           className="button end-turn-button"
           css={styles.doneButton(narrowLayout)}
-          onClick={() => onEndTurn()}
-          disabled={areControlsDisabled}
+          onClick={() => handleEndTurn()}
+          disabled={!isActivePlayer}
         >
           DONE
         </button>
@@ -43,7 +43,7 @@ export function GameControls({
 }
 
 const styles = {
-  gameControlsArea: css`
+  playerControlsArea: css`
     height: 100%;
     display: flex;
     flex-direction: row;

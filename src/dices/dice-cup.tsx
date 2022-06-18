@@ -2,6 +2,7 @@
 import { css } from '@emotion/react'
 import { useEffect, useState } from 'react'
 import { getHexColor } from '../assets/colors'
+import { useGameStateContext } from '../hooks/use-global-game-state'
 import { Dice } from './dice'
 
 interface DiceObj {
@@ -9,13 +10,9 @@ interface DiceObj {
   color: string
 }
 
-export function DiceCup({
-  activePlayerIndex,
-  isBig,
-}: {
-  activePlayerIndex: number
-  isBig: boolean
-}) {
+export function DiceCup({ isBig }: { isBig: boolean }) {
+  const { gameData, movingPlayerId } = useGameStateContext()
+
   const [dices, setDices] = useState<DiceObj[]>([
     { value: 1, color: getHexColor('w', 'dark') },
     { value: 1, color: getHexColor('w', 'dark') },
@@ -27,7 +24,7 @@ export function DiceCup({
 
   useEffect(() => {
     roll()
-  }, [activePlayerIndex])
+  }, [movingPlayerId])
 
   function roll() {
     var iterations = 5
@@ -48,6 +45,10 @@ export function DiceCup({
       setTimeout(rollDices, millis)
     }
     setTimeout(rollDices, millis)
+  }
+
+  if (gameData.state !== 'playing') {
+    return null
   }
 
   return (
