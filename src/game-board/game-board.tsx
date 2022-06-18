@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import React, { useEffect, useState } from 'react'
 import { dimensions } from '../constants/dimensions'
+import { useGameStateContext } from '../hooks/use-global-game-state'
 import { usePlayerStateContext } from '../hooks/use-player-game-state'
 import { Field, Line } from '../models/game'
 import * as DrawingUtil from './drawing-utility'
@@ -11,6 +12,7 @@ export interface GameBoardProps {
 
 export function GameBoard({ playerId, ...props }: GameBoardProps) {
   const { board, isActivePlayer, numSelectionsMade, toggleField } = usePlayerStateContext()
+  const { possibleMoves } = useGameStateContext()
 
   const [ctx, setCtx] = useState<CanvasRenderingContext2D>()
 
@@ -46,6 +48,21 @@ export function GameBoard({ playerId, ...props }: GameBoardProps) {
     DrawingUtil.drawLines(ctx, board.lines)
   }, [ctx, board])
 
+  function checkIfDicesAllowMove(line: Line, field: Field): boolean {
+    if (possibleMoves === undefined) return false
+    const moveColor = line.color
+    const moveValue = field.value
+    console.log({ possibleMovesInLine: possibleMoves[moveColor] })
+    if (isActivePlayer && possibleMoves[moveColor].includes(moveValue)) {
+      return true
+    }
+    if (possibleMoves.everyone === moveValue) {
+      return true
+    }
+
+    return false
+  }
+
   function checkIsFieldClickValid(field: Field): boolean {
     const maxPossibleSelections = isActivePlayer ? 2 : 1
 
@@ -55,11 +72,13 @@ export function GameBoard({ playerId, ...props }: GameBoardProps) {
   }
 
   function handleFieldClick(line: Line, field: Field) {
+    const dicesAllowMove = checkIfDicesAllowMove(line, field)
+    if (!dicesAllowMove) return
     const isFieldClickValid = checkIsFieldClickValid(field)
-    if (isFieldClickValid) {
-      console.log('toggling field')
-      toggleField(line, field)
-    }
+    if (!isFieldClickValid) return
+
+    console.log('toggling field')
+    toggleField(line, field)
   }
 
   return (

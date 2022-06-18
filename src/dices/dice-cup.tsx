@@ -10,17 +10,47 @@ interface DiceObj {
   color: string
 }
 
+const blackDiceColor = getHexColor('w', 'dark')
+const redDiceColor = getHexColor('r')
+const yellowDiceColor = getHexColor('y')
+const greenDiceColor = getHexColor('g')
+const blueDiceColor = getHexColor('b')
+
 export function DiceCup({ isBig }: { isBig: boolean }) {
-  const { gameData, movingPlayerId } = useGameStateContext()
+  const { gameData, movingPlayerId, setPossibleMoves } = useGameStateContext()
 
   const [dices, setDices] = useState<DiceObj[]>([
-    { value: 1, color: getHexColor('w', 'dark') },
-    { value: 1, color: getHexColor('w', 'dark') },
-    { value: 1, color: getHexColor('r') },
-    { value: 1, color: getHexColor('y') },
-    { value: 1, color: getHexColor('g') },
-    { value: 1, color: getHexColor('b') },
+    { value: 1, color: blackDiceColor },
+    { value: 1, color: blackDiceColor },
+    { value: 1, color: redDiceColor },
+    { value: 1, color: yellowDiceColor },
+    { value: 1, color: greenDiceColor },
+    { value: 1, color: blueDiceColor },
   ])
+
+  useEffect(() => {
+    const blackDiceValues = dices
+      .filter((dice) => dice.color === blackDiceColor)!
+      .map((dice) => dice.value)
+    const redDiceValue = dices.find((dice) => dice.color === redDiceColor)!.value
+    const yellowDiceValue = dices.find((dice) => dice.color === yellowDiceColor)!.value
+    const greenDiceValue = dices.find((dice) => dice.color === greenDiceColor)!.value
+    const blueDiceValue = dices.find((dice) => dice.color === blueDiceColor)!.value
+
+    const moveForEveryone = blackDiceValues.reduce((prevValue, diceValue) => prevValue + diceValue)
+    const redMoves = blackDiceValues.map((diceValue) => diceValue + redDiceValue)
+    const yellowMoves = blackDiceValues.map((diceValue) => diceValue + yellowDiceValue)
+    const greenMoves = blackDiceValues.map((diceValue) => diceValue + greenDiceValue)
+    const blueMoves = blackDiceValues.map((diceValue) => diceValue + blueDiceValue)
+
+    setPossibleMoves({
+      everyone: moveForEveryone,
+      r: redMoves,
+      y: yellowMoves,
+      g: greenMoves,
+      b: blueMoves,
+    })
+  }, [dices, setPossibleMoves])
 
   useEffect(() => {
     roll()

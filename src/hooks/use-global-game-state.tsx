@@ -7,16 +7,22 @@ import {
   useEffect,
   useState,
 } from 'react'
-import { Board, GameData, GamePlayingData, Line, Player } from '../models/game'
+import { Board, GameData, GamePlayingData, Line, LineColor, Player } from '../models/game'
 import { getNewBoard } from '../utils/game-board-factory'
 import { getNewPlayer } from '../utils/player-factory'
 
 export type GameStatus = 'running' | 'finished'
 
+type MovingPlayerMoves = Record<LineColor, number[]>
+export interface PossibleMoves extends MovingPlayerMoves {
+  everyone: number
+}
 export interface GameStateApi {
   gameData: GameData
   numberOfPlayers: number
   movingPlayerId: string | undefined
+  possibleMoves: PossibleMoves | undefined
+  setPossibleMoves: Dispatch<SetStateAction<PossibleMoves | undefined>>
   setNextPlayer: () => void
   startNewGame: () => void
   endGame: () => void
@@ -32,6 +38,7 @@ function useGameState(): GameStateApi {
   const [gameData, setGameData] = useState<GameData>(createEmptyLobby())
   const movingPlayerId = gameData.state === 'playing' ? gameData.movingPlayerId : undefined
   const numberOfClosedLines = gameData.state === 'playing' ? gameData.closedLineColors.length : 0
+  const [possibleMoves, setPossibleMoves] = useState<PossibleMoves | undefined>(undefined)
 
   useEffect(() => {
     if (numberOfClosedLines >= 2) {
@@ -145,6 +152,7 @@ function useGameState(): GameStateApi {
     gameData,
     numberOfPlayers: gameData.players.length,
     movingPlayerId,
+    possibleMoves,
     setNextPlayer,
     addPlayer,
     removePlayer,
@@ -154,6 +162,7 @@ function useGameState(): GameStateApi {
     updatePlayerData,
     closeLine,
     updatePlayerBoard,
+    setPossibleMoves,
   }
 }
 

@@ -6,7 +6,6 @@ import { GameBoard } from '../game-board/game-board'
 import { PlayerControls } from './player-controls/player-controls'
 import { GameStats } from '../game-stats/game-stats'
 import { useGameStateContext } from '../hooks/use-global-game-state'
-import { usePlayerStateContext } from '../hooks/use-player-game-state'
 
 export interface PlayerProps {
   id: string
@@ -16,7 +15,6 @@ export interface PlayerProps {
 export function Player({ id, gridPosition }: PlayerProps) {
   const [narrowLayout, setNarrowLayout] = useState(false)
   const { gameData } = useGameStateContext()
-  const { isActivePlayer } = usePlayerStateContext()
   const player = gameData.players.find((player) => player.id === id)!
 
   useEffect(() => {

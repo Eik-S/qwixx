@@ -72,6 +72,7 @@ export function usePlayerState({ player }: UsePlayerStateProps): PlayerStateApi 
       fillSelectedFields()
       setIsActivePlayer(player.id === movingPlayerId)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [movingPlayerId])
 
   useEffect(() => {
@@ -94,7 +95,7 @@ export function usePlayerState({ player }: UsePlayerStateProps): PlayerStateApi 
     if (numberOfStrikes === 4) {
       endGame()
     }
-  }, [numberOfStrikes])
+  }, [endGame, numberOfStrikes])
 
   function toggleField(targetLine: Line, targetField: Field) {
     const line = board.lines.find((line) => line.color === targetLine.color)
