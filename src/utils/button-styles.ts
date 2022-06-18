@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 import { colors } from '../assets/colors'
 
-export const buttonStyles = css`
+const baseButtonStyles = (size: 'small' | 'normal') => css`
   border: 4px solid ${colors.darkGrey};
   background-color: transparent;
   color: black;
@@ -11,6 +11,13 @@ export const buttonStyles = css`
   letter-spacing: 0.1em;
   cursor: pointer;
   text-transform: uppercase;
+
+  ${size === 'small' &&
+  css`
+    padding: 0 10px;
+    line-height: 36px;
+    letter-spacing: 0em;
+  `}
 
   &:hover {
     box-shadow: 0 0 6px 0px $grey;
@@ -25,3 +32,6 @@ export const buttonStyles = css`
     cursor: default;
   }
 `
+
+export const buttonStyles = baseButtonStyles('normal')
+export const smallButtonStyles = baseButtonStyles('small')

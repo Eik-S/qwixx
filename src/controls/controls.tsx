@@ -1,6 +1,8 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react'
 import { useState } from 'react'
+import { colors } from '../assets/colors'
+import { useGameStateContext } from '../hooks/use-global-game-state'
 import { ControlPane } from './control-pane'
 
 interface ControlsProps {
@@ -9,15 +11,16 @@ interface ControlsProps {
 }
 
 export function Controls({ isBig, onChangeIsBig }: ControlsProps) {
-  const [isControlsPaneOpen, setIsControlsPaneOpen] = useState(false)
+  const [isControlsPaneOpen, setIsControlsPaneOpen] = useState(true)
+  const { numberOfPlayers } = useGameStateContext()
 
   return (
     <>
       <button
-        css={styles.openControlsButton}
+        css={styles.openControlsButton(numberOfPlayers)}
         onClick={() => setIsControlsPaneOpen((prev) => !prev)}
       >
-        <span css={styles.buttonIcon}>{String.fromCharCode(parseInt(`${2746}`, 16))}</span>
+        <span css={styles.buttonIcon}>{String.fromCharCode(parseInt(`${2630}`, 16))}</span>
       </button>
       {isControlsPaneOpen && (
         <div css={styles.controlsPaneGridContainer}>
@@ -35,18 +38,29 @@ export function Controls({ isBig, onChangeIsBig }: ControlsProps) {
 }
 
 const styles = {
-  openControlsButton: css`
-    position: fixed;
-    top: 0px;
+  openControlsButton: (numberOfPlayers: number) => css`
+    position: absolute;
+    bottom: 0;
+    top: 0;
     right: 0px;
+    margin-top: auto;
+    margin-bottom: auto;
     padding: 0;
     width: 64px;
     height: 64px;
     border: none;
     background-color: transparent;
+
+    ${numberOfPlayers === 4 &&
+    css`
+      bottom: auto;
+      right: 200px;
+    `}
   `,
   buttonIcon: css`
-    font-size: 64px;
+    font-family: NotoEmoji;
+    font-weight: 700;
+    font-size: 46px;
     line-height: 30px;
     color: black;
   `,
@@ -64,7 +78,7 @@ const styles = {
   curtain: css`
     grid-column: 1 / span 3;
     grid-row: 1 / span 3;
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(255, 255, 255, 0.8);
   `,
   controlPane: css`
     grid-column: 2;
@@ -72,5 +86,6 @@ const styles = {
     background-color: white;
     width: 600px;
     min-height: 200px;
+    border: 4px solid ${colors.darkGrey};
   `,
 }

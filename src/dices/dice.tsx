@@ -11,7 +11,7 @@ export function Dice({ value, color, isBig }: { value: number; color: string; is
 
 const styles = {
   dice: (color: string, isBig: boolean) => css`
-    font-family: 'Nunito';
+    font-family: NotoEmoji;
     margin-top: -10px;
     font-size: 80px;
     line-height: 48px;

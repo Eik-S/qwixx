@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react'
 import { useGameStateContext } from '../hooks/use-global-game-state'
-import { buttonStyles } from '../utils/button-styles'
+import { buttonStyles, smallButtonStyles } from '../utils/button-styles'
 import { getNewPlayer } from '../utils/player-factory'
 
 export interface ControlPaneProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -22,24 +22,35 @@ export function ControlPane({ isBig, onChangeIsBig, onStartNewGame, ...props }: 
     onStartNewGame()
   }
 
+  function toggleIsBig() {
+    onChangeIsBig(!isBig)
+  }
+
   return (
     <div {...props} css={styles.pane}>
       <h2 css={styles.headline}>Settings</h2>
       <div css={styles.controlsGrid}>
         <label htmlFor="numPayersSlider">Number of PLayers: {gameData.players.length}</label>
-        <button onClick={() => handleAddPlayer()} disabled={gameData.players.length >= 4}>
-          +
+        <div>
+          <button
+            css={styles.numPlayersButton}
+            onClick={() => removePlayer()}
+            disabled={gameData.players.length <= 2}
+          >
+            -
+          </button>
+          <button
+            css={styles.numPlayersButton}
+            onClick={() => handleAddPlayer()}
+            disabled={gameData.players.length >= 4}
+          >
+            +
+          </button>
+        </div>
+        <label htmlFor="isBig">Big Dice</label>
+        <button css={styles.checkbox} id="isBig" onClick={() => toggleIsBig()}>
+          {isBig ? 'X' : ''}
         </button>
-        <button onClick={() => removePlayer()} disabled={gameData.players.length <= 2}>
-          -
-        </button>
-        <label htmlFor="isBig">Günter Mode</label>
-        <input
-          type="checkbox"
-          id="isBig"
-          checked={isBig}
-          onChange={(e) => onChangeIsBig(e.target.checked)}
-        />
         <button css={styles.restartButton} onClick={() => handleStartNewGame()} className="button">
           new game
         </button>
@@ -73,6 +84,20 @@ const styles = {
       line-height: 16px;
       align-self: center;
     }
+  `,
+  numPlayersButton: css`
+    ${smallButtonStyles}
+    padding-bottom: 1px;
+    width: 48px;
+    height: 48px;
+    &:first-of-type {
+      margin-right: 32px;
+    }
+  `,
+  checkbox: css`
+    ${smallButtonStyles}
+    width: 48px;
+    height: 48px;
   `,
   restartButton: css`
     ${buttonStyles}

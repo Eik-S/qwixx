@@ -153,6 +153,7 @@ export function GameBoard({ playerId, ...props }: GameBoardProps) {
   }
 
   function handleFieldClick(line: Line, field: Field) {
+    // TODO: dont handle if move is locked
     const isFieldClickValid = checkIsFieldClickValid(field)
     if (!isFieldClickValid) return
 
