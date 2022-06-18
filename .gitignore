@@ -23,5 +23,5 @@ yarn-debug.log*
 yarn-error.log*
 
 # next build folders
-.next
-.out
+/.next
+/out
