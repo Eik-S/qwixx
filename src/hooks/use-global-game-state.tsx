@@ -7,7 +7,15 @@ import {
   useEffect,
   useState,
 } from 'react'
-import { Board, GameData, GamePlayingData, Line, LineColor, Player } from '../models/game'
+import {
+  Board,
+  GameData,
+  GamePlayingData,
+  Line,
+  LineColor,
+  Player,
+  PlayerState,
+} from '../models/game'
 import { getNewBoard } from '../utils/game-board-factory'
 import { getNewPlayer } from '../utils/player-factory'
 
@@ -32,6 +40,8 @@ export interface GameStateApi {
   updatePlayerData: (player: Player) => void
   closeLine: (line: Line) => void
   updatePlayerBoard: (playerId: string, board: Board) => void
+  lockMove: (playerId: string) => void
+  unlockMove: (playerId: string) => void
 }
 
 function useGameState(): GameStateApi {
@@ -72,7 +82,12 @@ function useGameState(): GameStateApi {
         .indexOf(gameData.movingPlayerId)
       const nextPlayerIndex = (lastPlayerIndex + 1) % gameData.players.length
       const nextMovingPlayerId = gameData.players[nextPlayerIndex].id
-      setGameData((prevGameData) => ({ ...prevGameData, movingPlayerId: nextMovingPlayerId }))
+
+      setGameData((prevGameData) => ({
+        ...prevGameData,
+        movingPlayerId: nextMovingPlayerId,
+        players: prevGameData.players.map((prevPlayer) => ({ ...prevPlayer, state: 'moving' })),
+      }))
     }
   }
 
@@ -148,6 +163,24 @@ function useGameState(): GameStateApi {
     })
   }
 
+  function setPlayerState(playerId: string, state: PlayerState): void {
+    setGameData((prevGameData) => {
+      return {
+        ...prevGameData,
+        players: prevGameData.players.map((player) => {
+          if (player.id === playerId) {
+            return {
+              ...player,
+              state,
+            }
+          } else {
+            return player
+          }
+        }),
+      }
+    })
+  }
+
   return {
     gameData,
     numberOfPlayers: gameData.players.length,
@@ -163,6 +196,8 @@ function useGameState(): GameStateApi {
     closeLine,
     updatePlayerBoard,
     setPossibleMoves,
+    lockMove: (playerId: string) => setPlayerState(playerId, 'done'),
+    unlockMove: (playerId: string) => setPlayerState(playerId, 'moving'),
   }
 }
 

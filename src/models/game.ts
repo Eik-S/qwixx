@@ -17,10 +17,12 @@ export interface Board {
   strikes: number
 }
 
+export type PlayerState = 'moving' | 'done'
 export interface Player {
   id: string
   name: string
   board: Board
+  state: PlayerState
 }
 
 interface GameBaseData {

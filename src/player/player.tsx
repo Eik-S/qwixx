@@ -29,7 +29,11 @@ export function Player({ id, gridPosition }: PlayerProps) {
 
       <GameBoard playerId={id} css={styles.gameBoard}></GameBoard>
 
-      <PlayerControls css={styles.controls} narrowLayout={narrowLayout}></PlayerControls>
+      <PlayerControls
+        player={player}
+        css={styles.controls}
+        narrowLayout={narrowLayout}
+      ></PlayerControls>
     </div>
   )
 }

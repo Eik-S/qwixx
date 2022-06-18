@@ -7,5 +7,6 @@ export function getNewPlayer(): Player {
     id: humanId('-'),
     name: humanId('-').split('-')[1],
     board: getNewBoard(),
+    state: 'moving',
   }
 }

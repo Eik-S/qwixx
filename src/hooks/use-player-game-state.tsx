@@ -23,7 +23,7 @@ interface UsePlayerStateProps {
 
 export function usePlayerState({ player }: UsePlayerStateProps): PlayerStateApi {
   const { movingPlayerId, updatePlayerBoard } = useGameStateContext()
-  const { gameData, endGame, closeLine } = useGameStateContext()
+  const { gameData, endGame, closeLine, setNextPlayer } = useGameStateContext()
   const [board, setBoard] = useState(player.board)
   const numberOfStrikes = player.board.strikes
   const [selections, setSelections] = useState<Selection[]>([])
@@ -139,6 +139,22 @@ export function usePlayerState({ player }: UsePlayerStateProps): PlayerStateApi 
   useEffect(() => {
     setSelections([])
   }, [movingPlayerId])
+
+  useEffect(() => {
+    function handleEndTurn() {
+      if (numSelectionsMade === 0) {
+        addStrike()
+      }
+      setNextPlayer()
+    }
+
+    const playerStates = gameData.players.map((player) => player.state)
+    const movingPlayers = playerStates.find((playerState) => playerState === 'moving')
+
+    if (movingPlayers === undefined) {
+      handleEndTurn()
+    }
+  }, [gameData])
 
   function addStrike(): void {
     board.strikes++

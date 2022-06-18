@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react'
 import { useGameStateContext } from '../hooks/use-global-game-state'
+import { buttonStyles } from '../utils/button-styles'
 import { getNewPlayer } from '../utils/player-factory'
 
 export interface ControlPaneProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -74,6 +75,7 @@ const styles = {
     }
   `,
   restartButton: css`
+    ${buttonStyles}
     display: inline;
     justify-self: center;
     grid-column: 1 / span 2;

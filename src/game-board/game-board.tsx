@@ -82,6 +82,7 @@ export function GameBoard({ playerId, ...props }: GameBoardProps) {
   }
 
   const isEveryonesMoveMade = selections.find((selection) => selection.selectionType === 'everyone')
+  const noColoredMoveMade = !selections.find((selection) => selection.selectionType === 'colored')
   const isSelectionInLine = (line: Line) =>
     !!selections.find((selection) => selection.line === line)
   const isFieldToTheRightSelected = (field: Field, line: Line) =>
@@ -135,8 +136,8 @@ export function GameBoard({ playerId, ...props }: GameBoardProps) {
       if (numSelectionsMade === 0) {
         return true
       }
-      // allow if the first move was an everyones move
-      if (isEveryonesMoveMade) {
+      // allow if the first move was no colored move
+      if (noColoredMoveMade) {
         return true
       }
     }
