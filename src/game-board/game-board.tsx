@@ -39,8 +39,6 @@ export function GameBoard({ playerId, ...props }: GameBoardProps) {
 
   // content (re)drawing
   useEffect(() => {
-    console.log('redrawing board:')
-    console.log({ board })
     if (ctx === undefined || board === undefined) return
 
     ctx.clearRect(0, 0, dimensions.canvasWidth, dimensions.canvasHeight)
@@ -59,6 +57,7 @@ export function GameBoard({ playerId, ...props }: GameBoardProps) {
   function handleFieldClick(line: Line, field: Field) {
     const isFieldClickValid = checkIsFieldClickValid(field)
     if (isFieldClickValid) {
+      console.log('toggling field')
       toggleField(line, field)
     }
   }

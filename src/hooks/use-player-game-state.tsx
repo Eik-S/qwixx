@@ -1,21 +1,11 @@
-import {
-  createContext,
-  Dispatch,
-  ReactNode,
-  SetStateAction,
-  useContext,
-  useEffect,
-  useState,
-} from 'react'
+import { createContext, ReactNode, useContext, useEffect, useState } from 'react'
 import { Board, Field, Line, Player } from '../models/game'
 import { useGameStateContext } from './use-global-game-state'
 
 interface PlayerStateApi {
   board: Board
   isActivePlayer: boolean
-  hasBoardChanged: boolean
   numSelectionsMade: number
-  setHasBoardChanged: Dispatch<SetStateAction<boolean>>
   toggleField: (line: Line, field: Field) => void
   addStrike: () => void
 }
@@ -30,7 +20,6 @@ export function usePlayerState({ player }: UsePlayerStateProps): PlayerStateApi 
   const [board, setBoard] = useState(player.board)
   const numberOfStrikes = player.board.strikes
 
-  const [hasBoardChanged, setHasBoardChanged] = useState(false)
   const [numSelectionsMade, setNumSelectionsMade] = useState(0)
   const [isActivePlayer, setIsActivePlayer] = useState(false)
 
@@ -60,13 +49,10 @@ export function usePlayerState({ player }: UsePlayerStateProps): PlayerStateApi 
           if (field.status === 'selected') {
             field.status = 'filled'
             hasFilledCrossToTheRight = true
-            console.log(`index is ${i} line.fields.length is ${line.fields.length}`)
             if (i === line.fields.length - 1) {
-              console.log('counting crosses in line')
               const crossesInLine = line.fields.filter((field) => {
                 return field.status === 'selected' || field.status === 'filled'
               }).length
-              console.log(`counted ${crossesInLine} crosses`)
               if (crossesInLine >= 5) {
                 handleCloseLine(line)
               }
@@ -80,7 +66,6 @@ export function usePlayerState({ player }: UsePlayerStateProps): PlayerStateApi 
       })
 
       setNumSelectionsMade(0)
-      setHasBoardChanged(true)
     }
 
     if (movingPlayerId) {
@@ -95,7 +80,6 @@ export function usePlayerState({ player }: UsePlayerStateProps): PlayerStateApi 
       if (closedLineColors.includes(line.color)) {
         if (line.status === 'open') {
           line.status = 'closed'
-          setHasBoardChanged(true)
           line.fields.forEach((field) => {
             if (field.status === 'open') {
               field.status = 'disabled'
@@ -124,10 +108,11 @@ export function usePlayerState({ player }: UsePlayerStateProps): PlayerStateApi 
       )
     }
     if (field.status === 'selected') {
+      console.log('opening field')
       field.status = 'open'
       setNumSelectionsMade((prev) => prev - 1)
-    }
-    if (field.status === 'open') {
+    } else if (field.status === 'open') {
+      console.log('selecting field')
       field.status = 'selected'
       setNumSelectionsMade((prev) => prev + 1)
     }
@@ -143,9 +128,7 @@ export function usePlayerState({ player }: UsePlayerStateProps): PlayerStateApi 
   return {
     board,
     isActivePlayer,
-    hasBoardChanged,
     numSelectionsMade,
-    setHasBoardChanged,
     toggleField,
     addStrike,
   }
