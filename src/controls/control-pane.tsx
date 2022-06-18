@@ -1,10 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react'
-import { randomUUID } from 'crypto'
-import humanId from 'human-id'
 import { useGameStateContext } from '../hooks/use-global-game-state'
-import { Player } from '../models/game'
-import { getNewBoard } from '../utils/game-board-factory'
 import { getNewPlayer } from '../utils/player-factory'
 
 export interface ControlPaneProps extends React.HTMLAttributes<HTMLDivElement> {
