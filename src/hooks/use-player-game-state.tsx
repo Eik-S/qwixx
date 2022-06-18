@@ -2,11 +2,18 @@ import { createContext, ReactNode, useContext, useEffect, useState } from 'react
 import { Board, Field, Line, Player } from '../models/game'
 import { useGameStateContext } from './use-global-game-state'
 
+export type SelectionType = 'colored' | 'everyone' | 'both'
+interface Selection {
+  line: Line
+  field: Field
+  selectionType: SelectionType
+}
 interface PlayerStateApi {
   board: Board
   isActivePlayer: boolean
   numSelectionsMade: number
-  toggleField: (line: Line, field: Field) => void
+  selections: Selection[]
+  toggleField: (line: Line, field: Field, type: SelectionType) => void
   addStrike: () => void
 }
 
@@ -19,8 +26,8 @@ export function usePlayerState({ player }: UsePlayerStateProps): PlayerStateApi 
   const { gameData, endGame, closeLine } = useGameStateContext()
   const [board, setBoard] = useState(player.board)
   const numberOfStrikes = player.board.strikes
-
-  const [numSelectionsMade, setNumSelectionsMade] = useState(0)
+  const [selections, setSelections] = useState<Selection[]>([])
+  const numSelectionsMade = selections.length
   const [isActivePlayer, setIsActivePlayer] = useState(false)
 
   useEffect(() => {
@@ -64,12 +71,11 @@ export function usePlayerState({ player }: UsePlayerStateProps): PlayerStateApi 
           }
         }
       })
-
-      setNumSelectionsMade(0)
     }
 
     if (movingPlayerId) {
       fillSelectedFields()
+      setSelections([])
       setIsActivePlayer(player.id === movingPlayerId)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -97,7 +103,7 @@ export function usePlayerState({ player }: UsePlayerStateProps): PlayerStateApi 
     }
   }, [endGame, numberOfStrikes])
 
-  function toggleField(targetLine: Line, targetField: Field) {
+  function toggleField(targetLine: Line, targetField: Field, selectionType: SelectionType) {
     const line = board.lines.find((line) => line.color === targetLine.color)
     if (!line) {
       throw new Error(`No line with color ${targetLine.color} found to toggle field in`)
@@ -108,18 +114,31 @@ export function usePlayerState({ player }: UsePlayerStateProps): PlayerStateApi 
         `No field with value ${targetField.value} found in ${line.color} line to toggle`,
       )
     }
+
     if (field.status === 'selected') {
-      console.log('opening field')
       field.status = 'open'
-      setNumSelectionsMade((prev) => prev - 1)
+      removeSelection({ line, field, selectionType })
     } else if (field.status === 'open') {
-      console.log('selecting field')
       field.status = 'selected'
-      setNumSelectionsMade((prev) => prev + 1)
+      addSelection({ line, field, selectionType })
     }
 
     updatePlayerBoard(player.id, board)
   }
+
+  function addSelection(selection: Selection) {
+    setSelections((prevSelections) => [...prevSelections, selection])
+  }
+
+  function removeSelection(selection: Selection) {
+    setSelections((prevSelections) => {
+      return prevSelections.filter((prevSelection) => prevSelection.field !== selection.field)
+    })
+  }
+
+  useEffect(() => {
+    setSelections([])
+  }, [movingPlayerId])
 
   function addStrike(): void {
     board.strikes++
@@ -129,6 +148,7 @@ export function usePlayerState({ player }: UsePlayerStateProps): PlayerStateApi 
   return {
     board,
     isActivePlayer,
+    selections,
     numSelectionsMade,
     toggleField,
     addStrike,

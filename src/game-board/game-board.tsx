@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import { dimensions } from '../constants/dimensions'
 import { useGameStateContext } from '../hooks/use-global-game-state'
-import { usePlayerStateContext } from '../hooks/use-player-game-state'
+import { SelectionType, usePlayerStateContext } from '../hooks/use-player-game-state'
 import { Field, Line } from '../models/game'
 import * as DrawingUtil from './drawing-utility'
 
@@ -11,10 +11,10 @@ export interface GameBoardProps {
 }
 
 export function GameBoard({ playerId, ...props }: GameBoardProps) {
-  const { board, isActivePlayer, numSelectionsMade, toggleField } = usePlayerStateContext()
+  const { board, isActivePlayer, selections, numSelectionsMade, toggleField } =
+    usePlayerStateContext()
   const { possibleMoves } = useGameStateContext()
 
-  const [everyonesMoveMade, setEveryonesMoveMade] = useState(false)
   const [ctx, setCtx] = useState<CanvasRenderingContext2D>()
 
   // canvas initialization & watchers
@@ -49,10 +49,6 @@ export function GameBoard({ playerId, ...props }: GameBoardProps) {
     DrawingUtil.drawLines(ctx, board.lines)
   }, [ctx, board])
 
-  useEffect(() => {
-    setEveryonesMoveMade(false)
-  }, [isActivePlayer])
-
   function hasSelection(line: Line, selectedField: Field, direction: 'right' | 'left'): boolean {
     const lineCopy = JSON.parse(JSON.stringify(line)) as Line
     if (direction === 'right') {
@@ -69,37 +65,65 @@ export function GameBoard({ playerId, ...props }: GameBoardProps) {
     return false
   }
 
-  function checkIfDicesAllowMove(line: Line, field: Field): boolean {
-    if (possibleMoves === undefined) return false
+  function getSelectionType(line: Line, field: Field): SelectionType | undefined {
+    if (possibleMoves === undefined) {
+      throw new Error('No possible moves to calculate SelectionType from')
+    }
     const moveColor = line.color
     const moveValue = field.value
     const isValidEveryonesMove = possibleMoves.everyone === moveValue
     const isValidColoredMove = possibleMoves[moveColor].includes(moveValue)
 
+    if (isValidColoredMove && isValidEveryonesMove) return 'both'
+    if (isValidColoredMove) return 'colored'
+    if (isValidEveryonesMove) return 'everyone'
+
+    return undefined
+  }
+
+  const isEveryonesMoveMade = selections.find((selection) => selection.selectionType === 'everyone')
+  const isSelectionInLine = (line: Line) =>
+    !!selections.find((selection) => selection.line === line)
+  const isFieldToTheRightSelected = (field: Field, line: Line) =>
+    !!selections.find((selection) => {
+      if (selection.line !== line) {
+        return false
+      }
+      for (const selectionLineField of selection.line.fields) {
+        if (selectionLineField === field) {
+          return true
+        }
+        if (selectionLineField === selection.field) {
+          return false
+        }
+      }
+      throw new Error('This should not happen')
+    })
+
+  function checkIfDicesAllowMove(line: Line, field: Field, selectionType: SelectionType): boolean {
+    const isValidEveryonesMove = selectionType !== 'colored'
+    const isValidColoredMove = selectionType !== 'everyone'
     // allow only everyones move for not moving players
     if (!isActivePlayer && isValidEveryonesMove) {
       return true
     }
+
     /////////////////////////////
     // logic for active player //
     /////////////////////////////
-
+    if (field.status === 'selected') {
+      return true
+    }
     // dont allow move if other selection was made to the right
-    if (isActivePlayer && hasSelection(line, field, 'right')) {
+    if (isActivePlayer && isFieldToTheRightSelected(field, line)) {
       return false
     }
 
     // set these conditions for everyones move:
     if (isActivePlayer && isValidEveryonesMove) {
-      // allow if this is unselecting an everyones move
-      if (field.status === 'selected') {
-        setEveryonesMoveMade(false)
-        return true
-      }
       // allow if this is the first everyones move and there is no colored move in the same line
-      if (field.status === 'open' && !hasSelection(line, field, 'left')) {
-        if (everyonesMoveMade === false) {
-          setEveryonesMoveMade(true)
+      if (field.status === 'open' && !isSelectionInLine(line)) {
+        if (!isEveryonesMoveMade) {
           return true
         }
       }
@@ -107,16 +131,12 @@ export function GameBoard({ playerId, ...props }: GameBoardProps) {
 
     // set these conditions for colored move:
     if (isActivePlayer && isValidColoredMove) {
-      // allow if this is unselecting a colored move
-      if (field.status === 'selected') {
-        return true
-      }
       // allow if colored move is the first move
       if (numSelectionsMade === 0) {
         return true
       }
       // allow if the first move was an everyones move
-      if (everyonesMoveMade) {
+      if (isEveryonesMoveMade) {
         return true
       }
     }
@@ -134,10 +154,13 @@ export function GameBoard({ playerId, ...props }: GameBoardProps) {
   function handleFieldClick(line: Line, field: Field) {
     const isFieldClickValid = checkIsFieldClickValid(field)
     if (!isFieldClickValid) return
-    const dicesAllowMove = checkIfDicesAllowMove(line, field)
+
+    const selectionType = getSelectionType(line, field)
+    if (selectionType === undefined) return
+    const dicesAllowMove = checkIfDicesAllowMove(line, field, selectionType)
     if (!dicesAllowMove) return
 
-    toggleField(line, field)
+    toggleField(line, field, selectionType)
   }
 
   return (
