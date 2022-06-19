@@ -14,7 +14,6 @@ interface PlayerStateApi {
   numSelectionsMade: number
   selections: Selection[]
   toggleField: (line: Line, field: Field, type: SelectionType) => void
-  addStrike: () => void
 }
 
 interface UsePlayerStateProps {
@@ -22,7 +21,7 @@ interface UsePlayerStateProps {
 }
 
 export function usePlayerState({ player }: UsePlayerStateProps): PlayerStateApi {
-  const { movingPlayerId, updatePlayerBoard } = useGameStateContext()
+  const { movingPlayerId, isTimeOver, updatePlayerBoard } = useGameStateContext()
   const { gameData, endGame, closeLine, setNextPlayer } = useGameStateContext()
   const [board, setBoard] = useState(player.board)
   const numberOfStrikes = player.board.strikes
@@ -98,10 +97,10 @@ export function usePlayerState({ player }: UsePlayerStateProps): PlayerStateApi 
   }, [gameData, board])
 
   useEffect(() => {
-    if (numberOfStrikes === 4) {
+    if (gameData.state === 'playing' && numberOfStrikes === 4) {
       endGame()
     }
-  }, [endGame, numberOfStrikes])
+  }, [endGame, gameData.state, numberOfStrikes])
 
   function toggleField(targetLine: Line, targetField: Field, selectionType: SelectionType) {
     const line = board.lines.find((line) => line.color === targetLine.color)
@@ -141,9 +140,13 @@ export function usePlayerState({ player }: UsePlayerStateProps): PlayerStateApi 
   }, [movingPlayerId])
 
   useEffect(() => {
+    // only the active player ends a turn
+    if (!isActivePlayer) return
+
     function handleEndTurn() {
       if (numSelectionsMade === 0) {
-        addStrike()
+        board.strikes++
+        updatePlayerBoard(player.id, board)
       }
       setNextPlayer()
     }
@@ -151,15 +154,19 @@ export function usePlayerState({ player }: UsePlayerStateProps): PlayerStateApi 
     const playerStates = gameData.players.map((player) => player.state)
     const movingPlayers = playerStates.find((playerState) => playerState === 'moving')
 
-    if (movingPlayers === undefined) {
+    if (movingPlayers === undefined || isTimeOver) {
       handleEndTurn()
     }
-  }, [gameData])
-
-  function addStrike(): void {
-    board.strikes++
-    updatePlayerBoard(player.id, board)
-  }
+  }, [
+    board,
+    gameData,
+    isActivePlayer,
+    isTimeOver,
+    numSelectionsMade,
+    player.id,
+    setNextPlayer,
+    updatePlayerBoard,
+  ])
 
   return {
     board,
@@ -167,7 +174,6 @@ export function usePlayerState({ player }: UsePlayerStateProps): PlayerStateApi 
     selections,
     numSelectionsMade,
     toggleField,
-    addStrike,
   }
 }
 

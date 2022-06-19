@@ -25,9 +25,11 @@ export interface Player {
   state: PlayerState
 }
 
+export type MoveTime = number | 'infinite'
 interface GameBaseData {
   state: 'lobby' | 'playing' | 'finished'
   players: Player[]
+  moveTime: MoveTime
 }
 
 export interface GameLobbyData extends GameBaseData {

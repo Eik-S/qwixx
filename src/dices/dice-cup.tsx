@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react'
 import { useEffect, useState } from 'react'
 import { getHexColor } from '../assets/colors'
@@ -17,7 +16,8 @@ const greenDiceColor = getHexColor('g')
 const blueDiceColor = getHexColor('b')
 
 export function DiceCup({ isBig }: { isBig: boolean }) {
-  const { gameData, movingPlayerId, setPossibleMoves } = useGameStateContext()
+  const { movingPlayerId, setPossibleMoves } = useGameStateContext()
+  const [isRolling, setIsRolling] = useState(false)
 
   const [dices, setDices] = useState<DiceObj[]>([
     { value: 1, color: blackDiceColor },
@@ -29,6 +29,8 @@ export function DiceCup({ isBig }: { isBig: boolean }) {
   ])
 
   useEffect(() => {
+    if (isRolling) return
+    console.log('calcularing possible moves')
     const blackDiceValues = dices
       .filter((dice) => dice.color === blackDiceColor)!
       .map((dice) => dice.value)
@@ -50,15 +52,17 @@ export function DiceCup({ isBig }: { isBig: boolean }) {
       g: greenMoves,
       b: blueMoves,
     })
-  }, [dices, setPossibleMoves])
+  }, [dices, setPossibleMoves, isRolling])
 
   useEffect(() => {
+    console.log('rolling')
     roll()
   }, [movingPlayerId])
 
   function roll() {
     var iterations = 5
     var millis = 20
+
     var rollDices = function () {
       setDices((oldDices) => {
         return oldDices.map((dice) => {
@@ -70,15 +74,17 @@ export function DiceCup({ isBig }: { isBig: boolean }) {
       millis += 10
 
       if (iterations === 0) {
-        return
+        setIsRolling(false)
+        clearInterval(rolling)
       }
-      setTimeout(rollDices, millis)
     }
-    setTimeout(rollDices, millis)
-  }
 
-  if (gameData.state !== 'playing') {
-    return null
+    setIsRolling(true)
+    const rolling = setInterval(rollDices, millis)
+
+    return () => {
+      clearInterval(rolling)
+    }
   }
 
   return (

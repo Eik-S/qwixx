@@ -13,6 +13,7 @@ import {
   GamePlayingData,
   Line,
   LineColor,
+  MoveTime,
   Player,
   PlayerState,
 } from '../models/game'
@@ -30,6 +31,7 @@ export interface GameStateApi {
   numberOfPlayers: number
   movingPlayerId: string | undefined
   possibleMoves: PossibleMoves | undefined
+  isTimeOver: boolean
   setPossibleMoves: Dispatch<SetStateAction<PossibleMoves | undefined>>
   setNextPlayer: () => void
   startNewGame: () => void
@@ -42,6 +44,8 @@ export interface GameStateApi {
   updatePlayerBoard: (playerId: string, board: Board) => void
   lockMove: (playerId: string) => void
   unlockMove: (playerId: string) => void
+  setMoveTime: (newTime: MoveTime) => void
+  setIsTimeOver: Dispatch<SetStateAction<boolean>>
 }
 
 function useGameState(): GameStateApi {
@@ -49,6 +53,7 @@ function useGameState(): GameStateApi {
   const movingPlayerId = gameData.state === 'playing' ? gameData.movingPlayerId : undefined
   const numberOfClosedLines = gameData.state === 'playing' ? gameData.closedLineColors.length : 0
   const [possibleMoves, setPossibleMoves] = useState<PossibleMoves | undefined>(undefined)
+  const [isTimeOver, setIsTimeOver] = useState(false)
 
   useEffect(() => {
     if (numberOfClosedLines >= 2) {
@@ -56,13 +61,24 @@ function useGameState(): GameStateApi {
     }
   }, [numberOfClosedLines, gameData.state, movingPlayerId])
 
+  useEffect(() => {
+    const playerStates = gameData.players.map((player) => player.state)
+    const movingPlayers = playerStates.find((playerState) => playerState === 'moving')
+
+    if (movingPlayers === undefined) {
+      setNextPlayer()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gameData])
+
   function endGame() {
+    setIsTimeOver(false)
     setGameData((prevGameData: GameData) => {
       return {
+        ...prevGameData,
         state: 'finished',
         nextMovingPlayerId: prevGameData.players[0].id, //TODO: set to player with smallest score
         winnerPlayerId: prevGameData.players[1].id, //TODO: set to player with highest score
-        players: prevGameData.players,
       }
     })
   }
@@ -82,6 +98,9 @@ function useGameState(): GameStateApi {
         .indexOf(gameData.movingPlayerId)
       const nextPlayerIndex = (lastPlayerIndex + 1) % gameData.players.length
       const nextMovingPlayerId = gameData.players[nextPlayerIndex].id
+
+      // to not immediately end the next move
+      setIsTimeOver(false)
 
       setGameData((prevGameData) => ({
         ...prevGameData,
@@ -106,8 +125,9 @@ function useGameState(): GameStateApi {
 
   function startNewGame() {
     if (gameData.state === 'finished' || gameData.state === 'playing') {
-      setGameData((): GamePlayingData => {
+      setGameData((prevGameData): GamePlayingData => {
         return {
+          ...prevGameData,
           state: 'playing',
           movingPlayerId:
             gameData.state === 'finished' ? gameData.nextMovingPlayerId : gameData.movingPlayerId,
@@ -117,11 +137,11 @@ function useGameState(): GameStateApi {
       })
     }
     if (gameData.state === 'lobby') {
-      setGameData((): GamePlayingData => {
+      setGameData((prevGameData): GamePlayingData => {
         return {
+          ...prevGameData,
           state: 'playing',
           movingPlayerId: gameData.players[0].id,
-          players: gameData.players,
           closedLineColors: [],
         }
       })
@@ -132,6 +152,7 @@ function useGameState(): GameStateApi {
     return {
       state: 'lobby',
       players: [getNewPlayer(), getNewPlayer()],
+      moveTime: 'infinite',
     }
   }
 
@@ -181,11 +202,19 @@ function useGameState(): GameStateApi {
     })
   }
 
+  function setMoveTime(newTime: MoveTime): void {
+    if (gameData.state !== 'lobby') {
+      throw new Error('Cannot set moveTime outside of the lobby')
+    }
+    setGameData((prevGameData) => ({ ...prevGameData, moveTime: newTime }))
+  }
+
   return {
     gameData,
     numberOfPlayers: gameData.players.length,
     movingPlayerId,
     possibleMoves,
+    isTimeOver,
     setNextPlayer,
     addPlayer,
     removePlayer,
@@ -193,11 +222,13 @@ function useGameState(): GameStateApi {
     startNewGame,
     setGameData,
     updatePlayerData,
-    closeLine,
     updatePlayerBoard,
+    closeLine,
     setPossibleMoves,
     lockMove: (playerId: string) => setPlayerState(playerId, 'done'),
     unlockMove: (playerId: string) => setPlayerState(playerId, 'moving'),
+    setMoveTime,
+    setIsTimeOver,
   }
 }
 

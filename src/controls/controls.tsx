@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react'
 import { useState } from 'react'
 import { colors } from '../assets/colors'
@@ -11,7 +10,7 @@ interface ControlsProps {
 }
 
 export function Controls({ isBig, onChangeIsBig }: ControlsProps) {
-  const [isControlsPaneOpen, setIsControlsPaneOpen] = useState(true)
+  const [isControlsPaneOpen, setIsControlsPaneOpen] = useState(false)
   const { numberOfPlayers } = useGameStateContext()
 
   return (
@@ -20,7 +19,7 @@ export function Controls({ isBig, onChangeIsBig }: ControlsProps) {
         css={styles.openControlsButton(numberOfPlayers)}
         onClick={() => setIsControlsPaneOpen((prev) => !prev)}
       >
-        <span css={styles.buttonIcon}>{String.fromCharCode(parseInt(`${2630}`, 16))}</span>
+        <span css={styles.buttonIcon}>☰</span>
       </button>
       {isControlsPaneOpen && (
         <div css={styles.controlsPaneGridContainer}>

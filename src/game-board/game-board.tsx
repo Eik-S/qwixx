@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import React, { useEffect, useState } from 'react'
 import { dimensions } from '../constants/dimensions'
 import { useGameStateContext } from '../hooks/use-global-game-state'

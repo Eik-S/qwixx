@@ -20,6 +20,7 @@ export function createSession(): string {
     gameData: {
       state: 'lobby',
       players: [],
+      moveTime: 'infinite',
     },
   })
 
@@ -59,6 +60,7 @@ function initPlayer(name: string): Player {
   return {
     id: playerId,
     name,
+    state: 'moving',
     board: {
       lines: ['r', 'y', 'g', 'b'].map((lineColor) => {
         const color = lineColor as LineColor

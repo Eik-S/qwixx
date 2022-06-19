@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react'
 import { useGameStateContext } from '../../hooks/use-global-game-state'
 import { usePlayerStateContext } from '../../hooks/use-player-game-state'
@@ -11,8 +10,8 @@ export interface PlayerControlsProps {
 }
 
 export function PlayerControls({ player, narrowLayout, ...props }: PlayerControlsProps) {
-  const { numSelectionsMade, isActivePlayer, addStrike } = usePlayerStateContext()
-  const { startNewGame, setNextPlayer, gameData, lockMove, unlockMove } = useGameStateContext()
+  const { isActivePlayer } = usePlayerStateContext()
+  const { gameData, lockMove, unlockMove } = useGameStateContext()
   const isMoveLocked = player.state === 'done'
 
   function changeMoveState() {
@@ -31,15 +30,7 @@ export function PlayerControls({ player, narrowLayout, ...props }: PlayerControl
         >
           {isMoveLocked ? 'fix' : 'done'}
         </button>
-      ) : (
-        <button
-          className="button new-game-button"
-          css={styles.doneButton(narrowLayout, isActivePlayer)}
-          onClick={() => startNewGame()}
-        >
-          NEW GAME
-        </button>
-      )}
+      ) : null}
     </div>
   )
 }
