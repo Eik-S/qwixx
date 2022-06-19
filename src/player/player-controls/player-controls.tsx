@@ -1,8 +1,8 @@
 import { css } from '@emotion/react'
+import { BigButton } from '../../controls/ui-elements'
 import { useGameStateContext } from '../../hooks/use-global-game-state'
 import { usePlayerStateContext } from '../../hooks/use-player-game-state'
 import { Player } from '../../models/game'
-import { buttonStyles } from '../../utils/button-styles'
 
 export interface PlayerControlsProps {
   player: Player
@@ -11,28 +11,24 @@ export interface PlayerControlsProps {
 
 export function PlayerControls({ player, narrowLayout, ...props }: PlayerControlsProps) {
   const { isActivePlayer } = usePlayerStateContext()
-  const { gameData, lockMove, unlockMove } = useGameStateContext()
-  const isMoveLocked = player.state === 'done'
+  const { gameData, lockMove } = useGameStateContext()
+  const moveIsDone = player.state === 'done'
+  const playing = gameData.state === 'playing'
 
-  function changeMoveState() {
-    if (isMoveLocked) {
-      unlockMove(player.id)
-    } else {
-      lockMove(player.id)
-    }
-  }
   return (
     <div css={styles.playerControlsArea} {...props}>
-      {gameData.state === 'playing' ? (
-        <button
-          css={styles.doneButton(narrowLayout, isActivePlayer)}
-          onClick={() => changeMoveState()}
-        >
-          {isMoveLocked ? 'fix' : 'done'}
-        </button>
-      ) : null}
+      {!moveIsDone && playing && isActivePlayer && (
+        <DonePassButton onClick={() => lockMove(player.id)} text={'done'} />
+      )}
+      {!moveIsDone && playing && !isActivePlayer && (
+        <DonePassButton onClick={() => lockMove(player.id)} text={'pass'} css={styles.passButton} />
+      )}
     </div>
   )
+}
+
+function DonePassButton({ onClick, text, ...props }: { onClick: () => void; text: string }) {
+  return <BigButton onClick={onClick} text={text} {...props} />
 }
 
 const styles = {
@@ -41,22 +37,16 @@ const styles = {
     display: flex;
     flex-direction: row;
     align-items: flex-end;
-  `,
-  doneButton: (narrowLayout: boolean, isActivePlayer: boolean) => css`
-    ${buttonStyles}
     min-width: 160px;
-    padding-left: 0;
-    padding-right: 0;
-    ${narrowLayout &&
-    css`
-      padding: 12px 16px;
-      line-height: 30px;
-      word-break: break-all;
-      white-space: pre-wrap;
-    `}
-    ${!isActivePlayer &&
-    css`
-      border: none;
-    `}
+  `,
+  passButton: css`
+    border: none;
+    align-self: flex-start;
+  `,
+  narrowButton: css`
+    padding: 12px 16px;
+    line-height: 30px;
+    word-break: break-all;
+    white-space: pre-wrap;
   `,
 }

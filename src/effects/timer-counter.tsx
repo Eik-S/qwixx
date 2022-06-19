@@ -9,6 +9,8 @@ export function TimerCounter() {
   const [timeLeft, setTimeLeft] = useState(moveTime)
 
   useEffect(() => {
+    if (movingPlayerId === undefined) return
+
     function decreaseTimeLeft() {
       setTimeLeft((prevTimeLeft) => {
         if (prevTimeLeft === 1) {
@@ -23,7 +25,7 @@ export function TimerCounter() {
     return () => {
       clearInterval(timer)
     }
-  }, [movingPlayerId])
+  }, [moveTime, movingPlayerId])
 
   useEffect(() => {
     if (timeLeft === 0) {

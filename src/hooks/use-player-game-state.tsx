@@ -22,7 +22,7 @@ interface UsePlayerStateProps {
 
 export function usePlayerState({ player }: UsePlayerStateProps): PlayerStateApi {
   const { movingPlayerId, isTimeOver, updatePlayerBoard } = useGameStateContext()
-  const { gameData, endGame, closeLine, setNextPlayer } = useGameStateContext()
+  const { gameData, endGame, closeLine, setNextPlayer, lockMove } = useGameStateContext()
   const [board, setBoard] = useState(player.board)
   const numberOfStrikes = player.board.strikes
   const [selections, setSelections] = useState<Selection[]>([])
@@ -95,6 +95,15 @@ export function usePlayerState({ player }: UsePlayerStateProps): PlayerStateApi 
       }
     })
   }, [gameData, board])
+
+  useEffect(() => {
+    if (isActivePlayer && numSelectionsMade === 2) {
+      lockMove(player.id)
+    }
+    if (!isActivePlayer && numSelectionsMade === 1) {
+      lockMove(player.id)
+    }
+  }, [isActivePlayer, lockMove, numSelectionsMade, player.id])
 
   useEffect(() => {
     if (gameData.state === 'playing' && numberOfStrikes === 4) {

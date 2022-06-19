@@ -8,12 +8,18 @@ import { PlayerStateContextProvider } from './hooks/use-player-game-state'
 import { LobbyControls } from './lobby/lobby-controls'
 import { BackgroundEffects } from './effects/background-effects'
 import { FinishedControls } from './lobby/finished-controls'
+import { useEffect, useState } from 'react'
 
 export function App() {
   const { gameData } = useGameStateContext()
   const players = gameData.players
   const gameState = gameData.state
   const [isBig, setIsBig] = useLocalStorage('isBig', false)
+  const [renderApp, setRenderApp] = useState(false)
+
+  useEffect(() => {
+    setRenderApp(true)
+  }, [])
 
   function getGridPosition(playerId: number) {
     if (players.length === 2) {
@@ -30,7 +36,7 @@ export function App() {
   // dont render app on the server to not have
   // flickering content due to unset variables
   // needed by emotion
-  if (typeof window === 'undefined') {
+  if (!renderApp) {
     return null
   }
 
