@@ -30,7 +30,6 @@ export function DiceCup({ isBig }: { isBig: boolean }) {
 
   useEffect(() => {
     if (isRolling) return
-    console.log('calcularing possible moves')
     const blackDiceValues = dices
       .filter((dice) => dice.color === blackDiceColor)!
       .map((dice) => dice.value)
@@ -55,7 +54,6 @@ export function DiceCup({ isBig }: { isBig: boolean }) {
   }, [dices, setPossibleMoves, isRolling])
 
   useEffect(() => {
-    console.log('rolling')
     roll()
   }, [movingPlayerId])
 

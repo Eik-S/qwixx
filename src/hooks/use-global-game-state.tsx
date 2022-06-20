@@ -3,6 +3,7 @@ import {
   Dispatch,
   ReactNode,
   SetStateAction,
+  useCallback,
   useContext,
   useEffect,
   useState,
@@ -61,16 +62,6 @@ function useGameState(): GameStateApi {
     }
   }, [numberOfClosedLines, gameData.state, movingPlayerId])
 
-  useEffect(() => {
-    const playerStates = gameData.players.map((player) => player.state)
-    const movingPlayers = playerStates.find((playerState) => playerState === 'moving')
-
-    if (movingPlayers === undefined) {
-      setNextPlayer()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gameData])
-
   function endGame() {
     setIsTimeOver(false)
     setGameData((prevGameData: GameData) => {
@@ -92,22 +83,24 @@ function useGameState(): GameStateApi {
   }
 
   function setNextPlayer(): void {
-    if (gameData.state === 'playing') {
-      const lastPlayerIndex = gameData.players
+    // to not immediately end the next move
+    setIsTimeOver(false)
+
+    setGameData((prevGameData) => {
+      if (prevGameData.state !== 'playing') {
+        throw new Error('Must not set next player when not playing')
+      }
+      const lastPlayerIndex = prevGameData.players
         .map((player) => player.id)
-        .indexOf(gameData.movingPlayerId)
-      const nextPlayerIndex = (lastPlayerIndex + 1) % gameData.players.length
-      const nextMovingPlayerId = gameData.players[nextPlayerIndex].id
-
-      // to not immediately end the next move
-      setIsTimeOver(false)
-
-      setGameData((prevGameData) => ({
+        .indexOf(prevGameData.movingPlayerId)
+      const nextPlayerIndex = (lastPlayerIndex + 1) % prevGameData.players.length
+      const nextMovingPlayerId = prevGameData.players[nextPlayerIndex].id
+      return {
         ...prevGameData,
         movingPlayerId: nextMovingPlayerId,
         players: prevGameData.players.map((prevPlayer) => ({ ...prevPlayer, state: 'moving' })),
-      }))
-    }
+      }
+    })
   }
 
   function updatePlayerData(player: Player): void {
@@ -157,14 +150,15 @@ function useGameState(): GameStateApi {
   }
 
   function closeLine(line: Line): void {
-    if (gameData.state === 'playing') {
-      setGameData((): GamePlayingData => {
-        return {
-          ...gameData,
-          closedLineColors: [...gameData.closedLineColors, line.color],
-        }
-      })
-    }
+    setGameData((prevGameData) => {
+      if (prevGameData.state !== 'playing') {
+        throw new Error('Cannot close a line when not playing')
+      }
+      return {
+        ...prevGameData,
+        closedLineColors: [...prevGameData.closedLineColors, line.color],
+      }
+    })
   }
 
   function updatePlayerBoard(playerId: string, board: Board): void {
@@ -223,10 +217,10 @@ function useGameState(): GameStateApi {
     setGameData,
     updatePlayerData,
     updatePlayerBoard,
-    closeLine,
+    closeLine: useCallback((line: Line) => closeLine(line), []),
     setPossibleMoves,
-    lockMove: (playerId: string) => setPlayerState(playerId, 'done'),
-    unlockMove: (playerId: string) => setPlayerState(playerId, 'moving'),
+    lockMove: useCallback((playerId: string) => setPlayerState(playerId, 'done'), []),
+    unlockMove: useCallback((playerId: string) => setPlayerState(playerId, 'moving'), []),
     setMoveTime,
     setIsTimeOver,
   }

@@ -22,7 +22,8 @@ interface UsePlayerStateProps {
 
 export function usePlayerState({ player }: UsePlayerStateProps): PlayerStateApi {
   const { movingPlayerId, isTimeOver, updatePlayerBoard } = useGameStateContext()
-  const { gameData, endGame, closeLine, setNextPlayer, lockMove } = useGameStateContext()
+  const { gameData, endGame, closeLine, setNextPlayer, lockMove, unlockMove } =
+    useGameStateContext()
   const [board, setBoard] = useState(player.board)
   const numberOfStrikes = player.board.strikes
   const [selections, setSelections] = useState<Selection[]>([])
@@ -77,8 +78,7 @@ export function usePlayerState({ player }: UsePlayerStateProps): PlayerStateApi 
       setSelections([])
       setIsActivePlayer(player.id === movingPlayerId)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [movingPlayerId])
+  }, [board.lines, closeLine, movingPlayerId, player.id])
 
   useEffect(() => {
     const closedLineColors = gameData.state === 'playing' ? gameData.closedLineColors : []
@@ -97,13 +97,21 @@ export function usePlayerState({ player }: UsePlayerStateProps): PlayerStateApi 
   }, [gameData, board])
 
   useEffect(() => {
-    if (isActivePlayer && numSelectionsMade === 2) {
-      lockMove(player.id)
+    if (isActivePlayer) {
+      if (numSelectionsMade === 2) {
+        lockMove(player.id)
+      } else {
+        unlockMove(player.id)
+      }
     }
-    if (!isActivePlayer && numSelectionsMade === 1) {
-      lockMove(player.id)
+    if (!isActivePlayer) {
+      if (numSelectionsMade === 1) {
+        lockMove(player.id)
+      } else {
+        unlockMove(player.id)
+      }
     }
-  }, [isActivePlayer, lockMove, numSelectionsMade, player.id])
+  }, [isActivePlayer, lockMove, numSelectionsMade, player.id, unlockMove])
 
   useEffect(() => {
     if (gameData.state === 'playing' && numberOfStrikes === 4) {
