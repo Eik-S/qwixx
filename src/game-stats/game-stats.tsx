@@ -1,22 +1,24 @@
 import { css } from '@emotion/react'
 import { useEffect, useState } from 'react'
+import { usePlayerStateContext } from '../hooks/use-player-game-state'
 import { Board, Line } from '../models/game'
 
 export interface GameStatProps {
-  board: Board
   narrowLayout: boolean
 }
 
-export function GameStats({ narrowLayout, board }: GameStatProps) {
-  const [lineScores, setLineScores] = useState<number[]>([0, 0, 0, 0])
-  const totalScore = lineScores.reduce((prev, curr) => prev + curr, 0)
+export function GameStats({ narrowLayout }: GameStatProps) {
+  const { board } = usePlayerStateContext()
+
   const selectionsMade = board.lines.reduce((previousValue, currentVal) => {
     const filledFields = currentVal.fields.filter((field) => field.status === 'filled')
     const numberOfFilledFields = filledFields.length
     return previousValue + numberOfFilledFields
   }, 0)
+  const [totalScore, setTotalScore] = useState(0)
 
   useEffect(() => {
+    console.log('calculating score')
     const pointsBySelections = [0, 1, 3, 6, 10, 15, 21, 28, 36, 45, 55, 66, 78]
 
     function getScoreForLine(line: Line) {
@@ -24,13 +26,19 @@ export function GameStats({ narrowLayout, board }: GameStatProps) {
       return pointsBySelections[filledFields.length + (line.wasClosedByYou ? 1 : 0)]
     }
 
-    setLineScores([
+    const lineScores = [
       getScoreForLine(board.lines[0]),
       getScoreForLine(board.lines[1]),
       getScoreForLine(board.lines[2]),
       getScoreForLine(board.lines[3]),
-    ])
-  }, [board.lines, selectionsMade])
+    ]
+    const sumOfLineScores = lineScores.reduce(
+      (prevLineScore, lineScore) => prevLineScore + lineScore,
+    )
+    const strikeMinus = board.strikes * 5
+
+    setTotalScore(sumOfLineScores - strikeMinus)
+  }, [board.lines, board.strikes, selectionsMade])
 
   return (
     <div css={styles.gameStatsArea(narrowLayout)}>

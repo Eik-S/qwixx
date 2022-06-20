@@ -23,7 +23,7 @@ export function Player({ id, gridPosition }: PlayerProps) {
   return (
     <div css={styles.playerArea(gridPosition, narrowLayout)}>
       <div css={styles.stats(narrowLayout)}>
-        <GameStats narrowLayout={narrowLayout} board={player.board} />
+        <GameStats narrowLayout={narrowLayout} />
       </div>
 
       <GameBoard playerId={id} css={styles.gameBoard}></GameBoard>

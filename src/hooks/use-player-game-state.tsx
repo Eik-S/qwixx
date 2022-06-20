@@ -153,10 +153,6 @@ export function usePlayerState({ player }: UsePlayerStateProps): PlayerStateApi 
   }
 
   useEffect(() => {
-    setSelections([])
-  }, [movingPlayerId])
-
-  useEffect(() => {
     // only the active player ends a turn
     if (!isActivePlayer) return
 
