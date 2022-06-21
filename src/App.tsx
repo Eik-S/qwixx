@@ -1,14 +1,14 @@
 import { css } from '@emotion/react'
+import { useEffect, useState } from 'react'
 import { Controls } from './controls/controls'
 import { DiceCup } from './dices/dice-cup'
-import { useLocalStorage } from './hooks/use-local-storage'
-import { Player } from './player/player'
-import { useGameStateContext } from './hooks/use-global-game-state'
-import { PlayerStateContextProvider } from './hooks/use-player-game-state'
-import { LobbyControls } from './lobby/lobby-controls'
 import { BackgroundEffects } from './effects/background-effects'
+import { useGameStateContext } from './hooks/use-global-game-state'
+import { useLocalStorage } from './hooks/use-local-storage'
+import { PlayerStateContextProvider } from './hooks/use-player-game-state'
 import { FinishedControls } from './lobby/finished-controls'
-import { useEffect, useState } from 'react'
+import { LobbyControls } from './lobby/lobby-controls'
+import { Player } from './player/player'
 
 export function App() {
   const { gameData } = useGameStateContext()

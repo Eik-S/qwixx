@@ -2,11 +2,13 @@ import { css } from '@emotion/react'
 import { useEffect, useState } from 'react'
 import { colors } from '../assets/colors'
 import { useGameStateContext } from '../hooks/use-global-game-state'
+import { ColorPulse } from './color-pulse'
 
 export function TimerCounter() {
   const { gameData, movingPlayerId, setIsTimeOver } = useGameStateContext()
   const moveTime = gameData.moveTime as number
   const [timeLeft, setTimeLeft] = useState(moveTime)
+  const [showColorPulse, setShowColorPulse] = useState(false)
 
   useEffect(() => {
     if (movingPlayerId === undefined) return
@@ -16,7 +18,11 @@ export function TimerCounter() {
         if (prevTimeLeft === 1) {
           clearInterval(timer)
         }
-        return prevTimeLeft - 1
+        const newTime = prevTimeLeft - 1
+        if (newTime <= 3 && newTime >= 1) {
+          setShowColorPulse(true)
+        }
+        return newTime
       })
     }
     setTimeLeft(moveTime)
@@ -34,11 +40,19 @@ export function TimerCounter() {
     }
   }, [moveTime, setIsTimeOver, timeLeft])
 
-  return <div css={styles.time(timeLeft)}>{timeLeft}</div>
+  return (
+    <>
+      <div css={styles.time(timeLeft)}>{timeLeft}</div>
+      {showColorPulse && (
+        <ColorPulse onPulseShown={() => setShowColorPulse(false)} color={colors.red} />
+      )}
+    </>
+  )
 }
 
 const styles = {
   time: (timeLeft: number) => css`
+    position: relative;
     font-size: 30em;
     color: ${colors.lightGrey};
 
