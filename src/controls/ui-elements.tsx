@@ -12,29 +12,35 @@ interface PlusMinusButtonProps extends ButtonProps {
   type: 'plus' | 'minus'
 }
 
-function PlusMinusButton({ onClick, disabled, type, ...props }: PlusMinusButtonProps) {
+function PlusMinusButton({ onClick, disabled, type, labelId, ...props }: PlusMinusButtonProps) {
   return (
-    <button css={styles.plusMinusButtonStyles} onClick={onClick} disabled={disabled} {...props}>
+    <button
+      css={styles.plusMinusButtonStyles}
+      onClick={onClick}
+      id={labelId}
+      disabled={disabled}
+      {...props}
+    >
       {type === 'plus' ? '+' : '-'}
     </button>
   )
 }
 
-export function MinusButton({ onClick, disabled, ...props }: ButtonProps) {
-  return PlusMinusButton({ onClick, disabled, type: 'minus', ...props })
+export function MinusButton({ onClick, disabled, labelId, ...props }: ButtonProps) {
+  return PlusMinusButton({ onClick, disabled, type: 'minus', labelId, ...props })
 }
 
-export function PlusButton({ onClick, disabled, ...props }: ButtonProps) {
-  return PlusMinusButton({ onClick, disabled, type: 'plus', ...props })
+export function PlusButton({ onClick, disabled, labelId, ...props }: ButtonProps) {
+  return PlusMinusButton({ onClick, disabled, type: 'plus', labelId, ...props })
 }
 
 export interface BigButtonProps extends ButtonProps {
   text: string
 }
 
-export function BigButton({ onClick, disabled, text, ...props }: BigButtonProps) {
+export function BigButton({ onClick, disabled, text, labelId, ...props }: BigButtonProps) {
   return (
-    <button css={styles.bigButton} disabled={disabled} onClick={onClick} {...props}>
+    <button css={styles.bigButton} disabled={disabled} id={labelId} onClick={onClick} {...props}>
       {text}
     </button>
   )

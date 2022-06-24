@@ -12,13 +12,9 @@ export interface PlayerProps {
 }
 
 export function Player({ id, gridPosition }: PlayerProps) {
-  const [narrowLayout, setNarrowLayout] = useState(false)
   const { gameData } = useGameStateContext()
   const player = gameData.players.find((player) => player.id === id)!
-
-  useEffect(() => {
-    setNarrowLayout(gameData.players.length > 2)
-  }, [gameData.players.length])
+  const narrowLayout = gameData.players.length > 2
 
   return (
     <div css={styles.playerArea(gridPosition, narrowLayout)}>

@@ -14,14 +14,23 @@ export function PlayerControls({ player, narrowLayout, ...props }: PlayerControl
   const { gameData, lockMove } = useGameStateContext()
   const moveIsDone = player.state === 'done'
   const playing = gameData.state === 'playing'
+  console.log({ narrowLayout })
 
   return (
     <div css={styles.playerControlsArea} {...props}>
       {!moveIsDone && playing && isActivePlayer && (
-        <DonePassButton onClick={() => lockMove(player.id)} text={'done'} />
+        <DonePassButton
+          onClick={() => lockMove(player.id)}
+          text={'done'}
+          css={styles.narrowButton(narrowLayout)}
+        />
       )}
       {!moveIsDone && playing && !isActivePlayer && (
-        <DonePassButton onClick={() => lockMove(player.id)} text={'pass'} css={styles.passButton} />
+        <DonePassButton
+          onClick={() => lockMove(player.id)}
+          text={'pass'}
+          css={css([styles.passButton, styles.narrowButton(narrowLayout)])}
+        />
       )}
     </div>
   )
@@ -43,10 +52,14 @@ const styles = {
     border: none;
     align-self: flex-start;
   `,
-  narrowButton: css`
-    padding: 12px 16px;
-    line-height: 30px;
-    word-break: break-all;
-    white-space: pre-wrap;
+  narrowButton: (narrowLayout: boolean) => css`
+    ${narrowLayout &&
+    css`
+      padding: 12px 16px;
+      line-height: 30px;
+      word-break: break-all;
+      white-space: pre-wrap;
+      width: 56px;
+    `}
   `,
 }
