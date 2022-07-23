@@ -23,6 +23,7 @@ export interface Player {
   name: string
   board: Board
   state: PlayerState
+  score: number
 }
 
 export type MoveTime = number | 'infinite'

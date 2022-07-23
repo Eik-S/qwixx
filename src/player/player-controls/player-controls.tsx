@@ -14,7 +14,6 @@ export function PlayerControls({ player, narrowLayout, ...props }: PlayerControl
   const { gameData, lockMove } = useGameStateContext()
   const moveIsDone = player.state === 'done'
   const playing = gameData.state === 'playing'
-  console.log({ narrowLayout })
 
   return (
     <div css={styles.playerControlsArea} {...props}>

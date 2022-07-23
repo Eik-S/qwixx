@@ -54,10 +54,6 @@ export function DiceCup({ isBig }: { isBig: boolean }) {
   }, [dices, setPossibleMoves, isRolling])
 
   useEffect(() => {
-    roll()
-  }, [movingPlayerId])
-
-  function roll() {
     var iterations = 5
     var millis = 20
 
@@ -76,14 +72,13 @@ export function DiceCup({ isBig }: { isBig: boolean }) {
         clearInterval(rolling)
       }
     }
-
     setIsRolling(true)
     const rolling = setInterval(rollDices, millis)
 
     return () => {
       clearInterval(rolling)
     }
-  }
+  }, [movingPlayerId])
 
   return (
     <div css={styles.diceCup}>

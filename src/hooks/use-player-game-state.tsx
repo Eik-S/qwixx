@@ -1,4 +1,12 @@
-import { createContext, ReactNode, useContext, useEffect, useState } from 'react'
+import {
+  createContext,
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
 import { Board, Field, Line, Player } from '../models/game'
 import { useGameStateContext } from './use-global-game-state'
 
@@ -13,6 +21,8 @@ interface PlayerStateApi {
   isActivePlayer: boolean
   numSelectionsMade: number
   selections: Selection[]
+  score: number
+  updateScore: (newScore: number) => void
   toggleField: (line: Line, field: Field, type: SelectionType) => void
 }
 
@@ -21,11 +31,12 @@ interface UsePlayerStateProps {
 }
 
 export function usePlayerState({ player }: UsePlayerStateProps): PlayerStateApi {
-  const { movingPlayerId, isTimeOver, updatePlayerBoard } = useGameStateContext()
+  const { movingPlayerId, isTimeOver, updatePlayerBoard, updatePlayerData } = useGameStateContext()
   const { gameData, endGame, closeLine, setNextPlayer, lockMove, unlockMove } =
     useGameStateContext()
   const [board, setBoard] = useState(player.board)
   const numberOfStrikes = player.board.strikes
+  const score = player.score
   const [selections, setSelections] = useState<Selection[]>([])
   const numSelectionsMade = selections.length
   const [isActivePlayer, setIsActivePlayer] = useState(false)
@@ -114,7 +125,7 @@ export function usePlayerState({ player }: UsePlayerStateProps): PlayerStateApi 
   }, [isActivePlayer, lockMove, numSelectionsMade, player.id, unlockMove])
 
   useEffect(() => {
-    if (gameData.state === 'playing' && numberOfStrikes === 4) {
+    if (gameData.state === 'playing' && numberOfStrikes === 1) {
       endGame()
     }
   }, [endGame, gameData.state, numberOfStrikes])
@@ -152,6 +163,13 @@ export function usePlayerState({ player }: UsePlayerStateProps): PlayerStateApi 
     })
   }
 
+  function updateScore(newScore: number) {
+    updatePlayerData({
+      ...player,
+      score: newScore,
+    })
+  }
+
   useEffect(() => {
     // only the active player ends a turn
     if (!isActivePlayer) return
@@ -183,9 +201,11 @@ export function usePlayerState({ player }: UsePlayerStateProps): PlayerStateApi 
 
   return {
     board,
+    score,
     isActivePlayer,
     selections,
     numSelectionsMade,
+    updateScore,
     toggleField,
   }
 }

@@ -65,11 +65,15 @@ function useGameState(): GameStateApi {
   function endGame() {
     setIsTimeOver(false)
     setGameData((prevGameData: GameData) => {
+      const playersSortedByScore = [...prevGameData.players].sort((a, b) => a.score - b.score)
+      const looser = playersSortedByScore[0]
+      const winner = playersSortedByScore[playersSortedByScore.length - 1]
+
       return {
         ...prevGameData,
         state: 'finished',
-        nextMovingPlayerId: prevGameData.players[0].id, //TODO: set to player with smallest score
-        winnerPlayerId: prevGameData.players[1].id, //TODO: set to player with highest score
+        nextMovingPlayerId: looser.id,
+        winnerPlayerId: winner.id,
       }
     })
   }
@@ -154,6 +158,11 @@ function useGameState(): GameStateApi {
       if (prevGameData.state !== 'playing') {
         throw new Error('Cannot close a line when not playing')
       }
+      const lineWasAlreadyClosed = prevGameData.closedLineColors.includes(line.color)
+      if (lineWasAlreadyClosed) {
+        return prevGameData
+      }
+
       return {
         ...prevGameData,
         closedLineColors: [...prevGameData.closedLineColors, line.color],

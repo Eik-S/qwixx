@@ -74,6 +74,7 @@ function initPlayer(name: string): Player {
       }),
       strikes: 0,
     },
+    score: 0,
   }
 }
 

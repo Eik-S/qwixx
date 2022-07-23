@@ -4,8 +4,8 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
-        <link rel="icon" href="/static/fav.png" />
-        <link rel="manifest" href="/static/manifest.json" />
+        <link rel="icon" href="/fav.png" />
+        <link rel="manifest" href="/manifest.json" />
       </Head>
       <body>
         <noscript>You need to enable JavaScript to run this app.</noscript>

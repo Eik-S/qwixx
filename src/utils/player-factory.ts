@@ -8,5 +8,6 @@ export function getNewPlayer(): Player {
     name: humanId('-').split('-')[1],
     board: getNewBoard(),
     state: 'moving',
+    score: 0,
   }
 }

@@ -1,21 +1,20 @@
 import { css } from '@emotion/react'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { usePlayerStateContext } from '../hooks/use-player-game-state'
-import { Board, Line } from '../models/game'
+import { Line } from '../models/game'
 
 export interface GameStatProps {
   narrowLayout: boolean
 }
 
 export function GameStats({ narrowLayout }: GameStatProps) {
-  const { board } = usePlayerStateContext()
+  const { board, score, updateScore } = usePlayerStateContext()
 
   const selectionsMade = board.lines.reduce((previousValue, currentVal) => {
     const filledFields = currentVal.fields.filter((field) => field.status === 'filled')
     const numberOfFilledFields = filledFields.length
     return previousValue + numberOfFilledFields
   }, 0)
-  const [totalScore, setTotalScore] = useState(0)
 
   useEffect(() => {
     console.log('calculating score')
@@ -37,14 +36,14 @@ export function GameStats({ narrowLayout }: GameStatProps) {
     )
     const strikeMinus = board.strikes * 5
 
-    setTotalScore(sumOfLineScores - strikeMinus)
+    updateScore(sumOfLineScores - strikeMinus)
   }, [board.lines, board.strikes, selectionsMade])
 
   return (
     <div css={styles.gameStatsArea(narrowLayout)}>
       <div>
         <h3 css={styles.statLabel}>score</h3>
-        <p css={styles.statValue}>{totalScore}</p>
+        <p css={styles.statValue}>{score}</p>
       </div>
       <div>
         <h3 css={styles.statLabel}>strikes</h3>
