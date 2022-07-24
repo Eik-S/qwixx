@@ -16,7 +16,7 @@ export function PlayerControls({ player, narrowLayout, ...props }: PlayerControl
   const playing = gameData.state === 'playing'
 
   return (
-    <div css={styles.playerControlsArea} {...props}>
+    <div css={styles.playerControlsArea(narrowLayout)} {...props}>
       {!moveIsDone && playing && isActivePlayer && (
         <DonePassButton
           onClick={() => lockMove(player.id)}
@@ -40,12 +40,16 @@ function DonePassButton({ onClick, text, ...props }: { onClick: () => void; text
 }
 
 const styles = {
-  playerControlsArea: css`
+  playerControlsArea: (narrowLayout: boolean) => css`
     height: 100%;
     display: flex;
     flex-direction: row;
     align-items: flex-end;
     min-width: 160px;
+    ${narrowLayout &&
+    css`
+      min-width: 56px;
+    `}
   `,
   passButton: css`
     border: none;

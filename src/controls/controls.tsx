@@ -53,7 +53,7 @@ const styles = {
     ${numberOfPlayers === 4 &&
     css`
       bottom: auto;
-      right: 200px;
+      right: 10px;
     `}
   `,
   buttonIcon: css`

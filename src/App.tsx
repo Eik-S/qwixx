@@ -70,12 +70,17 @@ const styles = {
     padding: 24px;
 
     display: grid;
-    grid-template-columns: minmax(0, 298px) 1fr minmax(0, 298px);
+    grid-template-columns: 20% 60% 20%;
     grid-template-rows: auto 1fr auto;
     grid-template-areas:
       'player_left player_top player_right'
       'player_left mid_content player_right'
       'player_left player_bottom player_right';
+
+    @media (orientation: portrait) {
+      grid-template-columns: 30% 40% 30%;
+      height: 100vh;
+    }
   `,
   dicesArea: css`
     grid-area: mid_content;

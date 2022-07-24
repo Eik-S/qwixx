@@ -14,13 +14,13 @@ const styles = {
     margin-top: -10px;
     font-size: 80px;
     line-height: 48px;
-    margin: -16px 6px 0;
+    margin: 6px 6px 0;
     cursor: pointer;
     color: ${color};
     ${isBig &&
     css`
-      font-size: 180px;
-      line-height: 120px;
+      font-size: 150px;
+      line-height: 100px;
     `}
   `,
 }

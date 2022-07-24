@@ -16,7 +16,7 @@ const greenDiceColor = getHexColor('g')
 const blueDiceColor = getHexColor('b')
 
 export function DiceCup({ isBig }: { isBig: boolean }) {
-  const { movingPlayerId, setPossibleMoves } = useGameStateContext()
+  const { movingPlayerId, setPossibleMoves, numberOfPlayers } = useGameStateContext()
   const [isRolling, setIsRolling] = useState(false)
 
   const [dices, setDices] = useState<DiceObj[]>([
@@ -81,7 +81,7 @@ export function DiceCup({ isBig }: { isBig: boolean }) {
   }, [movingPlayerId])
 
   return (
-    <div css={styles.diceCup}>
+    <div css={styles.diceCup(numberOfPlayers)}>
       {dices.map((dice, i) => (
         <Dice key={i} value={dice.value} color={dice.color} isBig={isBig} />
       ))}
@@ -90,9 +90,14 @@ export function DiceCup({ isBig }: { isBig: boolean }) {
 }
 
 const styles = {
-  diceCup: css`
+  diceCup: (numPlayers: number) => css`
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap;
+    ${numPlayers !== 2 &&
+    css`
+      @media (orientation: portrait) {
+        flex-direction: column;
+      }
+    `}
   `,
 }
