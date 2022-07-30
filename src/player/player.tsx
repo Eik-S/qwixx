@@ -18,7 +18,6 @@ export interface PlayerProps {
 export function Player({ id, ...props }: PlayerProps) {
   const { gameData } = useGameStateContext()
   const player = gameData.players.find((player) => player.id === id)!
-  const narrowLayout = gameData.players.length > 2
 
   useEffect(() => {
     if (gameData.state === 'finished' && id === gameData.winnerPlayerId) {
@@ -44,53 +43,35 @@ export function Player({ id, ...props }: PlayerProps) {
   }, [gameData, id])
 
   return (
-    <div id={`player-area-${id}`} css={styles.playerArea(narrowLayout)} {...props}>
-      <div css={styles.stats(narrowLayout)}>
-        <GameStats narrowLayout={narrowLayout} />
+    <div id={`player-area-${id}`} css={styles.playerArea} {...props}>
+      <div css={styles.stats}>
+        <GameStats />
       </div>
 
       <GameBoard playerId={id} css={styles.gameBoard}></GameBoard>
 
-      <PlayerControls
-        player={player}
-        css={styles.controls}
-        narrowLayout={narrowLayout}
-      ></PlayerControls>
+      <PlayerControls player={player} css={styles.controls}></PlayerControls>
     </div>
   )
 }
 
 const styles = {
-  playerArea: (narrowLayout: boolean) => css`
+  playerArea: css`
     display: grid;
-    grid-template-areas: 'stats board controls';
-    grid-template-columns: auto auto auto;
-    grid-template-rows: auto;
     grid-column-gap: 18px;
-
-    ${narrowLayout &&
-    css`
-      grid-template-columns: auto auto;
-      grid-template-rows: auto auto;
-      grid-template-areas:
-        'stats .'
-        'board controls';
-    `}
+    grid-template-columns: auto auto;
+    grid-template-rows: auto auto;
+    grid-template-areas:
+      'stats .'
+      'board controls';
   `,
   gameBoard: css`
     grid-area: board;
   `,
-  stats: (narrowLayout: boolean) => css`
+  stats: css`
     grid-area: stats;
-    border-right: 4px solid ${colors.grey};
-    margin: -6px 0;
+    margin: 0;
     padding: 6px 18px 6px 0;
-
-    ${narrowLayout &&
-    css`
-      border: none;
-      margin: 0;
-    `}
   `,
   controls: css`
     grid-area: controls;

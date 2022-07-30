@@ -3,11 +3,9 @@ import { useEffect } from 'react'
 import { usePlayerStateContext } from '../hooks/use-player-game-state'
 import { Line } from '../models/game'
 
-export interface GameStatProps {
-  narrowLayout: boolean
-}
+export interface GameStatProps {}
 
-export function GameStats({ narrowLayout }: GameStatProps) {
+export function GameStats({ ...props }: GameStatProps) {
   const { board, score, updateScore } = usePlayerStateContext()
 
   const selectionsMade = board.lines.reduce((previousValue, currentVal) => {
@@ -37,10 +35,10 @@ export function GameStats({ narrowLayout }: GameStatProps) {
     const strikeMinus = board.strikes * 5
 
     updateScore(sumOfLineScores - strikeMinus)
-  }, [board.lines, board.strikes, selectionsMade])
+  }, [board.lines, board.strikes, selectionsMade, updateScore])
 
   return (
-    <div css={styles.gameStatsArea(narrowLayout)}>
+    <div css={styles.gameStatsArea} {...props}>
       <div>
         <h3 css={styles.statLabel}>score</h3>
         <p css={styles.statValue}>{score}</p>
@@ -62,25 +60,17 @@ export function GameStats({ narrowLayout }: GameStatProps) {
 }
 
 const styles = {
-  gameStatsArea: (narrowLayout: boolean) => css`
+  gameStatsArea: css`
     height: 100%;
     display: grid;
-    grid-auto-flow: row;
+    grid-auto-flow: column;
     text-align: center;
-    align-content: space-between;
-
-    ${narrowLayout &&
-    css`
-      grid-auto-flow: column;
-      justify-content: left;
-      justify-content: space-between;
-
-      & > div {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-      }
-    `}
+    justify-content: space-between;
+    & > div {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
   `,
   statLabel: css`
     text-transform: uppercase;

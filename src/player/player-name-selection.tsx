@@ -25,7 +25,7 @@ export function PlayerNameSelection({ playerId, ...props }: { playerId: string }
   }
 
   function setPlayerFromMatchupPlayer(matchupPlayer: MatchupPlayer) {
-    updatePlayerData(playerId, matchupPlayer)
+    updatePlayerData(playerId, { name: matchupPlayer.name, avatarCode: matchupPlayer.avatarCode })
   }
 
   return (
