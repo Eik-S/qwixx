@@ -18,8 +18,10 @@ import {
   Player,
   PlayerState,
 } from '../models/game'
+import { MatchupPlayer } from '../models/matchup'
 import { getNewBoard } from '../utils/game-board-factory'
 import { getNewPlayer } from '../utils/player-factory'
+import { useMatchupContext } from './use-matchup'
 
 export type GameStatus = 'running' | 'finished'
 
@@ -40,7 +42,7 @@ export interface GameStateApi {
   addPlayer: (player: Player) => void
   removePlayer: () => void
   setGameData: Dispatch<SetStateAction<GameData>>
-  updatePlayerData: (player: Player) => void
+  updatePlayerData: (playerId: string, newFields: Partial<Player>) => void
   closeLine: (line: Line) => void
   updatePlayerBoard: (playerId: string, board: Board) => void
   lockMove: (playerId: string) => void
@@ -51,6 +53,7 @@ export interface GameStateApi {
 
 function useGameState(): GameStateApi {
   const [gameData, setGameData] = useState<GameData>(createEmptyLobby())
+  const { initCurrentMatchup, addWin } = useMatchupContext()
   const movingPlayerId = gameData.state === 'playing' ? gameData.movingPlayerId : undefined
   const numberOfClosedLines = gameData.state === 'playing' ? gameData.closedLineColors.length : 0
   const [possibleMoves, setPossibleMoves] = useState<PossibleMoves | undefined>(undefined)
@@ -60,6 +63,7 @@ function useGameState(): GameStateApi {
     if (numberOfClosedLines >= 2) {
       endGame()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [numberOfClosedLines, gameData.state, movingPlayerId])
 
   function endGame() {
@@ -68,6 +72,8 @@ function useGameState(): GameStateApi {
       const playersSortedByScore = [...prevGameData.players].sort((a, b) => a.score - b.score)
       const looser = playersSortedByScore[0]
       const winner = playersSortedByScore[playersSortedByScore.length - 1]
+
+      addWin(winner.id)
 
       return {
         ...prevGameData,
@@ -107,12 +113,18 @@ function useGameState(): GameStateApi {
     })
   }
 
-  function updatePlayerData(player: Player): void {
+  function updatePlayerData(playerId: string, newFields: Partial<Player>): void {
+    const { id } = newFields
+    const playerWithSameId = gameData.players.find((player) => player.id === id)
+    if (id !== undefined && playerWithSameId) {
+      return
+    }
+
     setGameData((prevGameData) => ({
       ...prevGameData,
       players: prevGameData.players.map((prevPlayer) => {
-        if (player.id === prevPlayer.id) {
-          return player
+        if (prevPlayer.id === playerId) {
+          return { ...prevPlayer, ...newFields }
         } else {
           return prevPlayer
         }
@@ -134,6 +146,16 @@ function useGameState(): GameStateApi {
       })
     }
     if (gameData.state === 'lobby') {
+      const matchupPlayers: MatchupPlayer[] = gameData.players.map((player) => {
+        return {
+          id: player.id,
+          name: player.name,
+          avatarCode: player.avatarCode,
+          wins: 0,
+        }
+      })
+      initCurrentMatchup(matchupPlayers)
+
       setGameData((prevGameData): GamePlayingData => {
         return {
           ...prevGameData,

@@ -55,6 +55,7 @@ const styles = {
     border: 4px solid ${colors.darkGrey};
     display: flex;
     flex-direction: row;
+    min-width: 545px;
   `,
   controlElement: css`
     display: grid;

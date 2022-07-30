@@ -1,12 +1,4 @@
-import {
-  createContext,
-  Dispatch,
-  ReactNode,
-  SetStateAction,
-  useContext,
-  useEffect,
-  useState,
-} from 'react'
+import { createContext, ReactNode, useContext, useEffect, useState } from 'react'
 import { Board, Field, Line, Player } from '../models/game'
 import { useGameStateContext } from './use-global-game-state'
 
@@ -18,10 +10,12 @@ interface Selection {
 }
 interface PlayerStateApi {
   board: Board
-  isActivePlayer: boolean
   numSelectionsMade: number
   selections: Selection[]
   score: number
+  player: Player
+  isActivePlayer: boolean
+  isWinningPlayer: boolean | undefined
   updateScore: (newScore: number) => void
   toggleField: (line: Line, field: Field, type: SelectionType) => void
 }
@@ -31,15 +25,30 @@ interface UsePlayerStateProps {
 }
 
 export function usePlayerState({ player }: UsePlayerStateProps): PlayerStateApi {
-  const { movingPlayerId, isTimeOver, updatePlayerBoard, updatePlayerData } = useGameStateContext()
-  const { gameData, endGame, closeLine, setNextPlayer, lockMove, unlockMove } =
-    useGameStateContext()
+  // context state
+  const {
+    movingPlayerId,
+    isTimeOver,
+    gameData,
+    updatePlayerBoard,
+    updatePlayerData,
+    endGame,
+    closeLine,
+    setNextPlayer,
+    lockMove,
+    unlockMove,
+  } = useGameStateContext()
+
+  // state
   const [board, setBoard] = useState(player.board)
+  const [selections, setSelections] = useState<Selection[]>([])
+  const [isActivePlayer, setIsActivePlayer] = useState(false)
+  // derived state
   const numberOfStrikes = player.board.strikes
   const score = player.score
-  const [selections, setSelections] = useState<Selection[]>([])
+  const isWinningPlayer =
+    gameData.state === 'finished' ? gameData.winnerPlayerId === player.id : undefined
   const numSelectionsMade = selections.length
-  const [isActivePlayer, setIsActivePlayer] = useState(false)
 
   useEffect(() => {
     const playerBoard = gameData.players.find((p) => p.id === player.id)?.board!
@@ -164,8 +173,7 @@ export function usePlayerState({ player }: UsePlayerStateProps): PlayerStateApi 
   }
 
   function updateScore(newScore: number) {
-    updatePlayerData({
-      ...player,
+    updatePlayerData(player.id, {
       score: newScore,
     })
   }
@@ -202,9 +210,11 @@ export function usePlayerState({ player }: UsePlayerStateProps): PlayerStateApi 
   return {
     board,
     score,
-    isActivePlayer,
     selections,
     numSelectionsMade,
+    player,
+    isActivePlayer,
+    isWinningPlayer,
     updateScore,
     toggleField,
   }

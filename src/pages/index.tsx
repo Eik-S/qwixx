@@ -1,10 +1,13 @@
 import { App } from '../App'
 import { GameStateContextProvider } from '../hooks/use-global-game-state'
+import { MatchupContextProvider } from '../hooks/use-matchup'
 
 export default function Home() {
   return (
-    <GameStateContextProvider>
-      <App />
-    </GameStateContextProvider>
+    <MatchupContextProvider>
+      <GameStateContextProvider>
+        <App />
+      </GameStateContextProvider>
+    </MatchupContextProvider>
   )
 }

@@ -21,6 +21,7 @@ export type PlayerState = 'moving' | 'done'
 export interface Player {
   id: string
   name: string
+  avatarCode: number
   board: Board
   state: PlayerState
   score: number

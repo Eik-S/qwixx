@@ -5,6 +5,7 @@ import { LineColor, Field } from '../models/game'
 import { Player } from '../models/game'
 import { Session, SessionInfo } from '../models/session-elements'
 import { SessionMessage } from '../models/session-messages'
+import { getRandomIconCode } from '../utils/avatar-codes'
 
 let sessions: Session[] = []
 
@@ -60,6 +61,7 @@ function initPlayer(name: string): Player {
   return {
     id: playerId,
     name,
+    avatarCode: getRandomIconCode(),
     state: 'moving',
     board: {
       lines: ['r', 'y', 'g', 'b'].map((lineColor) => {

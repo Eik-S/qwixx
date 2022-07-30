@@ -19,12 +19,6 @@ const baseButtonStyles = (size: 'small' | 'normal') => css`
     letter-spacing: 0em;
   `}
 
-  &:hover {
-    box-shadow: 0 0 6px 0px $grey;
-  }
-  &:active {
-    box-shadow: inset 0 0 6px 0px $grey;
-  }
   &:disabled {
     box-shadow: none;
     color: ${colors.lightGrey};

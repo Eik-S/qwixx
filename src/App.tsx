@@ -9,6 +9,7 @@ import { PlayerStateContextProvider } from './hooks/use-player-game-state'
 import { FinishedControls } from './lobby/finished-controls'
 import { LobbyControls } from './lobby/lobby-controls'
 import { Player } from './player/player'
+import { PlayerSelection } from './player/player-selection'
 
 export function App() {
   const { gameData } = useGameStateContext()
@@ -31,6 +32,7 @@ export function App() {
     if (players.length === 4) {
       return playerId === 0 ? 'top' : playerId === 1 ? 'right' : playerId === 2 ? 'bottom' : 'left'
     }
+    throw new Error('unreachable state. only 2,3 or 4 playrs are aloud')
   }
 
   // dont render app on the server to not have
@@ -44,11 +46,20 @@ export function App() {
     <>
       <BackgroundEffects css={styles.background} />
       <div css={styles.content}>
-        {players.map((player, index) => (
-          <PlayerStateContextProvider key={index} player={player}>
-            <Player id={player.id} gridPosition={getGridPosition(index)} />
-          </PlayerStateContextProvider>
-        ))}
+        {players.map((player, index) =>
+          gameState === 'lobby' ? (
+            <PlayerSelection
+              key={player.id}
+              player={player}
+              css={styles.playerArea(getGridPosition(index))}
+            />
+          ) : (
+            <PlayerStateContextProvider key={player.id} player={player}>
+              <Player id={player.id} css={styles.playerArea(getGridPosition(index))} />
+            </PlayerStateContextProvider>
+          ),
+        )}
+
         {gameState === 'playing' && (
           <div css={styles.dicesArea}>
             <DiceCup isBig={isBig} />
@@ -81,6 +92,28 @@ const styles = {
       grid-template-columns: 30% 40% 30%;
       height: 100vh;
     }
+  `,
+  playerArea: (gridPosition: 'top' | 'bottom' | 'left' | 'right') => css`
+    width: min-content;
+    grid-area: ${`player_${gridPosition}`};
+    justify-self: center;
+
+    ${gridPosition === 'top' &&
+    css`
+      rotate: 180deg;
+    `}
+    ${gridPosition === 'left' &&
+    css`
+      justify-self: center;
+      align-self: center;
+      transform: rotate(90deg);
+    `}
+      ${gridPosition === 'right' &&
+    css`
+      justify-self: center;
+      align-self: center;
+      rotate: 270deg;
+    `};
   `,
   dicesArea: css`
     grid-area: mid_content;

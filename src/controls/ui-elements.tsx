@@ -34,13 +34,21 @@ export function PlusButton({ onClick, disabled, labelId, ...props }: ButtonProps
   return PlusMinusButton({ onClick, disabled, type: 'plus', labelId, ...props })
 }
 
-export interface BigButtonProps extends ButtonProps {
+export interface TextButtonProps extends ButtonProps {
   text: string
 }
 
-export function BigButton({ onClick, disabled, text, labelId, ...props }: BigButtonProps) {
+export function BigButton({ onClick, disabled, text, labelId, ...props }: TextButtonProps) {
   return (
     <button css={styles.bigButton} disabled={disabled} id={labelId} onClick={onClick} {...props}>
+      {text}
+    </button>
+  )
+}
+
+export function Button({ onClick, disabled, text, labelId, ...props }: TextButtonProps) {
+  return (
+    <button css={styles.button} disabled={disabled} id={labelId} onClick={onClick} {...props}>
       {text}
     </button>
   )
@@ -82,6 +90,9 @@ const styles = {
   `,
   bigButton: css`
     ${buttonStyles}
+  `,
+  button: css`
+    ${smallButtonStyles}
   `,
   checkbox: css`
     ${smallButtonStyles}

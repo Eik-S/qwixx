@@ -13,10 +13,9 @@ import {
 } from 'party-js'
 export interface PlayerProps {
   id: string
-  gridPosition: 'top' | 'bottom' | 'left' | 'right' | undefined
 }
 
-export function Player({ id, gridPosition }: PlayerProps) {
+export function Player({ id, ...props }: PlayerProps) {
   const { gameData } = useGameStateContext()
   const player = gameData.players.find((player) => player.id === id)!
   const narrowLayout = gameData.players.length > 2
@@ -45,7 +44,7 @@ export function Player({ id, gridPosition }: PlayerProps) {
   }, [gameData, id])
 
   return (
-    <div id={`player-area-${id}`} css={styles.playerArea(gridPosition, narrowLayout)}>
+    <div id={`player-area-${id}`} css={styles.playerArea(narrowLayout)} {...props}>
       <div css={styles.stats(narrowLayout)}>
         <GameStats narrowLayout={narrowLayout} />
       </div>
@@ -62,18 +61,12 @@ export function Player({ id, gridPosition }: PlayerProps) {
 }
 
 const styles = {
-  playerArea: (
-    gridPosition: 'top' | 'bottom' | 'left' | 'right' | undefined,
-    narrowLayout: boolean,
-  ) => css`
+  playerArea: (narrowLayout: boolean) => css`
     display: grid;
     grid-template-areas: 'stats board controls';
     grid-template-columns: auto auto auto;
     grid-template-rows: auto;
     grid-column-gap: 18px;
-    width: min-content;
-    grid-area: ${`player_${gridPosition}`};
-    justify-self: center;
 
     ${narrowLayout &&
     css`
@@ -83,22 +76,6 @@ const styles = {
         'stats .'
         'board controls';
     `}
-    ${gridPosition === 'top' &&
-    css`
-      rotate: 180deg;
-    `}
-      ${gridPosition === 'left' &&
-    css`
-      justify-self: center;
-      align-self: center;
-      transform: rotate(90deg);
-    `}
-      ${gridPosition === 'right' &&
-    css`
-      justify-self: center;
-      align-self: center;
-      rotate: 270deg;
-    `};
   `,
   gameBoard: css`
     grid-area: board;
