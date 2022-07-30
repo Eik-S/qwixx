@@ -15,11 +15,19 @@ export function PlayerAvatarSelection({ playerId, ...props }: { playerId: string
   return (
     <div {...props} css={styles.playerIconSelection}>
       <Label htmlFor="generate-random-icon" text="choose your avatar" />
-      <button onClick={() => changePlayerAvatar()} id="generate-random-icon" css={styles.avatar}>
-        {String.fromCodePoint(player.avatarCode)}
+      <button
+        onClick={() => changePlayerAvatar()}
+        id="generate-random-icon"
+        css={styles.avatarButton}
+      >
+        <Avatar code={player.avatarCode} />
       </button>
     </div>
   )
+}
+
+export function Avatar({ code }: { code: number }) {
+  return <span css={styles.avatar}>{String.fromCodePoint(code)}</span>
 }
 
 const styles = {
@@ -29,11 +37,13 @@ const styles = {
     place-items: center;
     row-gap: 12px;
   `,
+  avatarButton: css`
+    border: none;
+    background-color: transparent;
+  `,
   avatar: css`
     font-size: 64px;
     font-family: NotoEmoji;
-    border: none;
-    background-color: transparent;
     font-weight: bold;
   `,
   changeButton: css`
