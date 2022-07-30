@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
-import { Label } from '../controls/ui-elements'
-import { useGameStateContext } from '../hooks/use-global-game-state'
-import { getRandomIconCode } from '../utils/avatar-codes'
+import { Label } from '../../controls/ui-elements'
+import { useGameStateContext } from '../../hooks/use-global-game-state'
+import { getRandomIconCode } from '../../utils/avatar-codes'
 
 export function PlayerAvatarSelection({ playerId, ...props }: { playerId: string }) {
   const { gameData, updatePlayerData } = useGameStateContext()

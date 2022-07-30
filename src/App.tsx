@@ -9,7 +9,7 @@ import { PlayerStateContextProvider } from './hooks/use-player-game-state'
 import { FinishedControls } from './lobby/finished-controls'
 import { LobbyControls } from './lobby/lobby-controls'
 import { Player } from './player/player'
-import { PlayerSelection } from './player/player-selection'
+import { PlayerSelection } from './player/player-selection/player-selection'
 
 export function App() {
   const { gameData } = useGameStateContext()

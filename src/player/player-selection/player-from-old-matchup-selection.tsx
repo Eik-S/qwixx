@@ -1,8 +1,8 @@
 import { css } from '@emotion/react'
-import { Button, Label } from '../controls/ui-elements'
-import { useGameStateContext } from '../hooks/use-global-game-state'
-import { useMatchupContext } from '../hooks/use-matchup'
-import { MatchupPlayer } from '../models/matchup'
+import { Button, Label } from '../../controls/ui-elements'
+import { useGameStateContext } from '../../hooks/use-global-game-state'
+import { useMatchupContext } from '../../hooks/use-matchup'
+import { MatchupPlayer } from '../../models/matchup'
 
 export function PlayerFromOldMatchupSelection({ playerId, ...props }: { playerId: string }) {
   const { oldMatchupPlayers } = useMatchupContext()

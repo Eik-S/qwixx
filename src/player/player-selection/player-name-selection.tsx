@@ -1,9 +1,9 @@
 import { css } from '@emotion/react'
 import { ChangeEvent } from 'react'
-import { Label } from '../controls/ui-elements'
-import { useGameStateContext } from '../hooks/use-global-game-state'
-import { useMatchupContext } from '../hooks/use-matchup'
-import { MatchupPlayer } from '../models/matchup'
+import { Label } from '../../controls/ui-elements'
+import { useGameStateContext } from '../../hooks/use-global-game-state'
+import { useMatchupContext } from '../../hooks/use-matchup'
+import { MatchupPlayer } from '../../models/matchup'
 
 export function PlayerNameSelection({ playerId, ...props }: { playerId: string }) {
   const { gameData, updatePlayerData } = useGameStateContext()

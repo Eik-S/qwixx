@@ -1,5 +1,5 @@
 import { css } from '@emotion/react'
-import { Player } from '../models/game'
+import { Player } from '../../models/game'
 import { PlayerFromOldMatchupSelection } from './player-from-old-matchup-selection'
 import { PlayerAvatarSelection } from './player-icon-selection'
 import { PlayerNameSelection } from './player-name-selection'
