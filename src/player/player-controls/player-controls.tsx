@@ -16,6 +16,8 @@ export function PlayerControls({ player, ...props }: PlayerControlsProps) {
 
   return (
     <div css={styles.playerControlsArea} {...props}>
+      <span css={styles.playerAvatar}>{String.fromCodePoint(player.avatarCode)}</span>
+
       {!moveIsDone && playing && isActivePlayer && (
         <DonePassButton
           onClick={() => lockMove(player.id)}
@@ -41,9 +43,14 @@ function DonePassButton({ onClick, text, ...props }: { onClick: () => void; text
 const styles = {
   playerControlsArea: css`
     display: flex;
-    flex-direction: row;
-    align-items: flex-end;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
     min-width: 56px;
+  `,
+  playerAvatar: css`
+    font-family: 'NotoEmoji';
+    font-size: 42px;
   `,
   passButton: css`
     border: none;

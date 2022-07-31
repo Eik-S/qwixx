@@ -26,6 +26,7 @@ export function PlayerFromOldMatchupSelection({ playerId, ...props }: { playerId
             key={oldPlayer.id}
             onClick={() => setPlayerFromMatchupPlayer(oldPlayer)}
             text={oldPlayer.name}
+            css={styles.smallButton}
           />
         ))}
       </div>
@@ -44,9 +45,14 @@ const styles = {
   oldNamesContainer: css`
     display: flex;
     flex-wrap: wrap;
-    column-gap: 16px;
-    row-gap: 8px;
+    column-gap: 8px;
+    row-gap: 4px;
     max-height: 104px;
     overflow-y: auto;
+  `,
+  smallButton: css`
+    font-size: 18px;
+    letter-spacing: 0.05em;
+    padding: 0 8px;
   `,
 }

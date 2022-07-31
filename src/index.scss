@@ -19,6 +19,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+button {
+  color: $dark-grey;
+}
+
 *:not(input) {
   box-sizing: border-box;
   user-select: none;

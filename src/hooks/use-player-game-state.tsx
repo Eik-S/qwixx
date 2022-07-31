@@ -134,7 +134,7 @@ export function usePlayerState({ player }: UsePlayerStateProps): PlayerStateApi 
   }, [isActivePlayer, lockMove, numSelectionsMade, player.id, unlockMove])
 
   useEffect(() => {
-    if (gameData.state === 'playing' && numberOfStrikes === 1) {
+    if (gameData.state === 'playing' && numberOfStrikes === 4) {
       endGame()
     }
   }, [endGame, gameData.state, numberOfStrikes])

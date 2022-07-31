@@ -35,7 +35,8 @@ export function GameStats({ ...props }: GameStatProps) {
     const strikeMinus = board.strikes * 5
 
     updateScore(sumOfLineScores - strikeMinus)
-  }, [board.lines, board.strikes, selectionsMade, updateScore])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [board.lines, board.strikes, selectionsMade])
 
   return (
     <div css={styles.gameStatsArea} {...props}>

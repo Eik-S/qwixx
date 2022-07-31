@@ -146,15 +146,7 @@ function useGameState(): GameStateApi {
       })
     }
     if (gameData.state === 'lobby') {
-      const matchupPlayers: MatchupPlayer[] = gameData.players.map((player) => {
-        return {
-          id: player.id,
-          name: player.name,
-          avatarCode: player.avatarCode,
-          wins: 0,
-        }
-      })
-      initCurrentMatchup(matchupPlayers)
+      saveMatchup()
 
       setGameData((prevGameData): GamePlayingData => {
         return {
@@ -165,6 +157,19 @@ function useGameState(): GameStateApi {
         }
       })
     }
+  }
+
+  function saveMatchup() {
+    const matchupPlayers: MatchupPlayer[] = gameData.players.map((player) => {
+      return {
+        id: player.id,
+        name: player.name,
+        avatarCode: player.avatarCode,
+        wins: 0,
+      }
+    })
+
+    initCurrentMatchup(matchupPlayers)
   }
 
   function createEmptyLobby(): GameData {

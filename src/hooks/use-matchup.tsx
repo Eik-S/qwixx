@@ -37,11 +37,19 @@ function useMatchup(): MatchupApi {
 
   // keep currentMatchup up to date with localStorage version on changes
   useEffect(() => {
+    function onlyComputerGeneratedPlayerNames(players: MatchupPlayer[]): boolean {
+      return players.find((player) => player.name !== player.id.split('-')[1]) === undefined
+    }
+
     if (currentMatchup === undefined) {
       return
     }
 
     const playerIds = currentMatchup.players.map((player) => player.id)
+
+    if (onlyComputerGeneratedPlayerNames(currentMatchup.players)) {
+      return
+    }
 
     setMatchups((oldMatchups) => {
       const exceptCurrentMatchup = oldMatchups.filter((matchup) => !matches(matchup, playerIds))

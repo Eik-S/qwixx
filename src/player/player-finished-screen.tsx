@@ -73,18 +73,33 @@ const styles = {
     ${isWinningPlayer &&
     css`
       & > span:last-of-type {
-        animation: animateCrownPlacement 2s ease-in-out;
+        animation: animateCrownPlacement 2.5s ease-in-out;
       }
 
       @keyframes animateCrownPlacement {
         0% {
-          width: 80px;
           font-size: 30px;
           top: ${numberOfWins * -20 + -80}px;
+          background-color: transparent;
+          rotate: 0deg;
+        }
+        10% {
+          font-size: 80px;
+          width: 100px;
+        }
+        14%,
+        22% {
+          rotate: 10deg;
+        }
+        18%,
+        26% {
+          rotate: -10deg;
         }
         30% {
-          width: 200px;
+          rotate: getRandomCrownRotation();
+          top: ${numberOfWins * -20 + -80}px;
           font-size: 80px;
+          width: 100px;
         }
         100% {
           width: 20px;

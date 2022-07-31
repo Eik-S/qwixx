@@ -21,6 +21,7 @@ const styles = {
     grid-template-columns: 1fr 1fr;
     grid-template-rows: auto 1fr;
     row-gap: 24px;
+    padding-top: 24px;
   `,
   fromOldMatchupSelection: css`
     grid-row: 2;
