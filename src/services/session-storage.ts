@@ -1,11 +1,11 @@
 import { randomUUID } from 'crypto'
-import humanId from 'human-id'
 import { PassThrough } from 'stream'
 import { LineColor, Field } from '../models/game'
 import { Player } from '../models/game'
 import { Session, SessionInfo } from '../models/session-elements'
 import { SessionMessage } from '../models/session-messages'
 import { getRandomIconCode } from '../utils/avatar-codes'
+var hri = require('human-readable-ids').hri
 
 let sessions: Session[] = []
 
@@ -94,10 +94,7 @@ function getLineFields(order: 'asc' | 'desc'): Field[] {
 }
 
 function getHumanReadableId(): string {
-  return humanId({
-    separator: '-',
-    capitalize: false,
-  })
+  return hri.random().toUpperCase()
 }
 
 function sendJoinMessage(session: Session): void {
