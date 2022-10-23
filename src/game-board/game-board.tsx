@@ -5,6 +5,11 @@ import { SelectionType, usePlayerStateContext } from '../hooks/use-player-game-s
 import { Field, Line } from '../models/game'
 import * as DrawingUtil from './drawing-utility'
 
+interface BoardPosition {
+  line: Line
+  field: Field
+}
+
 export interface GameBoardProps {
   playerId: string
 }
@@ -13,6 +18,7 @@ export function GameBoard({ playerId, ...props }: GameBoardProps) {
   const { board, isActivePlayer, selections, numSelectionsMade, toggleField } =
     usePlayerStateContext()
   const { possibleMoves } = useGameStateContext()
+  const [mouseDownPosition, setMouseDownPosition] = useState<BoardPosition | undefined>(undefined)
 
   const [ctx, setCtx] = useState<CanvasRenderingContext2D>()
 
@@ -47,22 +53,6 @@ export function GameBoard({ playerId, ...props }: GameBoardProps) {
 
     DrawingUtil.drawLines(ctx, board.lines)
   }, [ctx, board])
-
-  function hasSelection(line: Line, selectedField: Field, direction: 'right' | 'left'): boolean {
-    const lineCopy = JSON.parse(JSON.stringify(line)) as Line
-    if (direction === 'right') {
-      lineCopy.fields.reverse()
-    }
-    for (const field of lineCopy.fields) {
-      if (field.value === selectedField.value) {
-        return false
-      }
-      if (field.status === 'selected') {
-        return true
-      }
-    }
-    return false
-  }
 
   function getSelectionType(line: Line, field: Field): SelectionType | undefined {
     if (possibleMoves === undefined) {
@@ -151,8 +141,7 @@ export function GameBoard({ playerId, ...props }: GameBoardProps) {
     return true
   }
 
-  function handleFieldClick(line: Line, field: Field) {
-    // TODO: dont handle if move is locked
+  function handleFieldClick({ line, field }: BoardPosition) {
     const isFieldClickValid = checkIsFieldClickValid(field)
     if (!isFieldClickValid) return
 
@@ -164,16 +153,37 @@ export function GameBoard({ playerId, ...props }: GameBoardProps) {
     toggleField(line, field, selectionType)
   }
 
+  function getClickBoardPosition(
+    event: React.MouseEvent<HTMLCanvasElement>,
+  ): BoardPosition | undefined {
+    event.preventDefault()
+    const y = event.nativeEvent.offsetY
+    const x = event.nativeEvent.offsetX
+
+    const line = dimensions.getLineByYPos(y, board.lines)
+    const field = dimensions.getFieldAtPosition(board.lines, x, y)
+
+    if (line === undefined || field === undefined) {
+      return undefined
+    }
+
+    return {
+      line,
+      field,
+    }
+  }
+
   return (
     <canvas
       id={`canvas-of-player-${playerId}`}
-      onClick={(event: React.MouseEvent) => {
-        const y = event.nativeEvent.offsetY
-        const x = event.nativeEvent.offsetX
-        const line = dimensions.getLineByYPos(y, board.lines)
-        const field = dimensions.getFieldAtPosition(board.lines, x, y)
-        if (line === undefined || field === undefined) return
-        handleFieldClick(line, field)
+      onMouseUp={() => {
+        if (mouseDownPosition) {
+          handleFieldClick(mouseDownPosition)
+        }
+      }}
+      onMouseDown={(event) => {
+        const boardPosition = getClickBoardPosition(event)
+        setMouseDownPosition(boardPosition)
       }}
       {...props}
     />
