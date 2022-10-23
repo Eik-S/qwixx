@@ -156,7 +156,6 @@ export function GameBoard({ playerId, ...props }: GameBoardProps) {
   function getClickBoardPosition(
     event: React.MouseEvent<HTMLCanvasElement>,
   ): BoardPosition | undefined {
-    event.preventDefault()
     const y = event.nativeEvent.offsetY
     const x = event.nativeEvent.offsetX
 
@@ -176,12 +175,20 @@ export function GameBoard({ playerId, ...props }: GameBoardProps) {
   return (
     <canvas
       id={`canvas-of-player-${playerId}`}
-      onMouseUp={() => {
+      onPointerCancel={() => {
+        console.log('mouse up', mouseDownPosition)
         if (mouseDownPosition) {
           handleFieldClick(mouseDownPosition)
         }
       }}
-      onMouseDown={(event) => {
+      onPointerUp={() => {
+        console.log('mouse up', mouseDownPosition)
+        if (mouseDownPosition) {
+          handleFieldClick(mouseDownPosition)
+        }
+      }}
+      onPointerDown={(event) => {
+        console.log('mouse down', mouseDownPosition)
         const boardPosition = getClickBoardPosition(event)
         setMouseDownPosition(boardPosition)
       }}
