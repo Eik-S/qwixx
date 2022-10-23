@@ -11,7 +11,7 @@ jobs:
     name: compiling
     runs-on: ubuntu-latest
     steps:
-      - uses: volta-cli/action@v1
+      - uses: volta-cli/action@v3
       - uses: actions/checkout@v3
       - run: npm ci
       - run: npm run tsc
@@ -19,7 +19,7 @@ jobs:
     name: building
     runs-on: ubuntu-latest
     steps:
-      - uses: volta-cli/action@v1
+      - uses: volta-cli/action@v3
       - uses: actions/checkout@v3
       - run: npm ci
       - run: npm run build:static
