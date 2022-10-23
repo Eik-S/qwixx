@@ -51,5 +51,11 @@
   },
   "devDependencies": {
     "@emotion/babel-plugin": "^11.9.2"
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "volta": {
+    "node": "16.18.0"
   }
 }
