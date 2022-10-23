@@ -10,10 +10,6 @@ export function ColorPulse({ color, onPulseShown }: ColorPulseProps) {
   const [showPulse, setShowPulse] = useState(false)
 
   useEffect(() => {
-    console.log({ showPulse })
-  }, [showPulse])
-
-  useEffect(() => {
     setShowPulse(true)
     const timeout = setTimeout(() => {
       setShowPulse(false)

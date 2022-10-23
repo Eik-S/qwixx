@@ -49,6 +49,7 @@ export interface GameStateApi {
   unlockMove: (playerId: string) => void
   setMoveTime: (newTime: MoveTime) => void
   setIsTimeOver: Dispatch<SetStateAction<boolean>>
+  returnToLobby: () => void
 }
 
 function useGameState(): GameStateApi {
@@ -80,6 +81,18 @@ function useGameState(): GameStateApi {
         state: 'finished',
         nextMovingPlayerId: looser.id,
         winnerPlayerId: winner.id,
+      }
+    })
+  }
+
+  function returnToLobby() {
+    setIsTimeOver(false)
+    setGameData((prevGameData: GameData) => {
+      return {
+        ...prevGameData,
+        state: 'lobby',
+        nextMovingPlayerId: undefined,
+        winnerPlayerId: undefined,
       }
     })
   }
@@ -132,30 +145,25 @@ function useGameState(): GameStateApi {
     }))
   }
 
+  function getRandomPlayer(): Player {
+    const randomIndex = Math.floor(Math.random() * gameData.players.length)
+    return gameData.players[randomIndex]
+  }
+
   function startNewGame() {
-    if (gameData.state === 'finished' || gameData.state === 'playing') {
-      setGameData((prevGameData): GamePlayingData => {
-        return {
-          ...prevGameData,
-          state: 'playing',
-          movingPlayerId:
-            gameData.state === 'finished' ? gameData.nextMovingPlayerId : gameData.movingPlayerId,
-          players: gameData.players.map((player) => ({ ...player, board: getNewBoard() })),
-          closedLineColors: [],
-        }
-      })
-    }
+    setGameData((prevGameData): GamePlayingData => {
+      return {
+        ...prevGameData,
+        state: 'playing',
+        movingPlayerId:
+          gameData.state === 'finished' ? gameData.nextMovingPlayerId : getRandomPlayer().id,
+        players: gameData.players.map((player) => ({ ...player, board: getNewBoard() })),
+        closedLineColors: [],
+      }
+    })
+
     if (gameData.state === 'lobby') {
       saveMatchup()
-
-      setGameData((prevGameData): GamePlayingData => {
-        return {
-          ...prevGameData,
-          state: 'playing',
-          movingPlayerId: gameData.players[0].id,
-          closedLineColors: [],
-        }
-      })
     }
   }
 
@@ -259,6 +267,7 @@ function useGameState(): GameStateApi {
     unlockMove: useCallback((playerId: string) => setPlayerState(playerId, 'moving'), []),
     setMoveTime,
     setIsTimeOver,
+    returnToLobby,
   }
 }
 

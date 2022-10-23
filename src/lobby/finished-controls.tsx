@@ -4,14 +4,10 @@ import { BigButton } from '../controls/ui-elements'
 import { useGameStateContext } from '../hooks/use-global-game-state'
 
 export function FinishedControls({ ...props }) {
-  const { startNewGame } = useGameStateContext()
+  const { startNewGame, returnToLobby } = useGameStateContext()
   return (
     <div css={styles.controlsContainer} {...props}>
-      <BigButton
-        css={styles.toLobbyButton}
-        onClick={() => window.location.reload()}
-        text="<- lobby"
-      />
+      <BigButton css={styles.toLobbyButton} onClick={() => returnToLobby()} text="<- lobby" />
       <BigButton onClick={() => startNewGame()} text="new game" />
     </div>
   )

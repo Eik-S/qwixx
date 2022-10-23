@@ -15,7 +15,6 @@ export function GameStats({ ...props }: GameStatProps) {
   }, 0)
 
   useEffect(() => {
-    console.log('calculating score')
     const pointsBySelections = [0, 1, 3, 6, 10, 15, 21, 28, 36, 45, 55, 66, 78]
 
     function getScoreForLine(line: Line) {

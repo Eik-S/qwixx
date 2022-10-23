@@ -6,11 +6,17 @@ import { BigButton, Checkbox, Label, MinusButton, PlusButton } from './ui-elemen
 export interface ControlPaneProps extends React.HTMLAttributes<HTMLDivElement> {
   isBig: boolean
   onChangeIsBig: (newValue: boolean) => void
-  onStartNewGame: () => void
+  closeControlPane: () => void
 }
 
-export function ControlPane({ isBig, onChangeIsBig, onStartNewGame, ...props }: ControlPaneProps) {
-  const { addPlayer, removePlayer, startNewGame, gameData, numberOfPlayers } = useGameStateContext()
+export function ControlPane({
+  isBig,
+  onChangeIsBig,
+  closeControlPane,
+  ...props
+}: ControlPaneProps) {
+  const { addPlayer, removePlayer, startNewGame, returnToLobby, gameData, numberOfPlayers } =
+    useGameStateContext()
 
   function handleAddPlayer(): void {
     addPlayer(getNewPlayer())
@@ -18,7 +24,12 @@ export function ControlPane({ isBig, onChangeIsBig, onStartNewGame, ...props }: 
 
   function handleStartNewGame(): void {
     startNewGame()
-    onStartNewGame()
+    closeControlPane()
+  }
+
+  function handleBackToLobbyClick(): void {
+    returnToLobby()
+    closeControlPane()
   }
 
   function toggleIsBig() {
@@ -48,11 +59,10 @@ export function ControlPane({ isBig, onChangeIsBig, onStartNewGame, ...props }: 
         </div>
         <Label htmlFor={toggleBigDiceId} text="Big Dice" />
         <Checkbox labelId={toggleBigDiceId} checked={isBig} onChange={() => toggleIsBig()} />
-        <BigButton
-          css={styles.restartButton}
-          onClick={() => handleStartNewGame()}
-          text="new game"
-        />
+        <div css={styles.buttons}>
+          <BigButton onClick={() => handleStartNewGame()} text="new game" />
+          <BigButton onClick={() => handleBackToLobbyClick()} text="lobby" />
+        </div>
       </div>
     </div>
   )
@@ -78,8 +88,11 @@ const styles = {
   minusButton: css`
     margin-right: 32px;
   `,
-  restartButton: css`
-    justify-self: center;
+  buttons: css`
     grid-column: 1 / span 2;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    gap: 16px;
   `,
 }

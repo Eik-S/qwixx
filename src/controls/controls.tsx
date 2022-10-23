@@ -28,7 +28,7 @@ export function Controls({ isBig, onChangeIsBig }: ControlsProps) {
             css={styles.controlPane}
             isBig={isBig}
             onChangeIsBig={(newValue) => onChangeIsBig(newValue)}
-            onStartNewGame={() => setIsControlsPaneOpen(false)}
+            closeControlPane={() => setIsControlsPaneOpen(false)}
           />
         </div>
       )}

@@ -176,19 +176,16 @@ export function GameBoard({ playerId, ...props }: GameBoardProps) {
     <canvas
       id={`canvas-of-player-${playerId}`}
       onPointerCancel={() => {
-        console.log('mouse up', mouseDownPosition)
         if (mouseDownPosition) {
           handleFieldClick(mouseDownPosition)
         }
       }}
       onPointerUp={() => {
-        console.log('mouse up', mouseDownPosition)
         if (mouseDownPosition) {
           handleFieldClick(mouseDownPosition)
         }
       }}
       onPointerDown={(event) => {
-        console.log('mouse down', mouseDownPosition)
         const boardPosition = getClickBoardPosition(event)
         setMouseDownPosition(boardPosition)
       }}
