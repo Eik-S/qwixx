@@ -11,36 +11,43 @@ jobs:
     name: compiling
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: volta-cli/action@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 16.15.1
+          node-version-file: 'package.json'
       - run: npm i
       - run: npm run tsc
   build:
     name: building
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: volta-cli/action@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: 'package.json'
       - run: npm i
       - run: npm run build
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: pwa-build
           path: qwixx-pwa/out
-  deploy:
+  deploy-pwa:
     needs: [tsc, build]
     name: deploying pwa
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: pwa-build
-          path: out
-      - uses: shimataro/ssh-key-action@v2
+          path: qwixx-pwa/out
+      - name: assuming role
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          key: ${{ secrets.HETZNER_SSH_PRIVATE_KEY }}
-          known_hosts: 'just-a-placeholder'
-      - run: ssh-keyscan -H ${{ secrets.HETZNER_SERVER_IP }} >> ~/.ssh/known_hosts
-      - run: scp -r ./out/* ${{ secrets.HETZNER_SERVER_USER }}@${{ secrets.HETZNER_SERVER_IP }}:/var/www/qwixx
+          role-to-assume: arn:aws:iam::643625685022:role/qwixxTerraformRestrictedAdmin
+          aws-region: eu-central-1
+      - name: deploying to s3
+        run: aws s3 sync ./qwixx-pwa/out/ s3://qwixx.eikemu.com/ --delete
+      - name: invalidating cloudfront cache
+        run: aws cloudfront create-invalidation --distribution-id E96GBKAUTW52Y --paths '/*'

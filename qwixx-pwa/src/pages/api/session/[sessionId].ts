@@ -64,8 +64,8 @@ export default function handler(
   res.end()
 }
 
-function isValidSessionId(sessionId: string | string[]): sessionId is string {
-  if (Array.isArray(sessionId)) {
+function isValidSessionId(sessionId: string | string[] | undefined): sessionId is string {
+  if (typeof sessionId === 'undefined' || Array.isArray(sessionId)) {
     return false
   }
   if (!sessionId.match(/^[a-z]+-[a-z]+-[a-z]+$/)) {
