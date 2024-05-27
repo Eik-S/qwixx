@@ -2,14 +2,12 @@
 
 # dependencies
 /node_modules
-/.pnp
-.pnp.js
 
 # testing
-/coverage
+/**/coverage
 
 # production
-/build
+/**/build
 
 # misc
 .DS_Store
@@ -24,8 +22,8 @@ yarn-debug.log*
 yarn-error.log*
 
 # next build folders
-/.next
-/out
+/**/.next
+/**/out
 
 # next-pwa generated files
 /public/sw.js

@@ -93,6 +93,6 @@ const styles = {
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
-    gap: 16px;
+    gap: 32px;
   `,
 }

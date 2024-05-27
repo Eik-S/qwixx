@@ -2,7 +2,7 @@
 
 import { colors, getHexColor } from '../assets/colors'
 import { dimensions } from '../constants/dimensions'
-import { Field, Line, LineColor } from './../models/game'
+import { Field, Line, LineColor } from '../models/game'
 
 export function drawLines(ctx: CanvasRenderingContext2D, lines: Line[]): void {
   lines.forEach((line) => {

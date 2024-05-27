@@ -16,8 +16,10 @@ interface PlayerStateApi {
   player: Player
   isActivePlayer: boolean
   isWinningPlayer: boolean | undefined
+  invalidClicks: number
   updateScore: (newScore: number) => void
   toggleField: (line: Line, field: Field, type: SelectionType) => void
+  incrementInvalidClicks: () => void
 }
 
 interface UsePlayerStateProps {
@@ -43,6 +45,8 @@ export function usePlayerState({ player }: UsePlayerStateProps): PlayerStateApi 
   const [board, setBoard] = useState(player.board)
   const [selections, setSelections] = useState<Selection[]>([])
   const [isActivePlayer, setIsActivePlayer] = useState(false)
+  const [numOfInvalidClicks, setNumOfInvalidClicks] = useState(0)
+
   // derived state
   const numberOfStrikes = player.board.strikes
   const score = player.score
@@ -139,6 +143,35 @@ export function usePlayerState({ player }: UsePlayerStateProps): PlayerStateApi 
     }
   }, [endGame, gameData.state, numberOfStrikes])
 
+  useEffect(() => {
+    // only the active player ends a turn
+    if (!isActivePlayer) return
+
+    function handleEndTurn() {
+      if (numSelectionsMade === 0) {
+        board.strikes++
+        updatePlayerBoard(player.id, board)
+      }
+      setNextPlayer()
+    }
+
+    const playerStates = gameData.players.map((player) => player.state)
+    const movingPlayers = playerStates.find((playerState) => playerState === 'moving')
+
+    if (movingPlayers === undefined || isTimeOver) {
+      handleEndTurn()
+    }
+  }, [
+    board,
+    gameData,
+    isActivePlayer,
+    isTimeOver,
+    numSelectionsMade,
+    player.id,
+    setNextPlayer,
+    updatePlayerBoard,
+  ])
+
   function toggleField(targetLine: Line, targetField: Field, selectionType: SelectionType) {
     const line = board.lines.find((line) => line.color === targetLine.color)
     if (!line) {
@@ -178,34 +211,9 @@ export function usePlayerState({ player }: UsePlayerStateProps): PlayerStateApi 
     })
   }
 
-  useEffect(() => {
-    // only the active player ends a turn
-    if (!isActivePlayer) return
-
-    function handleEndTurn() {
-      if (numSelectionsMade === 0) {
-        board.strikes++
-        updatePlayerBoard(player.id, board)
-      }
-      setNextPlayer()
-    }
-
-    const playerStates = gameData.players.map((player) => player.state)
-    const movingPlayers = playerStates.find((playerState) => playerState === 'moving')
-
-    if (movingPlayers === undefined || isTimeOver) {
-      handleEndTurn()
-    }
-  }, [
-    board,
-    gameData,
-    isActivePlayer,
-    isTimeOver,
-    numSelectionsMade,
-    player.id,
-    setNextPlayer,
-    updatePlayerBoard,
-  ])
+  function incrementInvalidClicks() {
+    setNumOfInvalidClicks((prevNumOfInvalidClicks) => prevNumOfInvalidClicks + 1)
+  }
 
   return {
     board,
@@ -215,8 +223,10 @@ export function usePlayerState({ player }: UsePlayerStateProps): PlayerStateApi 
     player,
     isActivePlayer,
     isWinningPlayer,
+    invalidClicks: numOfInvalidClicks,
     updateScore,
     toggleField,
+    incrementInvalidClicks,
   }
 }
 
