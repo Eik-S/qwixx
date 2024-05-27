@@ -30,7 +30,7 @@
   "scripts": {
     "dev": "next dev",
     "start": "next start",
-    "build": "next build",
+    "build": "npm run build:static",
     "build:static": "next build && next export",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
