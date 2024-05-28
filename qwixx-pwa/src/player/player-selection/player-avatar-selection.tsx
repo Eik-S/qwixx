@@ -6,6 +6,7 @@ import { getRandomIconCode } from '../../utils/avatar-codes'
 export function PlayerAvatarSelection({ playerId, ...props }: { playerId: string }) {
   const { gameData, updatePlayerData } = useGameStateContext()
   const player = gameData.players.find((p) => p.id === playerId)!
+  const buttonID = `${playerId}-avatar`
 
   function changePlayerAvatar() {
     const avatarCode = getRandomIconCode()
@@ -14,12 +15,8 @@ export function PlayerAvatarSelection({ playerId, ...props }: { playerId: string
 
   return (
     <div {...props} css={styles.playerIconSelection}>
-      <Label htmlFor="generate-random-icon" text="choose your avatar" />
-      <button
-        onClick={() => changePlayerAvatar()}
-        id="generate-random-icon"
-        css={styles.avatarButton}
-      >
+      <Label htmlFor={buttonID} text="choose your avatar" />
+      <button onClick={() => changePlayerAvatar()} id={buttonID} css={styles.avatarButton}>
         <Avatar code={player.avatarCode} />
       </button>
     </div>

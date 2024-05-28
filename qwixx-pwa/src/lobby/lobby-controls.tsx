@@ -30,18 +30,22 @@ export function LobbyControls({ ...props }) {
     }
   }
 
-  const changeMoveTimeId = 'change-move-time'
   return (
     <div css={styles.controlsContainer} {...props}>
       <div css={styles.controlElement}>
-        <Label htmlFor={changeMoveTimeId} text="move time" />
+        <Label text="move time" aria-label={`${moveTime} seconds move time`} aria-live="polite" />
         <div>
           <MinusButton
             onClick={() => decreaseMoveTime()}
+            aria-label="decrease move time"
             disabled={moveTime === validMoveTimeValues[0]}
           />
           <span css={styles.moveTime}>{moveTime === 'infinite' ? '♾️' : `${moveTime}s`}</span>
-          <PlusButton onClick={() => increaseMoveTime()} disabled={moveTime === 'infinite'} />
+          <PlusButton
+            aria-label="increase move time"
+            onClick={() => increaseMoveTime()}
+            disabled={moveTime === 'infinite'}
+          />
         </div>
       </div>
       <BigButton onClick={() => startNewGame()} text="start game" />

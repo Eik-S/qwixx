@@ -36,29 +36,38 @@ export function ControlPane({
     onChangeIsBig(!isBig)
   }
 
-  const changeNumPlayersId = 'change-num-players'
-  const toggleBigDiceId = 'toggle-big-dice'
+  const bigDiceCheckboxId = 'toggle-big-dice-checkbox'
+  const bigDiceLabelId = 'toggle-big-dice-label'
 
   return (
     <div {...props} css={styles.pane}>
       <h2 css={styles.headline}>Settings</h2>
       <div css={styles.controlsGrid}>
-        <Label htmlFor={changeNumPlayersId} text={`Number of PLayers: ${numberOfPlayers}`} />
+        <Label
+          text={`Number of PLayers: ${numberOfPlayers}`}
+          aria-label={`${numberOfPlayers} player game`}
+          aria-live="polite"
+        />
         <div>
           <MinusButton
             css={styles.minusButton}
-            labelId={changeNumPlayersId}
             onClick={() => removePlayer()}
             disabled={gameData.players.length <= 2}
+            aria-label={`remove player`}
           />
           <PlusButton
-            labelId={changeNumPlayersId}
             onClick={() => handleAddPlayer()}
             disabled={gameData.players.length >= 4}
+            aria-label={`add player`}
           />
         </div>
-        <Label htmlFor={toggleBigDiceId} text="Big Dice" />
-        <Checkbox labelId={toggleBigDiceId} checked={isBig} onChange={() => toggleIsBig()} />
+        <Label htmlFor={bigDiceCheckboxId} id={bigDiceLabelId} text="Big Dice" />
+        <Checkbox
+          id={bigDiceCheckboxId}
+          labelId={bigDiceLabelId}
+          checked={isBig}
+          onChange={() => toggleIsBig()}
+        />
         <div css={styles.buttons}>
           <BigButton onClick={() => handleStartNewGame()} text="new game" />
           <BigButton onClick={() => handleBackToLobbyClick()} text="lobby" />

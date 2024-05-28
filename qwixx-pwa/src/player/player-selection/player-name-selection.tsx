@@ -9,6 +9,7 @@ export function PlayerNameSelection({ playerId, ...props }: { playerId: string }
   const { gameData, updatePlayerData } = useGameStateContext()
   const { oldMatchupPlayers } = useMatchupContext()
   const player = gameData.players.find((p) => p.id === playerId)!
+  const inputID = `${playerId}-name-input`
 
   function setPlayerName(event: ChangeEvent<HTMLInputElement>) {
     const newName = event.target.value.trim().toUpperCase()
@@ -30,10 +31,10 @@ export function PlayerNameSelection({ playerId, ...props }: { playerId: string }
 
   return (
     <div {...props} css={styles.nameSelectionContainer}>
-      <Label htmlFor="player-name-input" text="enter your name" />
+      <Label htmlFor={inputID} text="enter your name" />
       <input
         type="text"
-        name="player-name-input"
+        id={inputID}
         value={player.name ?? ''}
         onChange={setPlayerName}
         css={styles.textInput}

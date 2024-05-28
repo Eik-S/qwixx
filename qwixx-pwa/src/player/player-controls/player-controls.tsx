@@ -21,6 +21,7 @@ export function PlayerControls({ player, ...props }: PlayerControlsProps) {
       {!moveIsDone && playing && isActivePlayer && (
         <DonePassButton
           onClick={() => lockMove(player.id)}
+          aria-label={`end turn of ${player.name}`}
           text={'done'}
           css={styles.playerButton}
         />
@@ -28,6 +29,7 @@ export function PlayerControls({ player, ...props }: PlayerControlsProps) {
       {!moveIsDone && playing && !isActivePlayer && (
         <DonePassButton
           onClick={() => lockMove(player.id)}
+          aria-label={`skip move of ${player.name}`}
           text={'pass'}
           css={css([styles.passButton, styles.playerButton])}
         />

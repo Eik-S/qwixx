@@ -16,6 +16,7 @@ export function Controls({ isBig, onChangeIsBig }: ControlsProps) {
   return (
     <>
       <button
+        aria-label="open game settings"
         css={styles.openControlsButton(numberOfPlayers)}
         onClick={() => setIsControlsPaneOpen((prev) => !prev)}
       >
@@ -29,6 +30,7 @@ export function Controls({ isBig, onChangeIsBig }: ControlsProps) {
             isBig={isBig}
             onChangeIsBig={(newValue) => onChangeIsBig(newValue)}
             closeControlPane={() => setIsControlsPaneOpen(false)}
+            aria-modal="true"
           />
         </div>
       )}
