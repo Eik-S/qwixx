@@ -30,7 +30,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: pwa-build
-          path: qwixx-pwa/out
+          path: qwixx-pwa/build
   deploy-pwa:
     needs: [tsc, build]
     name: deploying pwa
@@ -41,13 +41,13 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: pwa-build
-          path: qwixx-pwa/out
+          path: qwixx-pwa/build
       - name: assuming role
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::643625685022:role/qwixxTerraformRestrictedAdmin
           aws-region: eu-central-1
       - name: deploying to s3
-        run: aws s3 sync ./qwixx-pwa/out/ s3://qwixx.eikemu.com/ --delete
+        run: aws s3 sync ./qwixx-pwa/build/ s3://qwixx.eikemu.com/ --delete
       - name: invalidating cloudfront cache
         run: aws cloudfront create-invalidation --distribution-id E96GBKAUTW52Y --paths '/*'

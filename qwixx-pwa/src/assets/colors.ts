@@ -20,7 +20,7 @@ export const colors = {
   darkGrey: '#434343',
 
   background: '#fff',
-}
+} as const
 
 export function getHexColor(colorString: string, accent?: 'light' | 'dark'): string {
   if (colorString === 'r') {
