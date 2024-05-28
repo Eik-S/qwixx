@@ -47,7 +47,9 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::643625685022:role/qwixxTerraformRestrictedAdmin
           aws-region: eu-central-1
-      - name: deploying to s3
-        run: aws s3 sync ./qwixx-pwa/build/ s3://qwixx.eikemu.com/ --delete
+      - name: deploying website to s3
+        run: aws s3 sync --exclude 'assets/*' ./qwixx-pwa/build/ s3://qwixx.eikemu.com/ --delete --cache-control max-age=120
+      - name: deploying website assets to s3
+        run: aws s3 sync ./qwixx-pwa/build/assets/ s3://qwixx.eikemu.com/assets/ --delete --cache-control max-age=31536000
       - name: invalidating cloudfront cache
         run: aws cloudfront create-invalidation --distribution-id E96GBKAUTW52Y --paths '/*'

@@ -7,9 +7,10 @@ import { colors } from './assets/colors'
 const globalStyles = css`
   @font-face {
     font-family: NotoEmoji;
-    src: url('/NotoEmoji-VariableFont_wght.ttf') format('truetype');
+    src: url('/assets/NotoEmoji-VariableFont_wght.ttf') format('truetype');
     font-weight: 300 700;
     font-style: normal;
+    font-display: swap;
   }
 
   body,
