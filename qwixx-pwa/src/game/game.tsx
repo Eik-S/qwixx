@@ -67,9 +67,7 @@ export function Game() {
 
 const styles = {
   content: css`
-    height: 100vh;
-    width: 100vw;
-    height: -webkit-fill-available;
+    height: 100%;
     padding: 24px;
 
     display: grid;

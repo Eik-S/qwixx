@@ -13,9 +13,11 @@ const globalStyles = css`
     font-display: swap;
   }
 
+  html,
   body,
-  html {
-    position: fixed;
+  #root {
+    height: 100%;
+    overscroll-behavior: none;
   }
 
   body {
