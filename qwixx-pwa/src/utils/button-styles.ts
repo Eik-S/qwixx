@@ -21,8 +21,8 @@ const baseButtonStyles = (size: 'small' | 'normal') => css`
 
   &:disabled {
     box-shadow: none;
-    color: ${colors.lightGrey};
-    border-color: ${colors.lightGrey};
+    color: ${colors.grey};
+    border-color: ${colors.grey};
     cursor: default;
   }
 `

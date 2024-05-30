@@ -21,10 +21,10 @@ const globalStyles = css`
   }
 
   body {
-    margin: 0;
     font-family: sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background-color: ${colors.background};
   }
 
   button {

@@ -19,7 +19,7 @@ export const colors = {
   lightGrey: '#E3E3E3',
   darkGrey: '#434343',
 
-  background: '#fff',
+  background: '#fff0f5',
 } as const
 
 export function getHexColor(colorString: string, accent?: 'light' | 'dark'): string {

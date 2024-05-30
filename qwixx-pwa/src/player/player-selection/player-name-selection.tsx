@@ -57,6 +57,7 @@ const styles = {
     height: 32px;
     text-align: center;
     text-decoration: none;
+    background-color: transparent;
     &:focus {
       outline: none;
     }

@@ -7,7 +7,9 @@ const cacheFirst = async ({ request, fallbackUrl }) => {
   // First try to get the resource from the cache
   const cache = await caches.open('v1')
   const responseFromCache = await cache.match(request)
-  if (responseFromCache) {
+  // eslint-disable-next-line no-restricted-globals
+  const isDev = self.location.href.includes('localhost') ? 'true' : 'false'
+  if (isDev === 'false' && responseFromCache) {
     const headers = new Headers(responseFromCache.headers)
     headers.set('X-Cache-Status', 'Cache')
 

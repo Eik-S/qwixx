@@ -84,7 +84,7 @@ const styles = {
   controlPane: css`
     grid-column: 2;
     grid-row: 2;
-    background-color: white;
+    background-color: ${colors.background};
     width: 600px;
     min-height: 200px;
     border: 4px solid ${colors.darkGrey};
