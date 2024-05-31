@@ -6,7 +6,7 @@ import { css } from '@emotion/react'
 
 async function registerServiceWorker() {
   try {
-    const registration = await navigator.serviceWorker.register('/sw.js', {
+    const registration = await navigator.serviceWorker.register('/service-worker/sw.js', {
       scope: '/',
     })
     if (registration.installing) {

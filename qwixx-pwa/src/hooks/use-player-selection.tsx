@@ -1,7 +1,7 @@
 import { MatchupPlayer } from '../models/matchup'
 import { useGameStateContext } from './use-global-game-state'
 
-export function usePlayerSelection({ playerId, ...props }: { playerId: string }) {
+export function usePlayerSelection({ playerId }: { playerId: string }) {
   const { updatePlayerData } = useGameStateContext()
 
   function setPlayerFromMatchupPlayer(matchupPlayer: MatchupPlayer) {

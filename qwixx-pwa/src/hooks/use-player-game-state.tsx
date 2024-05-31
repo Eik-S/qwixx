@@ -55,8 +55,8 @@ export function usePlayerState({ player }: UsePlayerStateProps): PlayerStateApi 
   const numSelectionsMade = selections.length
 
   useEffect(() => {
-    const playerBoard = gameData.players.find((p) => p.id === player.id)?.board!
-    setBoard({ ...playerBoard })
+    setBoard({ ...player.board })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameData, player.id])
 
   useEffect(() => {
@@ -73,8 +73,8 @@ export function usePlayerState({ player }: UsePlayerStateProps): PlayerStateApi 
 
     function fillSelectedFields() {
       board.lines.forEach((line) => {
-        var hasFilledCrossToTheRight = false
-        for (var i = line.fields.length - 1; i >= 0; i--) {
+        let hasFilledCrossToTheRight = false
+        for (let i = line.fields.length - 1; i >= 0; i--) {
           const field = line.fields[i]
 
           if (field.status === 'selected') {

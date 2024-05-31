@@ -5,12 +5,12 @@ import { Player } from '../models/game'
 import { Session, SessionInfo } from '../models/session-elements'
 import { SessionMessage } from '../models/session-messages'
 import { getRandomIconCode } from '../utils/avatar-codes'
-var hri = require('human-readable-ids').hri
+import { getRandomAnimalIdCombo } from '../utils/random-ids'
 
 let sessions: Session[] = []
 
 export function createSession(): string {
-  const sessionId = getHumanReadableId()
+  const sessionId = getRandomAnimalIdCombo()
   const creationDate = Date.now()
   const stream = new PassThrough()
 
@@ -66,7 +66,7 @@ function initPlayer(name: string): Player {
     board: {
       lines: ['r', 'y', 'g', 'b'].map((lineColor) => {
         const color = lineColor as LineColor
-        const order = lineColor.includes('r' || 'y') ? 'asc' : 'desc'
+        const order = ['r', 'y'].includes(lineColor) ? 'asc' : 'desc'
         return {
           color,
           fields: getLineFields(order),
@@ -91,10 +91,6 @@ function getLineFields(order: 'asc' | 'desc'): Field[] {
     fields.reverse()
   }
   return fields
-}
-
-function getHumanReadableId(): string {
-  return hri.random().toUpperCase()
 }
 
 function sendJoinMessage(session: Session): void {

@@ -1,7 +1,7 @@
-import { animals } from '../assets/animals'
 import { Player } from '../models/game'
 import { getRandomIconCode } from './avatar-codes'
 import { getNewBoard } from './game-board-factory'
+import { getRandomAnimalName, getRandomID } from './random-ids'
 
 export function getNewPlayer(): Player {
   const name = getRandomAnimalName()
@@ -14,15 +14,4 @@ export function getNewPlayer(): Player {
     state: 'moving',
     score: 0,
   }
-}
-
-function getRandomAnimalName(): string {
-  const index = Math.floor(Math.random() * animals.length)
-  return animals[index]
-}
-
-function getRandomID(): string {
-  const unixTime = Date.now()
-  const randomFactor = Math.floor(Math.random() * 1000)
-  return (unixTime - randomFactor).toString().slice(-5)
 }

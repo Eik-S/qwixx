@@ -3,9 +3,7 @@ import { useEffect } from 'react'
 import { usePlayerStateContext } from '../hooks/use-player-game-state'
 import { Line } from '../models/game'
 
-export interface GameStatProps {}
-
-export function GameStats({ ...props }: GameStatProps) {
+export function GameStats({ ...props }) {
   const { board, score, updateScore } = usePlayerStateContext()
 
   const selectionsMade = board.lines.reduce((previousValue, currentVal) => {

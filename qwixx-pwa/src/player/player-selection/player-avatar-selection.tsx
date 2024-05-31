@@ -2,6 +2,7 @@ import { css } from '@emotion/react'
 import { Label } from '../../controls/ui-elements'
 import { useGameStateContext } from '../../hooks/use-global-game-state'
 import { getRandomIconCode } from '../../utils/avatar-codes'
+import { colors } from '../../assets/colors'
 
 export function PlayerAvatarSelection({ playerId, ...props }: { playerId: string }) {
   const { gameData, updatePlayerData } = useGameStateContext()
@@ -42,6 +43,7 @@ const styles = {
     font-size: 64px;
     font-family: NotoEmoji;
     font-weight: bold;
+    color: ${colors.black};
   `,
   changeButton: css`
     border: none;

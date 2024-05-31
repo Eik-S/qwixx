@@ -54,10 +54,10 @@ export function DiceCup({ isBig }: { isBig: boolean }) {
   }, [dices, setPossibleMoves, isRolling])
 
   useEffect(() => {
-    var iterations = 5
-    var millis = 20
+    let iterations = 5
+    let millis = 20
 
-    var rollDices = function () {
+    const rollDices = function () {
       setDices((oldDices) => {
         return oldDices.map((dice) => {
           return { ...dice, value: Math.ceil(Math.random() * 6) }

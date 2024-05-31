@@ -2,19 +2,25 @@
   "name": "qwixx",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "workspaces": [
     "qwixx-pwa"
   ],
   "devDependencies": {
     "concurrently": "^7.6.0",
-    "prettier": "2.8.3"
+    "prettier": "2.8.3",
+    "husky": "^8.0.0",
+    "@commitlint/cli": "^19.3.0",
+    "@commitlint/config-conventional": "^19.2.2"
   },
   "scripts": {
     "start": "concurrently --kill-others \"npm run start --workspace qwixx-pwa\"",
     "test": "npm run test --workspaces --if-present",
     "tsc": "npm run tsc --workspaces",
     "build": "npm run build --workspaces --if-present",
-    "lint": "npm run lint --workspaces --if-present"
+    "lint": "npm run lint --workspaces --if-present",
+    "prepare": "husky install",
+    "commitlint": "commitlint"
   },
   "volta": {
     "node": "20.10.0",

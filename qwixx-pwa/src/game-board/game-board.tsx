@@ -35,12 +35,10 @@ export function GameBoard({ playerId, ...props }: GameBoardProps) {
     canvas.style.width = `${width}px`
     canvas.style.height = `${height}px`
 
-    // Set actual size in memory (scaled to account for extra pixel density).
-    var scale = window.devicePixelRatio // Change to 1 on retina screens to see blurry canvas.
+    const scale = window.devicePixelRatio
     canvas.width = Math.floor(width * scale)
     canvas.height = Math.floor(height * scale)
 
-    // Normalize coordinate system to use css pixels.
     canvasCtx.scale(scale, scale)
     setCtx(canvasCtx)
   }, [board, ctx, playerId])
