@@ -1,5 +1,5 @@
-const cacheVersion = process.env.RELEASE_VERSION || 'dev'
-
+const semVersion = 'v1.0.0' // x-release-please-version
+const cacheVersion = semVersion.replaceAll('.', '_')
 const putInCache = async (request, response) => {
   const cache = await caches.open(cacheVersion)
   await cache.put(request, response)
