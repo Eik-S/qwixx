@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/Eik-S/qwixx/compare/v1.0.0...v1.0.1) (2024-06-01)
+
+
+### Bug Fixes
+
+* skip release-please PR ([a590105](https://github.com/Eik-S/qwixx/commit/a5901056b9375831ad473f965fc89487e31e0f0f))
+
 ## 1.0.0 (2024-06-01)
 
 
