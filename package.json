@@ -7,11 +7,11 @@
     "qwixx-pwa"
   ],
   "devDependencies": {
-    "concurrently": "^7.6.0",
-    "prettier": "2.8.3",
-    "husky": "^8.0.0",
     "@commitlint/cli": "^19.3.0",
-    "@commitlint/config-conventional": "^19.2.2"
+    "@commitlint/config-conventional": "^19.2.2",
+    "concurrently": "^7.6.0",
+    "husky": "^8.0.0",
+    "prettier": "2.8.3"
   },
   "scripts": {
     "start": "concurrently --kill-others \"npm run start --workspace qwixx-pwa\"",
