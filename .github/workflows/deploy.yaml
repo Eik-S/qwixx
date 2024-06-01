@@ -41,4 +41,5 @@ jobs:
           RELEASE_VERSION=${{ steps.release.outputs.qwixx-pwa--tag_name }} npm run build -w qwixx-pwa
           aws s3 sync --exclude 'assets/*' ./qwixx-pwa/build/ s3://qwixx.eikemu.com/ --delete --cache-control max-age=120
           aws s3 sync ./qwixx-pwa/build/assets/ s3://qwixx.eikemu.com/assets/ --delete --cache-control max-age=31536000
+          aws s3 sync ./qwixx-pwa/build/service-worker/sw.js s3://qwixx.eikemu.com/service-worker/sw.js --content-type application/javascript --cache-control max-age=31536000
           aws cloudfront create-invalidation --distribution-id E96GBKAUTW52Y --paths '/*'
