@@ -1,0 +1,44 @@
+name: Deploy
+
+on:
+  workflow_run:
+    workflows: ['Test and Build']
+    branches: [main]
+    types:
+      - completed
+
+permissions:
+  contents: write
+  pull-requests: write
+  id-token: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: create release PR
+        id: release
+        uses: googleapis/release-please-action@v4
+        with:
+          token: ${{ secrets.RELEASE_PLEASE_PAT }}
+          # this is a built-in strategy in release-please
+          # for more options: https://github.com/googleapis/release-please-action?tab=readme-ov-file#action-inputs
+          release-type: node
+          path: qwixx-pwa
+      - name: assuming role
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::643625685022:role/qwixxTerraformRestrictedAdmin
+          aws-region: eu-central-1
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: 'package.json'
+      - name: deploy release vesion
+        if: ${{ steps.release.outputs.qwixx-pwa--release_created }}
+        run: |
+          npm i
+          RELEASE_VERSION=${{ steps.release.outputs.qwixx-pwa--tag_name }} npm run build -w qwixx-pwa
+          aws s3 sync --exclude 'assets/*' ./qwixx-pwa/build/ s3://qwixx.eikemu.com/ --delete --cache-control max-age=120
+          aws s3 sync ./qwixx-pwa/build/assets/ s3://qwixx.eikemu.com/assets/ --delete --cache-control max-age=31536000
+          aws cloudfront create-invalidation --distribution-id E96GBKAUTW52Y --paths '/*'
