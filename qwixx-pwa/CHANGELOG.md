@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/Eik-S/qwixx/compare/qwixx-pwa-v1.2.0...qwixx-pwa-v1.2.1) (2024-06-03)
+
+
+### Bug Fixes
+
+* scope and location of service-worker ([70a59e4](https://github.com/Eik-S/qwixx/commit/70a59e41fd490bec09293077682498dcebca6c8d))
+
 ## [1.2.0](https://github.com/Eik-S/qwixx/compare/qwixx-pwa-v1.1.2...qwixx-pwa-v1.2.0) (2024-06-03)
 
 
