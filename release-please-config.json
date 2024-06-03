@@ -3,7 +3,7 @@
   "packages": {
     "qwixx-pwa": {
       "labels": ["autorelease"],
-      "extra-files": ["public/service-worker/sw.js"],
+      "extra-files": ["public/sw.js"],
       "release-type": "node"
     }
   }
