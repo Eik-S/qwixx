@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/Eik-S/qwixx/compare/v1.0.1...v1.1.0) (2024-06-01)
+
+
+### Features
+
+* add release-please version to sw.js ([022b1e0](https://github.com/Eik-S/qwixx/commit/022b1e0efefa332fb523152fdece10d1e89ba652))
+
 ## [1.0.1](https://github.com/Eik-S/qwixx/compare/v1.0.0...v1.0.1) (2024-06-01)
 
 
