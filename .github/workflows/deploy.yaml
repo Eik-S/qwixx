@@ -24,6 +24,7 @@ jobs:
           # this is a built-in strategy in release-please
           # for more options: https://github.com/googleapis/release-please-action?tab=readme-ov-file#action-inputs
           release-type: node
+          config-file: release-please-config.json
           path: qwixx-pwa
       - name: assuming role
         uses: aws-actions/configure-aws-credentials@v4
