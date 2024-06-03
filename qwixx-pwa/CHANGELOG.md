@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.2](https://github.com/Eik-S/qwixx/compare/v1.1.1...v1.1.2) (2024-06-03)
+
+
+### Bug Fixes
+
+* use release-please config for real ([9cac8f7](https://github.com/Eik-S/qwixx/commit/9cac8f7d8685c25cd9c21cd0f21008287cc04ae8))
+
 ## [1.1.1](https://github.com/Eik-S/qwixx/compare/v1.1.0...v1.1.1) (2024-06-03)
 
 
