@@ -1,5 +1,10 @@
 {
   "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
-  "release-type": "node",
-  "extra-files": ["public/service-worker/sw.js"]
+  "packages": {
+    "qwixx-pwa": {
+      "labels": ["autorelease"],
+      "extra-files": ["public/service-worker/sw.js"],
+      "release-type": "node"
+    }
+  }
 }
