@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/Eik-S/qwixx/compare/v1.1.0...v1.1.1) (2024-06-03)
+
+
+### Bug Fixes
+
+* scope of service-worker and extra-files in release-please config ([2de513f](https://github.com/Eik-S/qwixx/commit/2de513f65ac2f1a10afea4fd87d3e239a84b7c48))
+
 ## [1.1.0](https://github.com/Eik-S/qwixx/compare/v1.0.1...v1.1.0) (2024-06-01)
 
 
