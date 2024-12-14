@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.1](https://github.com/Eik-S/qwixx/compare/qwixx-pwa-v1.3.0...qwixx-pwa-v1.3.1) (2024-12-14)
+
+
+### Bug Fixes
+
+* typo in meta description ([a706c75](https://github.com/Eik-S/qwixx/commit/a706c7538066e8d435e46ba5cae7e2275197fca0))
+
 ## [1.3.0](https://github.com/Eik-S/qwixx/compare/qwixx-pwa-v1.2.1...qwixx-pwa-v1.3.0) (2024-12-14)
 
 
