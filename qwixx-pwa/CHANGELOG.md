@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/Eik-S/qwixx/compare/qwixx-pwa-v1.2.1...qwixx-pwa-v1.3.0) (2024-12-14)
+
+
+### Features
+
+* added dark mode ([e78fd87](https://github.com/Eik-S/qwixx/commit/e78fd87266b70c726a18ae0b3f9e782ecb682ed9))
+
 ## [1.2.1](https://github.com/Eik-S/qwixx/compare/qwixx-pwa-v1.2.0...qwixx-pwa-v1.2.1) (2024-06-03)
 
 
