@@ -1,42 +1,33 @@
 import { css } from '@emotion/react'
 import { useEffect, useState } from 'react'
-import { getHexColor } from '../assets/colors'
 import { useGameStateContext } from '../hooks/use-global-game-state'
 import { Dice } from './dice'
 
 interface DiceObj {
   value: number
-  color: string
+  color: 'w' | 'r' | 'y' | 'g' | 'b'
 }
-
-const blackDiceColor = getHexColor('w', 'dark')
-const redDiceColor = getHexColor('r')
-const yellowDiceColor = getHexColor('y')
-const greenDiceColor = getHexColor('g')
-const blueDiceColor = getHexColor('b')
 
 export function DiceCup({ isBig }: { isBig: boolean }) {
   const { movingPlayerId, setPossibleMoves, numberOfPlayers } = useGameStateContext()
   const [isRolling, setIsRolling] = useState(false)
 
   const [dices, setDices] = useState<DiceObj[]>([
-    { value: 1, color: blackDiceColor },
-    { value: 1, color: blackDiceColor },
-    { value: 1, color: redDiceColor },
-    { value: 1, color: yellowDiceColor },
-    { value: 1, color: greenDiceColor },
-    { value: 1, color: blueDiceColor },
+    { value: 1, color: 'w' },
+    { value: 1, color: 'w' },
+    { value: 1, color: 'r' },
+    { value: 1, color: 'y' },
+    { value: 1, color: 'g' },
+    { value: 1, color: 'b' },
   ])
 
   useEffect(() => {
     if (isRolling) return
-    const blackDiceValues = dices
-      .filter((dice) => dice.color === blackDiceColor)!
-      .map((dice) => dice.value)
-    const redDiceValue = dices.find((dice) => dice.color === redDiceColor)!.value
-    const yellowDiceValue = dices.find((dice) => dice.color === yellowDiceColor)!.value
-    const greenDiceValue = dices.find((dice) => dice.color === greenDiceColor)!.value
-    const blueDiceValue = dices.find((dice) => dice.color === blueDiceColor)!.value
+    const blackDiceValues = dices.filter((dice) => dice.color === 'w')!.map((dice) => dice.value)
+    const redDiceValue = dices.find((dice) => dice.color === 'r')!.value
+    const yellowDiceValue = dices.find((dice) => dice.color === 'y')!.value
+    const greenDiceValue = dices.find((dice) => dice.color === 'g')!.value
+    const blueDiceValue = dices.find((dice) => dice.color === 'b')!.value
 
     const moveForEveryone = blackDiceValues.reduce((prevValue, diceValue) => prevValue + diceValue)
     const redMoves = blackDiceValues.map((diceValue) => diceValue + redDiceValue)

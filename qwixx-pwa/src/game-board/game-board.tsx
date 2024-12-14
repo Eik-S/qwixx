@@ -20,7 +20,25 @@ export function GameBoard({ playerId, ...props }: GameBoardProps) {
   const { possibleMoves } = useGameStateContext()
   const [mouseDownPosition, setMouseDownPosition] = useState<BoardPosition | undefined>(undefined)
 
+  const [isDarkMode, setIsDarkMode] = useState(
+    window.matchMedia('(prefers-color-scheme: dark)').matches,
+  )
+
   const [ctx, setCtx] = useState<CanvasRenderingContext2D>()
+
+  useEffect(() => {
+    function changeIsDarkMode({ matches }: MediaQueryListEvent) {
+      setIsDarkMode(matches)
+    }
+
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', changeIsDarkMode)
+
+    return () => {
+      window
+        .matchMedia('(prefers-color-scheme: dark)')
+        .removeEventListener('change', changeIsDarkMode)
+    }
+  }, [])
 
   // canvas initialization & watchers
   useEffect(() => {
@@ -50,7 +68,7 @@ export function GameBoard({ playerId, ...props }: GameBoardProps) {
     ctx.clearRect(0, 0, dimensions.canvasWidth, dimensions.canvasHeight)
 
     DrawingUtil.drawLines(ctx, board.lines)
-  }, [ctx, board])
+  }, [ctx, board, isDarkMode])
 
   function getSelectionType(line: Line, field: Field): SelectionType | undefined {
     if (possibleMoves === undefined) {

@@ -3,31 +3,30 @@
   "version": "1.2.1",
   "type": "module",
   "dependencies": {
-    "@emotion/react": "^11.11.4",
-    "party-js": "^2.2.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "@emotion/react": "11.14.0",
+    "party-js": "2.2.0",
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
   },
   "devDependencies": {
-    "@emotion/babel-preset-css-prop": "^11.11.0",
-    "@eslint/js": "^9.3.0",
-    "@testing-library/jest-dom": "^5.16.1",
-    "@testing-library/react": "^12.1.2",
-    "@testing-library/user-event": "^13.5.0",
-    "@types/jest": "^27.4.0",
-    "@types/node": "^16.11.19",
-    "@types/react": "^17.0.38",
-    "@types/react-dom": "^18.3.0",
-    "@typescript-eslint/eslint-plugin": "^7.11.0",
-    "@typescript-eslint/parser": "^7.11.0",
-    "@vitejs/plugin-react": "^4.3.0",
-    "eslint": "^9.3.0",
-    "eslint-plugin-react": "^7.34.2",
-    "eslint-plugin-react-hooks": "^5.1.0-rc-9d4fba0788-20240530",
-    "typescript": "^5.3.3",
-    "typescript-eslint": "8.0.0-alpha.24",
-    "vite": "^5.2.11",
-    "vite-plugin-eslint": "^1.8.1"
+    "@eslint/js": "9.17.0",
+    "@testing-library/jest-dom": "6.6.3",
+    "@testing-library/react": "16.1.0",
+    "@testing-library/user-event": "14.5.2",
+    "@types/jest": "29.5.14",
+    "@types/node": "22.10.2",
+    "@types/react": "19.0.1",
+    "@types/react-dom": "19.0.2",
+    "@typescript-eslint/eslint-plugin": "8.18.0",
+    "@typescript-eslint/parser": "8.18.0",
+    "@vitejs/plugin-react": "4.3.4",
+    "eslint": "9.17.0",
+    "eslint-plugin-react": "7.37.2",
+    "eslint-plugin-react-hooks": "5.1.0",
+    "typescript": "5.7.2",
+    "typescript-eslint": "8.18.0",
+    "vite": "6.0.3",
+    "vite-plugin-eslint": "1.8.1"
   },
   "scripts": {
     "start": "vite",
@@ -38,6 +37,6 @@
     "bundle-analyzer": "npx vite-bundle-visualizer"
   },
   "engines": {
-    "node": "20"
+    "node": "22"
   }
 }

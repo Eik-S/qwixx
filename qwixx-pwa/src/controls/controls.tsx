@@ -1,6 +1,6 @@
 import { css } from '@emotion/react'
 import { useState } from 'react'
-import { colors } from '../assets/colors'
+import { colors, responsiveColors } from '../assets/colors'
 import { useGameStateContext } from '../hooks/use-global-game-state'
 import { ControlPane } from './control-pane'
 
@@ -59,11 +59,11 @@ const styles = {
     `}
   `,
   buttonIcon: css`
+    ${responsiveColors.text}
     font-family: NotoEmoji;
     font-weight: 700;
     font-size: 46px;
     line-height: 30px;
-    color: black;
   `,
   controlsPaneGridContainer: css`
     position: fixed;
@@ -79,14 +79,17 @@ const styles = {
   curtain: css`
     grid-column: 1 / span 3;
     grid-row: 1 / span 3;
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: ${colors.white}dd;
+    @media (prefers-color-scheme: dark) {
+      background-color: ${colors.black}88;
+    }
   `,
   controlPane: css`
     grid-column: 2;
     grid-row: 2;
-    background-color: ${colors.background};
     width: 600px;
     min-height: 200px;
     border: 4px solid ${colors.darkGrey};
+    ${responsiveColors.background}
   `,
 }

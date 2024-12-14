@@ -1,8 +1,8 @@
 import React from 'react'
-import ReactDOM from 'react-dom/client'
+import { createRoot } from 'react-dom/client'
 import { App } from './App'
 import { Global, css } from '@emotion/react'
-import { colors } from './assets/colors'
+import { colors, responsiveColors } from './assets/colors'
 
 const globalStyles = css`
   @font-face {
@@ -24,7 +24,8 @@ const globalStyles = css`
     font-family: sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-color: ${colors.background};
+    ${responsiveColors.background}
+    ${responsiveColors.text}
   }
 
   button {
@@ -42,7 +43,7 @@ const globalStyles = css`
   }
 `
 
-const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
+const root = createRoot(document.getElementById('root') as HTMLElement)
 root.render(
   <React.StrictMode>
     <Global styles={globalStyles} />

@@ -4,6 +4,7 @@ import { Label } from '../../controls/ui-elements'
 import { useGameStateContext } from '../../hooks/use-global-game-state'
 import { useMatchupContext } from '../../hooks/use-matchup'
 import { MatchupPlayer } from '../../models/matchup'
+import { responsiveColors } from '../../assets/colors'
 
 export function PlayerNameSelection({ playerId, ...props }: { playerId: string }) {
   const { gameData, updatePlayerData } = useGameStateContext()
@@ -51,6 +52,7 @@ const styles = {
     row-gap: 12px;
   `,
   textInput: css`
+    ${responsiveColors.text}
     width: 200px;
     border: none;
     border-bottom: 4px solid black;

@@ -1,10 +1,10 @@
 import { css } from '@emotion/react'
-import { colors } from '../assets/colors'
+import { colors, responsiveColors } from '../assets/colors'
 
 const baseButtonStyles = (size: 'small' | 'normal') => css`
+  ${responsiveColors.text}
   border: 4px solid ${colors.darkGrey};
   background-color: transparent;
-  color: black;
   font-size: 28px;
   padding: 18px 32px;
   font-weight: bold;

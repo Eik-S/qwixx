@@ -20,9 +20,9 @@ function drawFieldLine(
   const y = dimensions.getLineYPos(colorString)
   fields.forEach((field, fieldIndex) => {
     const x = dimensions.getFieldXPos(fieldIndex)
-
-    ctx.fillStyle = getHexColor(colorString, 'light')
-    ctx.strokeStyle = getHexColor(colorString, 'dark')
+    const darkMode = getIsDarkMode()
+    ctx.fillStyle = getHexColor(colorString, darkMode ? 'dark' : 'light')
+    ctx.strokeStyle = getHexColor(colorString, darkMode ? 'darker' : 'dark')
     ctx.fillRect(x, y, dimensions.fieldSize, dimensions.fieldSize)
 
     ctx.lineWidth = 2
@@ -35,7 +35,7 @@ function drawFieldLine(
     )
 
     // draw number in the center of the field
-    ctx.fillStyle = getHexColor(colorString)
+    ctx.fillStyle = getHexColor(colorString, darkMode ? 'darker' : undefined)
     drawFieldNumber(ctx, x + dimensions.fieldSize / 2, y + dimensions.fieldSize / 2, field.value)
 
     if (field.status === 'selected' || field.status === 'filled') {
@@ -58,7 +58,8 @@ function drawCrossAt(ctx: CanvasRenderingContext2D, x: number, y: number, lineWi
   const crossRad = 22
 
   ctx.beginPath()
-  ctx.strokeStyle = 'black'
+  const darkMode = getIsDarkMode()
+  ctx.strokeStyle = darkMode ? colors.lightGrey : 'black'
   ctx.lineWidth = lineWidth
   ctx.lineCap = 'round'
   ctx.moveTo(x - crossRad / 2, y - crossRad / 2)
@@ -80,13 +81,16 @@ function drawClosedByYouStar(ctx: CanvasRenderingContext2D, line: Line) {
   const x = dimensions.canvasWidth - dimensions.fieldSize + 10
   const y = dimensions.getLineYPos(line.color) + 8
   const rad = dimensions.fieldSize / 2 - 6
+  const darkMode = getIsDarkMode()
 
   ctx.beginPath()
-  ctx.strokeStyle = line.wasClosedByYou ? getHexColor('w', 'dark') : getHexColor('w')
+  ctx.strokeStyle = line.wasClosedByYou
+    ? getHexColor('w', darkMode ? 'darker' : 'dark')
+    : getHexColor('w', darkMode ? 'dark' : undefined)
   ctx.lineWidth = 4
   ctx.lineCap = 'round'
   ctx.lineJoin = 'round'
-  ctx.fillStyle = line.wasClosedByYou ? getHexColor(line.color) : colors.background
+  ctx.fillStyle = line.wasClosedByYou ? getHexColor(line.color) : colors.darkGrey
   ctx.moveTo(x + rad, y)
   ctx.lineTo(
     x + rad + Math.cos((Math.PI * 3) / 10) * rad,
@@ -108,4 +112,8 @@ function drawClosedByYouStar(ctx: CanvasRenderingContext2D, line: Line) {
   ctx.stroke()
   ctx.fill()
   ctx.closePath()
+}
+
+function getIsDarkMode(): boolean {
+  return window.matchMedia('(prefers-color-scheme: dark)').matches
 }
