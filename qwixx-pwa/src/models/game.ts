@@ -12,6 +12,14 @@ export interface Line {
   wasClosedByYou: boolean
 }
 
+export type FieldSelectionType = 'colored' | 'everyone' | 'both'
+
+export interface FieldSelection {
+  line: Line
+  field: Field
+  selectionType: FieldSelectionType
+}
+
 export interface Board {
   lines: Line[]
   strikes: number

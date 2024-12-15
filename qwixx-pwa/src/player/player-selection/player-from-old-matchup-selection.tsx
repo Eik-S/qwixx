@@ -1,15 +1,22 @@
 import { css } from '@emotion/react'
 import { Button, Label } from '../../controls/ui-elements'
-import { useGameStateContext } from '../../hooks/use-global-game-state'
-import { useMatchupContext } from '../../hooks/use-matchup'
+import { Player } from '../../models/game'
 import { MatchupPlayer } from '../../models/matchup'
 
-export function PlayerFromOldMatchupSelection({ playerId, ...props }: { playerId: string }) {
-  const { oldMatchupPlayers } = useMatchupContext()
-  const { updatePlayerData } = useGameStateContext()
+interface PlayerFromOldMatchupSelectionProps {
+  player: Player
+  oldMatchupPlayers: MatchupPlayer[]
+  onUpdatePlayerData: (playerId: string, newFields: Partial<Player>) => void
+}
 
+export function PlayerFromOldMatchupSelection({
+  player,
+  oldMatchupPlayers,
+  onUpdatePlayerData,
+  ...props
+}: PlayerFromOldMatchupSelectionProps) {
   function setPlayerFromMatchupPlayer(matchupPlayer: MatchupPlayer) {
-    updatePlayerData(playerId, { ...matchupPlayer })
+    onUpdatePlayerData(player.id, { ...matchupPlayer })
   }
 
   if (oldMatchupPlayers.length === 0) {
@@ -25,6 +32,7 @@ export function PlayerFromOldMatchupSelection({ playerId, ...props }: { playerId
           <Button
             key={oldPlayer.id}
             onClick={() => setPlayerFromMatchupPlayer(oldPlayer)}
+            disabled={oldPlayer.id === player.id}
             text={oldPlayer.name}
             css={styles.smallButton}
           />

@@ -1,30 +1,20 @@
-import { css } from '@emotion/react'
+import { useGameStateContext } from '../../hooks/use-global-game-state'
+import { useMatchupContext } from '../../hooks/use-matchup'
 import { Player } from '../../models/game'
-import { PlayerFromOldMatchupSelection } from './player-from-old-matchup-selection'
-import { PlayerAvatarSelection } from './player-avatar-selection'
-import { PlayerNameSelection } from './player-name-selection'
+import { PlayerSelectionUi } from './player-selection-ui'
 
-export function PlayerSelection({ player, ...props }: { player: Player }) {
-  return (
-    <div css={styles.container} {...props}>
-      <PlayerNameSelection playerId={player.id} />
-      <PlayerAvatarSelection playerId={player.id} />
-      <PlayerFromOldMatchupSelection playerId={player.id} css={styles.fromOldMatchupSelection} />
-    </div>
-  )
+interface PlayerSelectionProps {
+  player: Player
 }
-
-const styles = {
-  container: css`
-    min-width: 600px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto 1fr;
-    row-gap: 24px;
-    padding-top: 24px;
-  `,
-  fromOldMatchupSelection: css`
-    grid-row: 2;
-    grid-column: 1 / span 2;
-  `,
+export function PlayerSelection({ player, ...props }: PlayerSelectionProps) {
+  const { updatePlayerData } = useGameStateContext()
+  const { oldMatchupPlayers } = useMatchupContext()
+  return (
+    <PlayerSelectionUi
+      player={player}
+      oldMatchupPlayers={oldMatchupPlayers}
+      onUpdatePlayerData={updatePlayerData}
+      {...props}
+    />
+  )
 }

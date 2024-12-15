@@ -1,5 +1,5 @@
 import { css } from '@emotion/react'
-import { colors } from '../assets/colors'
+import { responsiveColors } from '../assets/colors'
 import { BigButton, Label, MinusButton, PlusButton } from '../controls/ui-elements'
 import { useGameStateContext } from '../hooks/use-global-game-state'
 
@@ -55,8 +55,9 @@ export function LobbyControls({ ...props }) {
 
 const styles = {
   controlsContainer: css`
+    ${responsiveColors.border}
+    border: 4px solid;
     padding: 32px;
-    border: 4px solid ${colors.darkGrey};
     display: flex;
     flex-direction: row;
     min-width: 545px;

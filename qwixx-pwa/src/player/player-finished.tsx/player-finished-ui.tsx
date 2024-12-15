@@ -1,24 +1,27 @@
 import { css } from '@emotion/react'
-import { useEffect } from 'react'
-import { useMatchupContext } from '../hooks/use-matchup'
-import { usePlayerStateContext } from '../hooks/use-player-game-state'
-import { Avatar } from './player-selection/player-avatar-selection'
 import {
   confetti,
   Color as PartyColor,
-  settings as partySettings,
   random as partyRandom,
+  settings as partySettings,
 } from 'party-js'
-import { colors } from '../assets/colors'
+import { useEffect } from 'react'
+import { colors } from '../../assets/colors'
+import { Player } from '../../models/game'
+import { Avatar } from '../player-selection/player-avatar-selection'
 
-export function PlayerFinishedScreen({ ...props }) {
-  const { player, isWinningPlayer } = usePlayerStateContext()
-  const { currentMatchup } = useMatchupContext()
+interface PlayerFinishedUiProps {
+  player: Player
+  isWinningPlayer: boolean | undefined
+  numberOfWins: number
+}
 
-  const numberOfWins = currentMatchup!.players.find(
-    (matchupPlayer) => matchupPlayer.id === player.id,
-  )!.wins
-
+export function PlayerFinishedUi({
+  isWinningPlayer,
+  numberOfWins,
+  player,
+  ...props
+}: PlayerFinishedUiProps) {
   // confetti animation
   useEffect(() => {
     if (!isWinningPlayer) return

@@ -8,7 +8,7 @@ import { PlayerStateContextProvider } from '../hooks/use-player-game-state'
 import { FinishedControls } from '../lobby/finished-controls'
 import { LobbyControls } from '../lobby/lobby-controls'
 import { Player } from '../player/player'
-import { PlayerFinishedScreen } from '../player/player-finished-screen'
+import { PlayerFinished } from '../player/player-finished.tsx/player-finished'
 import { PlayerSelection } from '../player/player-selection/player-selection'
 
 export function Game() {
@@ -44,7 +44,7 @@ export function Game() {
           ) : (
             <PlayerStateContextProvider key={player.id} player={player}>
               {gameState === 'finished' ? (
-                <PlayerFinishedScreen css={styles.playerArea(getGridPosition(index))} />
+                <PlayerFinished css={styles.playerArea(getGridPosition(index))} />
               ) : (
                 <Player id={player.id} css={styles.playerArea(getGridPosition(index))} />
               )}

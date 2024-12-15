@@ -85,11 +85,12 @@ const styles = {
     }
   `,
   controlPane: css`
+    ${responsiveColors.background}
+    ${responsiveColors.border}
+    border: 4px solid;
     grid-column: 2;
     grid-row: 2;
     width: 600px;
     min-height: 200px;
-    border: 4px solid ${colors.darkGrey};
-    ${responsiveColors.background}
   `,
 }

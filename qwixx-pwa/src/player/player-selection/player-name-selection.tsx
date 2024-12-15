@@ -1,15 +1,23 @@
 import { css } from '@emotion/react'
 import { ChangeEvent } from 'react'
+import { colors, darkMode, responsiveColors } from '../../assets/colors'
 import { Label } from '../../controls/ui-elements'
-import { useGameStateContext } from '../../hooks/use-global-game-state'
-import { useMatchupContext } from '../../hooks/use-matchup'
+import { Player } from '../../models/game'
 import { MatchupPlayer } from '../../models/matchup'
-import { responsiveColors } from '../../assets/colors'
 
-export function PlayerNameSelection({ playerId, ...props }: { playerId: string }) {
-  const { gameData, updatePlayerData } = useGameStateContext()
-  const { oldMatchupPlayers } = useMatchupContext()
-  const player = gameData.players.find((p) => p.id === playerId)!
+interface PlayerNameSelectionProps {
+  player: Player
+  oldMatchupPlayers: MatchupPlayer[]
+  onUpdatePlayerData: (playerId: string, newFields: Partial<Player>) => void
+}
+
+export function PlayerNameSelection({
+  player,
+  oldMatchupPlayers,
+  onUpdatePlayerData,
+  ...props
+}: PlayerNameSelectionProps) {
+  const { id: playerId } = player
   const inputID = `${playerId}-name-input`
 
   function setPlayerName(event: ChangeEvent<HTMLInputElement>) {
@@ -23,11 +31,11 @@ export function PlayerNameSelection({ playerId, ...props }: { playerId: string }
       return
     }
 
-    updatePlayerData(playerId, { name: newName.length === 0 ? undefined : newName })
+    onUpdatePlayerData(playerId, { name: newName.length === 0 ? undefined : newName })
   }
 
   function setPlayerFromMatchupPlayer(matchupPlayer: MatchupPlayer) {
-    updatePlayerData(playerId, { name: matchupPlayer.name, avatarCode: matchupPlayer.avatarCode })
+    onUpdatePlayerData(playerId, { name: matchupPlayer.name, avatarCode: matchupPlayer.avatarCode })
   }
 
   return (
@@ -53,9 +61,13 @@ const styles = {
   `,
   textInput: css`
     ${responsiveColors.text}
-    width: 200px;
     border: none;
-    border-bottom: 4px solid black;
+    border-bottom: 4px solid;
+    border-color: ${colors.black};
+    ${darkMode} {
+      border-color: ${colors.white};
+    }
+    width: 200px;
     height: 32px;
     text-align: center;
     text-decoration: none;

@@ -1,6 +1,6 @@
 import { css } from '@emotion/react'
 
-const darkMode = '@media (prefers-color-scheme: dark)'
+export const darkMode = '@media (prefers-color-scheme: dark)'
 export const colors = {
   red: '#D73F4C',
   lightRed: '#F9E0E5',
@@ -40,11 +40,31 @@ export const responsiveColors = {
       background-color: ${colors.black};
     }
   `,
+  disabledText: css`
+    color: ${colors.grey};
+
+    ${darkMode} {
+      color: ${colors.darkGrey};
+    }
+  `,
   text: css`
     color: ${colors.black};
 
     ${darkMode} {
       color: ${colors.white};
+    }
+  `,
+  border: css`
+    border-color: ${colors.darkGrey};
+    &:disabled {
+      border-color: ${colors.grey};
+    }
+
+    ${darkMode} {
+      border-color: ${colors.grey};
+      &:disabled {
+        border-color: ${colors.darkGrey};
+      }
     }
   `,
 }

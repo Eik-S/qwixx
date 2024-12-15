@@ -1,5 +1,5 @@
 import { css } from '@emotion/react'
-import { colors } from '../assets/colors'
+import { responsiveColors } from '../assets/colors'
 import { BigButton } from '../controls/ui-elements'
 import { useGameStateContext } from '../hooks/use-global-game-state'
 
@@ -19,8 +19,9 @@ const styles = {
     border: none;
   `,
   controlsContainer: css`
+    ${responsiveColors.border}
+    border: 4px solid;
     padding: 32px;
-    border: 4px solid ${colors.darkGrey};
     display: flex;
     flex-direction: row;
   `,

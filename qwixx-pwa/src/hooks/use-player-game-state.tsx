@@ -1,24 +1,17 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react'
-import { Board, Field, Line, Player } from '../models/game'
+import { Board, Field, FieldSelection, FieldSelectionType, Line, Player } from '../models/game'
 import { useGameStateContext } from './use-global-game-state'
 
-export type SelectionType = 'colored' | 'everyone' | 'both'
-interface Selection {
-  line: Line
-  field: Field
-  selectionType: SelectionType
-}
 interface PlayerStateApi {
   board: Board
-  numSelectionsMade: number
-  selections: Selection[]
+  selections: FieldSelection[]
   score: number
   player: Player
   isActivePlayer: boolean
   isWinningPlayer: boolean | undefined
   invalidClicks: number
   updateScore: (newScore: number) => void
-  toggleField: (line: Line, field: Field, type: SelectionType) => void
+  toggleField: (line: Line, field: Field, type: FieldSelectionType) => void
   incrementInvalidClicks: () => void
 }
 
@@ -43,7 +36,7 @@ export function usePlayerState({ player }: UsePlayerStateProps): PlayerStateApi 
 
   // state
   const [board, setBoard] = useState(player.board)
-  const [selections, setSelections] = useState<Selection[]>([])
+  const [selections, setSelections] = useState<FieldSelection[]>([])
   const [isActivePlayer, setIsActivePlayer] = useState(false)
   const [numOfInvalidClicks, setNumOfInvalidClicks] = useState(0)
 
@@ -166,13 +159,13 @@ export function usePlayerState({ player }: UsePlayerStateProps): PlayerStateApi 
     gameData,
     isActivePlayer,
     isTimeOver,
-    numSelectionsMade,
     player.id,
     setNextPlayer,
     updatePlayerBoard,
+    numSelectionsMade,
   ])
 
-  function toggleField(targetLine: Line, targetField: Field, selectionType: SelectionType) {
+  function toggleField(targetLine: Line, targetField: Field, selectionType: FieldSelectionType) {
     const line = board.lines.find((line) => line.color === targetLine.color)
     if (!line) {
       throw new Error(`No line with color ${targetLine.color} found to toggle field in`)
@@ -195,11 +188,11 @@ export function usePlayerState({ player }: UsePlayerStateProps): PlayerStateApi 
     updatePlayerBoard(player.id, board)
   }
 
-  function addSelection(selection: Selection) {
+  function addSelection(selection: FieldSelection) {
     setSelections((prevSelections) => [...prevSelections, selection])
   }
 
-  function removeSelection(selection: Selection) {
+  function removeSelection(selection: FieldSelection) {
     setSelections((prevSelections) => {
       return prevSelections.filter((prevSelection) => prevSelection.field !== selection.field)
     })
@@ -219,7 +212,6 @@ export function usePlayerState({ player }: UsePlayerStateProps): PlayerStateApi 
     board,
     score,
     selections,
-    numSelectionsMade,
     player,
     isActivePlayer,
     isWinningPlayer,

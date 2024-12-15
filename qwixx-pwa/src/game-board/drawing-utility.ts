@@ -21,11 +21,21 @@ function drawFieldLine(
   fields.forEach((field, fieldIndex) => {
     const x = dimensions.getFieldXPos(fieldIndex)
     const darkMode = getIsDarkMode()
-    ctx.fillStyle = getHexColor(colorString, darkMode ? 'dark' : 'light')
-    ctx.strokeStyle = getHexColor(colorString, darkMode ? 'darker' : 'dark')
-    ctx.fillRect(x, y, dimensions.fieldSize, dimensions.fieldSize)
 
+    // draw field
+    switch (field.status) {
+      case 'disabled':
+        ctx.fillStyle = darkMode ? colors.black : colors.lightGrey
+        ctx.fillRect(x, y, dimensions.fieldSize, dimensions.fieldSize)
+        break
+      default:
+        ctx.fillStyle = getHexColor(colorString, darkMode ? 'dark' : 'light')
+        ctx.fillRect(x, y, dimensions.fieldSize, dimensions.fieldSize)
+    }
+
+    // draw field border
     ctx.lineWidth = 2
+    ctx.strokeStyle = getHexColor(colorString, darkMode ? 'darker' : 'dark')
     const strokeDelta = ctx.lineWidth / 2
     ctx.strokeRect(
       x + strokeDelta,
@@ -38,6 +48,7 @@ function drawFieldLine(
     ctx.fillStyle = getHexColor(colorString, darkMode ? 'darker' : undefined)
     drawFieldNumber(ctx, x + dimensions.fieldSize / 2, y + dimensions.fieldSize / 2, field.value)
 
+    // draw cross on selected or filled fields
     if (field.status === 'selected' || field.status === 'filled') {
       drawCrossAt(
         ctx,
@@ -45,11 +56,6 @@ function drawFieldLine(
         y + dimensions.fieldSize / 2,
         field.status === 'selected' ? 2 : 4,
       )
-    }
-
-    if (field.status === 'disabled') {
-      ctx.fillStyle = '#fff9'
-      ctx.fillRect(x, y, dimensions.fieldSize, dimensions.fieldSize)
     }
   })
 }

@@ -1,17 +1,25 @@
 import { css } from '@emotion/react'
 import { responsiveColors } from '../../assets/colors'
 import { Label } from '../../controls/ui-elements'
-import { useGameStateContext } from '../../hooks/use-global-game-state'
+import { Player } from '../../models/game'
 import { getRandomIconCode } from '../../utils/avatar-codes'
 
-export function PlayerAvatarSelection({ playerId, ...props }: { playerId: string }) {
-  const { gameData, updatePlayerData } = useGameStateContext()
-  const player = gameData.players.find((p) => p.id === playerId)!
+interface PlayerAvatarSelectionProps {
+  player: Player
+  onUpdatePlayerData: (playerId: string, newFields: Partial<Player>) => void
+}
+
+export function PlayerAvatarSelection({
+  player,
+  onUpdatePlayerData,
+  ...props
+}: PlayerAvatarSelectionProps) {
+  const { id: playerId } = player
   const buttonID = `${playerId}-avatar`
 
   function changePlayerAvatar() {
     const avatarCode = getRandomIconCode()
-    updatePlayerData(playerId, { avatarCode })
+    onUpdatePlayerData(playerId, { avatarCode })
   }
 
   return (

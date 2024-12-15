@@ -1,9 +1,10 @@
 import { css } from '@emotion/react'
-import { colors, responsiveColors } from '../assets/colors'
+import { responsiveColors } from '../assets/colors'
 
 const baseButtonStyles = (size: 'small' | 'normal') => css`
   ${responsiveColors.text}
-  border: 4px solid ${colors.darkGrey};
+  ${responsiveColors.border}
+  border: 4px solid;
   background-color: transparent;
   font-size: 28px;
   padding: 18px 32px;
@@ -20,9 +21,8 @@ const baseButtonStyles = (size: 'small' | 'normal') => css`
   `}
 
   &:disabled {
+    ${responsiveColors.disabledText}
     box-shadow: none;
-    color: ${colors.grey};
-    border-color: ${colors.grey};
     cursor: default;
   }
 `
