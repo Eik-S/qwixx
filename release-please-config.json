@@ -4,20 +4,7 @@
     "qwixx-pwa": {
       "labels": ["autorelease"],
       "extra-files": ["public/sw.js"],
-      "release-type": "node",
-      "changelog-sections": [
-        {
-          "type": "refactor",
-          "section": "Refactor",
-          "hidden": true
-        },
-        {
-          "type": "chore",
-          "section": "Chores",
-          "hidden": true
-        }
-      ],
-      "always-update": true
+      "release-type": "node"
     }
   }
 }
