@@ -84,5 +84,5 @@ export function getHexColor(colorString: string, accent?: 'light' | 'dark' | 'da
   }
   if (colorString === 'w') {
     return accent ? colors[`${accent}Grey`] : colors.grey
-  } else throw Error(`Invalid colorString provided: ${colorString}`)
+  } else throw Error(`Invalid colorString was provided: ${colorString}`)
 }
