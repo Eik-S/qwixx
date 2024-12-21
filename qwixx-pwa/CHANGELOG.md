@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.0](https://github.com/Eik-S/qwixx/compare/qwixx-pwa-v1.3.1...qwixx-pwa-v1.4.0) (2024-12-21)
+
+
+### Features
+
+* deploy commit ([9a23c8f](https://github.com/Eik-S/qwixx/commit/9a23c8f2e4caf4225e726d130fa898b17357c21b))
+* small fixes ([b33ec59](https://github.com/Eik-S/qwixx/commit/b33ec599dc3022f5a0972cfca45bcb40718cf636))
+
 ## [1.3.1](https://github.com/Eik-S/qwixx/compare/qwixx-pwa-v1.3.0...qwixx-pwa-v1.3.1) (2024-12-14)
 
 
