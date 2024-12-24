@@ -9,7 +9,14 @@
     "react-dom": "19.0.0"
   },
   "devDependencies": {
+    "@chromatic-com/storybook": "^3.2.3",
     "@eslint/js": "9.17.0",
+    "@storybook/addon-essentials": "^8.4.7",
+    "@storybook/addon-interactions": "^8.4.7",
+    "@storybook/blocks": "^8.4.7",
+    "@storybook/react": "^8.4.7",
+    "@storybook/react-vite": "^8.4.7",
+    "@storybook/test": "^8.4.7",
     "@testing-library/jest-dom": "6.6.3",
     "@testing-library/react": "16.1.0",
     "@testing-library/user-event": "14.5.2",
@@ -23,6 +30,8 @@
     "eslint": "9.17.0",
     "eslint-plugin-react": "7.37.2",
     "eslint-plugin-react-hooks": "5.1.0",
+    "eslint-plugin-storybook": "^0.11.1",
+    "storybook": "^8.4.7",
     "typescript": "5.7.2",
     "typescript-eslint": "8.18.0",
     "vite": "6.0.3",
@@ -34,9 +43,15 @@
     "serve": "vite preview",
     "tsc": "tsc",
     "lint": "eslint . -c eslint.config.js",
-    "bundle-analyzer": "npx vite-bundle-visualizer"
+    "bundle-analyzer": "npx vite-bundle-visualizer",
+    "storybook": "storybook dev -p 6006"
   },
   "engines": {
     "node": "22"
+  },
+  "eslintConfig": {
+    "extends": [
+      "plugin:storybook/recommended"
+    ]
   }
 }

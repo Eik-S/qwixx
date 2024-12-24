@@ -22,6 +22,10 @@ export function PlayerFinishedUi({
   player,
   ...props
 }: PlayerFinishedUiProps) {
+  const randomRotation = createMostLikelyRotationFactory()
+  const crownPositionData = [...Array(numberOfWins)]
+    .map(randomRotation)
+    .map((value, index, values) => getCrownPositionData(value, values.slice(0, index)))
   // confetti animation
   useEffect(() => {
     if (!isWinningPlayer) return
@@ -49,8 +53,8 @@ export function PlayerFinishedUi({
   return (
     <div id={`player-area-${player.id}`} {...props}>
       <div css={styles.crowns(!!isWinningPlayer, numberOfWins)}>
-        {[...Array(numberOfWins)].map((_, index) => (
-          <span key={index} css={styles.crown(index)}>
+        {crownPositionData.map(({ rotation, translateX }, index) => (
+          <span key={index} css={styles.crown(rotation, translateX, index)}>
             <span>👑</span>
           </span>
         ))}
@@ -60,10 +64,27 @@ export function PlayerFinishedUi({
   )
 }
 
-function getRandomCrownRotation(): string {
-  const negative = Math.random() < 0.5
-  const rotation = Math.floor(Math.random() * 10) * (negative ? -1 : 1)
-  return `${rotation}deg`
+function createMostLikelyRotationFactory() {
+  let previousRotation = 0
+  return () => {
+    const factor = previousRotation < 0 ? 0.99 : 0.01
+    const negative = Math.random() * factor
+    const newRotation = Math.floor(Math.random() * 10) * (negative ? -1 : 1)
+    console.log({ previousRotation, newRotation })
+    previousRotation = newRotation
+    return newRotation
+  }
+}
+
+function getCrownPositionData(
+  rotation: number,
+  previousRotations: number[],
+): { translateX: number; rotation: number } {
+  const translateX = previousRotations.reduce((prev, curr) => prev + curr, 0) / 3
+  return {
+    rotation,
+    translateX,
+  }
 }
 
 const styles = {
@@ -111,7 +132,7 @@ const styles = {
       }
     `}
   `,
-  crown: (index: number) => css`
+  crown: (rotation: number, translateX: number, index: number) => css`
     position: absolute;
     font-size: 24px;
     font-family: 'NotoEmoji';
@@ -120,8 +141,7 @@ const styles = {
     display: inline-block;
     text-align: center;
     top: ${index * -20}px;
-    rotate: ${getRandomCrownRotation()};
-    background-color: white;
+    transform: translateX(${`${translateX}px`}) rotate(${`${rotation}deg`});
     border-bottom-left-radius: 6px;
     border-bottom-right-radius: 6px;
     & > span {

@@ -14,11 +14,13 @@
     "prettier": "3.4.2"
   },
   "scripts": {
+    "validate": "npm run lint && npm run tsc",
     "start": "concurrently --kill-others \"npm run start --workspace qwixx-pwa\"",
     "test": "npm run test --workspaces --if-present",
     "tsc": "npm run tsc --workspaces",
     "build": "npm run build --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present",
+    "storybook": "npm run storybook --workspaces --if-present",
     "prepare": "husky install",
     "commitlint": "commitlint"
   },

@@ -16,7 +16,6 @@ export function Game() {
   const players = gameData.players
   const gameState = gameData.state
   const [isBig, setIsBig] = useLocalStorage('isBig', false)
-
   function getGridPosition(playerId: number) {
     if (players.length === 2) {
       return playerId === 0 ? 'top' : 'bottom'
