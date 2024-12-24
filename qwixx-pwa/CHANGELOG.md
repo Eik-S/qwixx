@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/Eik-S/qwixx/compare/qwixx-pwa-v1.4.0...qwixx-pwa-v1.5.0) (2024-12-24)
+
+
+### Features
+
+* add translateX for crown stack in finished screen ([d870937](https://github.com/Eik-S/qwixx/commit/d8709373c7de8240ba6444ca2ac11f7f0015757c))
+
 ## [1.4.0](https://github.com/Eik-S/qwixx/compare/qwixx-pwa-v1.3.1...qwixx-pwa-v1.4.0) (2024-12-21)
 
 

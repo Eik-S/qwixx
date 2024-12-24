@@ -1,4 +1,4 @@
-const semVersion = 'v1.4.0' // x-release-please-version
+const semVersion = 'v1.5.0' // x-release-please-version
 const cacheVersion = semVersion.replaceAll('.', '_')
 const putInCache = async (request, response) => {
   const cache = await caches.open(cacheVersion)
