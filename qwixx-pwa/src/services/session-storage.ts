@@ -22,6 +22,7 @@ export function createSession(): string {
       state: 'lobby',
       players: [],
       moveTime: 'infinite',
+      penalizeInvalidClicks: false,
     },
   })
 

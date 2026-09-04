@@ -1,12 +1,14 @@
 import { css } from '@emotion/react'
 import { responsiveColors } from '../assets/colors'
-import { BigButton, Label, MinusButton, PlusButton } from '../controls/ui-elements'
+import { BigButton, Checkbox, Label, MinusButton, PlusButton } from '../controls/ui-elements'
 import { useGameStateContext } from '../hooks/use-global-game-state'
 
 export function LobbyControls({ ...props }) {
-  const { startNewGame, gameData, setMoveTime } = useGameStateContext()
+  const { startNewGame, gameData, setMoveTime, setPenalizeInvalidClicks } = useGameStateContext()
   const moveTime = gameData.moveTime
   const validMoveTimeValues = [10, 30, 60]
+  const penalizeInvalidClicksCheckboxId = 'penalize-invalid-clicks-checkbox'
+  const penalizeInvalidClicksLabelId = 'penalize-invalid-clicks-label'
 
   function increaseMoveTime() {
     if (typeof moveTime === 'number') {
@@ -47,6 +49,19 @@ export function LobbyControls({ ...props }) {
             disabled={moveTime === 'infinite'}
           />
         </div>
+      </div>
+      <div css={styles.controlElement}>
+        <Label
+          htmlFor={penalizeInvalidClicksCheckboxId}
+          id={penalizeInvalidClicksLabelId}
+          text="penalty for invalid clicks"
+        />
+        <Checkbox
+          id={penalizeInvalidClicksCheckboxId}
+          labelId={penalizeInvalidClicksLabelId}
+          checked={gameData.penalizeInvalidClicks}
+          onChange={() => setPenalizeInvalidClicks(!gameData.penalizeInvalidClicks)}
+        />
       </div>
       <BigButton onClick={() => startNewGame()} text="start game" />
     </div>

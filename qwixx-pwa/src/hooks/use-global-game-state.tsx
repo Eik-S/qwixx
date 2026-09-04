@@ -48,6 +48,7 @@ export interface GameStateApi {
   lockMove: (playerId: string) => void
   unlockMove: (playerId: string) => void
   setMoveTime: (newTime: MoveTime) => void
+  setPenalizeInvalidClicks: (newValue: boolean) => void
   setIsTimeOver: Dispatch<SetStateAction<boolean>>
   returnToLobby: () => void
 }
@@ -185,6 +186,7 @@ function useGameState(): GameStateApi {
       state: 'lobby',
       players: [getNewPlayer(), getNewPlayer()],
       moveTime: 'infinite',
+      penalizeInvalidClicks: false,
     }
   }
 
@@ -247,6 +249,13 @@ function useGameState(): GameStateApi {
     setGameData((prevGameData) => ({ ...prevGameData, moveTime: newTime }))
   }
 
+  function setPenalizeInvalidClicks(newValue: boolean): void {
+    if (gameData.state !== 'lobby') {
+      throw new Error('Cannot set penalizeInvalidClicks outside of the lobby')
+    }
+    setGameData((prevGameData) => ({ ...prevGameData, penalizeInvalidClicks: newValue }))
+  }
+
   return {
     gameData,
     numberOfPlayers: gameData.players.length,
@@ -266,6 +275,7 @@ function useGameState(): GameStateApi {
     lockMove: useCallback((playerId: string) => setPlayerState(playerId, 'done'), []),
     unlockMove: useCallback((playerId: string) => setPlayerState(playerId, 'moving'), []),
     setMoveTime,
+    setPenalizeInvalidClicks,
     setIsTimeOver,
     returnToLobby,
   }

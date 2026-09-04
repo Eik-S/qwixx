@@ -40,6 +40,7 @@ interface GameBaseData {
   state: 'lobby' | 'playing' | 'finished'
   players: Player[]
   moveTime: MoveTime
+  penalizeInvalidClicks: boolean
 }
 
 export interface GameLobbyData extends GameBaseData {

@@ -16,6 +16,7 @@ export interface GameBoardUiProps {
   selections: FieldSelection[]
   possibleMoves: PossibleMoves | undefined
   onToggleField: (line: Line, field: Field, type: FieldSelectionType) => void
+  onInvalidClick?: () => void
 }
 
 export function GameBoardUi({
@@ -25,6 +26,7 @@ export function GameBoardUi({
   selections,
   possibleMoves,
   onToggleField,
+  onInvalidClick,
   ...props
 }: GameBoardUiProps) {
   const numSelectionsMade = selections.length
@@ -173,12 +175,21 @@ export function GameBoardUi({
 
   function handleFieldClick({ line, field }: BoardPosition) {
     const isFieldClickValid = checkIsFieldClickValid(field)
-    if (!isFieldClickValid) return
+    if (!isFieldClickValid) {
+      onInvalidClick?.()
+      return
+    }
 
     const selectionType = getSelectionType(line, field)
-    if (selectionType === undefined) return
+    if (selectionType === undefined) {
+      onInvalidClick?.()
+      return
+    }
     const dicesAllowMove = checkIfDicesAllowMove(line, field, selectionType)
-    if (!dicesAllowMove) return
+    if (!dicesAllowMove) {
+      onInvalidClick?.()
+      return
+    }
 
     onToggleField(line, field, selectionType)
   }

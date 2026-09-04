@@ -7,8 +7,9 @@ export interface GameBoardProps {
 }
 
 export function GameBoard({ playerId, ...props }: GameBoardProps) {
-  const { board, isActivePlayer, selections, toggleField } = usePlayerStateContext()
-  const { possibleMoves } = useGameStateContext()
+  const { board, isActivePlayer, selections, toggleField, incrementInvalidClicks } =
+    usePlayerStateContext()
+  const { possibleMoves, gameData } = useGameStateContext()
 
   return (
     <GameBoardUi
@@ -18,6 +19,7 @@ export function GameBoard({ playerId, ...props }: GameBoardProps) {
       selections={selections}
       possibleMoves={possibleMoves}
       onToggleField={toggleField}
+      onInvalidClick={gameData.penalizeInvalidClicks ? incrementInvalidClicks : undefined}
       {...props}
     />
   )

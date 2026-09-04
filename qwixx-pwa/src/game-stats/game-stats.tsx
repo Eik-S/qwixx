@@ -4,7 +4,7 @@ import { usePlayerStateContext } from '../hooks/use-player-game-state'
 import { Line } from '../models/game'
 
 export function GameStats({ ...props }) {
-  const { board, score, updateScore } = usePlayerStateContext()
+  const { board, score, updateScore, invalidClicks } = usePlayerStateContext()
 
   const selectionsMade = board.lines.reduce((previousValue, currentVal) => {
     const filledFields = currentVal.fields.filter((field) => field.status === 'filled')
@@ -30,10 +30,11 @@ export function GameStats({ ...props }) {
       (prevLineScore, lineScore) => prevLineScore + lineScore,
     )
     const strikeMinus = board.strikes * 5
+    const invalidClickMinus = invalidClicks
 
-    updateScore(sumOfLineScores - strikeMinus)
+    updateScore(sumOfLineScores - strikeMinus - invalidClickMinus)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [board.lines, board.strikes, selectionsMade])
+  }, [board.lines, board.strikes, selectionsMade, invalidClicks])
 
   return (
     <div css={styles.gameStatsArea} {...props}>
